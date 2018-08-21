@@ -5,15 +5,13 @@ Ventana v;
 void setup() {
   size( 1200, 900 );
   setupFisica();
-  setupElementos();
+  loadElements();
   smooth();
-  
-  
 }
 
 void draw() {
   background(50);
   drawFisica();
-  drawElementos();
+  drawElements();
 
 }
