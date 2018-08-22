@@ -1,6 +1,8 @@
 Ventana [] windows;
 
+
 void loadElements() {
+
   //Inicializo ventanas
   windows = new Ventana [2];
   JSONArray jsonVentanas;
@@ -23,7 +25,7 @@ void drawElements() {
   }
 }
 
-void guardarElementos() {
+void saveElements() {
   JSONArray jsonVentanas;
   jsonVentanas = new JSONArray();
   for (int i=0; i<windows.length; i++) {
@@ -42,13 +44,29 @@ void guardarElementos() {
 
 class Ventana {
   int x, y, ancho, alto, altoArco;
-
+  PShape s; 
+  
   Ventana (int x, int y, int ancho, int alto, int altoArco) {
     this.x=x;
     this.y=y;
     this.ancho=ancho;
     this.alto=alto;
     this.altoArco=altoArco;
+    this.s = createShape();
+
+    int numPoints=40;
+    float angle=PI/(float)numPoints;
+
+    s.beginShape();
+    s.vertex(x,y);
+    for (int i=1; i<numPoints; i++)
+    {
+      s.vertex(x+ancho/2+ancho/2*sin(HALF_PI+PI+angle*i), y+altoArco/2*cos(HALF_PI+TWO_PI+angle*i));
+    } 
+    s.vertex(x+ancho,y);
+    s.vertex(x+ancho,y+alto);
+    s.vertex(x,y+alto);
+    s.endShape(CLOSE);
   }
 
   void draw() {
@@ -56,6 +74,7 @@ class Ventana {
     noStroke();
     fill(255, 100);
     arc(x+ancho/2, y, ancho, altoArco, PI, TWO_PI);
+    shape(s);
     rect (x, y, ancho, alto);
     popStyle();
   }
