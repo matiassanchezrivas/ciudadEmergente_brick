@@ -1,12 +1,10 @@
-
-FBody[] steps = new FBody[20];
 FWorld world;
 
 int brickHeight = 60;
 int brickWidth = 60;
-
-int min = 300;
-
+int numArcBricks = 10;
+int minVelocity = 500;
+int sizeBall = 40;
 
 //=================================================================
 
@@ -16,23 +14,80 @@ void setupFisica() {
   world = new FWorld();
   world.setEdges();
 
-  //BOLA
-  FCircle bola = new FCircle(40);
+  resetBall();
+  resetPaleta();
+  resetWindows();
+
+}
+//------------------------------------------------
+
+void drawFisica() {
+
+  FBody bola = getBody("bola");
+  if (bola != null) {
+
+    float velx = bola.getVelocityX();
+    float vely = bola.getVelocityY();
+
+    velx = (velx > 0) ? minVelocity : -minVelocity;
+    vely = (vely > 0) ? minVelocity : -minVelocity;
+
+    bola.setVelocity(velx, vely);
+  }
+
+  FBody paleta = getBody("paleta");
+
+  if (paleta != null) paleta.setPosition(mouseX, height-100);
+
+
+  world.step();
+  world.draw();
+} 
+
+FBody getBody(String bodyName) {
+  ArrayList<FBody> bodies=world.getBodies();
+  for (FBody b : bodies) {
+    try {
+      if (b.getName().equals(bodyName)) {
+        return b;
+      }
+    }
+    catch(NullPointerException e) {
+      //println(e);
+    }
+  }
+
+  return null;
+}
+
+
+
+void contactResult(FContactResult result) {
+  // Draw an ellipse where the contact took place and as big as the normal impulse of the contact
+  //ellipse(result.getX(), result.getY(), result.getNormalImpulse(), result.getNormalImpulse());
+  if (result.getBody1().getName()=="brick") {
+    FBody b = result.getBody1();
+    b.setFill(255, 255, 0);
+    world.remove(b);
+    //b.addImpulse(100, 100);
+  };
+  // Trigger your sound here
+  // ...
+}
+
+void resetBall(){
+//BOLA
+  FCircle bola = new FCircle(sizeBall);
   bola.setPosition(width/2, height/2);
   bola.setVelocity(1000, 1000);
   bola.setDensity(0.01);
   bola.setDamping(-1);
   bola.setName("bola");
   world.add(bola);
+}
 
-  //PALETA
-  FBox paleta = new FBox(300, 30);
-  paleta.setName("paleta");
-  paleta.setStatic(true);
-  world.add(paleta);
-
-
-  for (Ventana ventana : windows) {
+void resetWindows(){
+for (Ventana ventana : windows) {
     //VENTANA
     FPoly v = new FPoly();
     int numPoints=40;
@@ -71,8 +126,8 @@ void setupFisica() {
     }
 
     //ARCO
-    int _numPoints=10;
-    int _numBricksArc=10;
+    int _numPoints=15;
+    int _numBricksArc=numArcBricks;
     float _angleSep = PI/_numBricksArc;
     float _angle=PI/_numBricksArc/(float)_numPoints;
     for (int j=0; j<_numBricksArc; j++) {
@@ -92,61 +147,20 @@ void setupFisica() {
     }
   }
 }
-//------------------------------------------------
 
-void drawFisica() {
-
-  FBody bola = getBody("bola");
-  if (bola != null) {
-
-    float velx = bola.getVelocityX();
-    float vely = bola.getVelocityY();
-
-    velx = (velx > 0) ? min : -min;
-    vely = (vely > 0) ? min : -min;
-
-    bola.setVelocity(velx, vely);
-  }
-
-  FBody paleta = getBody("paleta");
-
-  if (paleta != null) paleta.setPosition(mouseX, height-100);
-
-
-
-
-  world.step();
-
-  world.draw();
-} 
-
-FBody getBody(String bodyName) {
-  ArrayList<FBody> bodies=world.getBodies();
-  for (FBody b : bodies) {
-    try {
-      if (b.getName().equals(bodyName)) {
-        return b;
-      }
-    }
-    catch(NullPointerException e) {
-      //println(e);
-    }
-  }
-
-  return null;
+void resetPaleta(){
+  //PALETA
+  FBox paleta = new FBox(300, 30);
+  paleta.setName("paleta");
+  paleta.setStatic(true);
+  world.add(paleta);
 }
 
+void resetAll(){
+  world = new FWorld();
+  world.setEdges();
 
-
-void contactResult(FContactResult result) {
-  // Draw an ellipse where the contact took place and as big as the normal impulse of the contact
-  //ellipse(result.getX(), result.getY(), result.getNormalImpulse(), result.getNormalImpulse());
-  if (result.getBody1().getName()=="brick") {
-    FBody b = result.getBody1();
-    b.setFill(255, 255, 0);
-    world.remove(b);
-    //b.addImpulse(100, 100);
-  };
-  // Trigger your sound here
-  // ...
+  resetBall();
+  resetPaleta();
+  resetWindows();
 }

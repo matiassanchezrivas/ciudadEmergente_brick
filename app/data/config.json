@@ -1,0 +1,9 @@
+{
+  "config": {
+    "sizeBall": 50,
+    "brickHeight": 60,
+    "minVelocity": 500,
+    "numArcBricks": 10,
+    "brickWidth": 60
+  }
+}

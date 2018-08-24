@@ -1,8 +1,6 @@
 Ventana [] windows;
 
-
 void loadElements() {
-
   //Inicializo ventanas
   windows = new Ventana [2];
   JSONArray jsonVentanas;
@@ -41,11 +39,10 @@ void saveElements() {
   saveJSONArray(jsonVentanas, "data/ventanas.json");
 }
 
-
 class Ventana {
   int x, y, ancho, alto, altoArco;
   PShape s; 
-  
+
   Ventana (int x, int y, int ancho, int alto, int altoArco) {
     this.x=x;
     this.y=y;
@@ -54,19 +51,19 @@ class Ventana {
     this.altoArco=altoArco;
     this.s = createShape();
 
-    int numPoints=40;
-    float angle=PI/(float)numPoints;
+    //int numPoints=40;
+    //float angle=PI/(float)numPoints;
 
-    s.beginShape();
-    s.vertex(x,y);
-    for (int i=1; i<numPoints; i++)
-    {
-      s.vertex(x+ancho/2+ancho/2*sin(HALF_PI+PI+angle*i), y+altoArco/2*cos(HALF_PI+TWO_PI+angle*i));
-    } 
-    s.vertex(x+ancho,y);
-    s.vertex(x+ancho,y+alto);
-    s.vertex(x,y+alto);
-    s.endShape(CLOSE);
+    //s.beginShape();
+    //s.vertex(x,y);
+    //for (int i=1; i<numPoints; i++)
+    //{
+    //  s.vertex(x+ancho/2+ancho/2*sin(HALF_PI+PI+angle*i), y+altoArco/2*cos(HALF_PI+TWO_PI+angle*i));
+    //} 
+    //s.vertex(x+ancho,y);
+    //s.vertex(x+ancho,y+alto);
+    //s.vertex(x,y+alto);
+    //s.endShape(CLOSE);
   }
 
   void draw() {
@@ -77,5 +74,35 @@ class Ventana {
     shape(s);
     rect (x, y, ancho, alto);
     popStyle();
+  }
+}
+
+class Poligono {
+  ArrayList <PVector> vertices;
+    PShape s; 
+
+  Poligono (ArrayList vertices) {
+    this.vertices = vertices;
+    this.s = createShape();
+  }
+
+  Poligono () {
+    vertices = new ArrayList();
+    
+  }
+
+  void addVertex(int x, int y) {
+    this.vertices.add(new PVector(x, y));
+  }
+
+  void draw() {
+    PShape s;
+    this.s.beginShape();
+    for(int i=0; i<vertices.size(); i++){
+    PVector v = vertices.get(i);
+    this.s.vertex(v.x, v.y);
+    ellipse(v.x, v.y, 10, 10);
+    }
+    this.s.endShape(CLOSE);
   }
 }
