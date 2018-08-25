@@ -1,4 +1,6 @@
 Ventana [] windows;
+PackLadrillos packLadrillos;
+
 
 void loadElements() {
   //Inicializo ventanas
@@ -15,12 +17,16 @@ void loadElements() {
     int altoArco = v.getInt("altoArco");
     windows[i]= new Ventana(x, y, ancho, alto, altoArco);
   }
+
+  //Inicializo ladrillos
+  packLadrillos = new PackLadrillos( 100, 100, 900, 500, 10);
 }
 
 void drawElements() {
   for (Ventana ventana : windows) {
     ventana.draw();
   }
+  packLadrillos.draw();
 }
 
 void saveElements() {
@@ -77,32 +83,80 @@ class Ventana {
   }
 }
 
-class Poligono {
-  ArrayList <PVector> vertices;
-    PShape s; 
+class PackLadrillos {
+  ArrayList <FilaLadrillos> filas;
+  int x, y, ancho, alto;
 
-  Poligono (ArrayList vertices) {
-    this.vertices = vertices;
-    this.s = createShape();
-  }
-
-  Poligono () {
-    vertices = new ArrayList();
+  PackLadrillos (int x, int y, int ancho, int alto, int cantidad) {
+    this.x=x;
+    this.y=y;
+    this.ancho=ancho;
+    this.alto=alto;
+    this.filas = new ArrayList();
     
-  }
-
-  void addVertex(int x, int y) {
-    this.vertices.add(new PVector(x, y));
+    for (int i=0; i<cantidad; i++) {
+      int anchoFila=ancho-i*ancho/cantidad;
+      filas.add(new FilaLadrillos(x+ancho/cantidad*i/2, y+alto/cantidad*i, ancho-ancho/cantidad*(i), alto/cantidad, 10-i));
+    }
   }
 
   void draw() {
-    PShape s;
-    this.s.beginShape();
-    for(int i=0; i<vertices.size(); i++){
-    PVector v = vertices.get(i);
-    this.s.vertex(v.x, v.y);
-    ellipse(v.x, v.y, 10, 10);
+    pushStyle();
+    stroke(255);
+    noFill();
+    rect(x, y, ancho, alto);
+
+    for (int i=0; i<filas.size(); i++) {
+      FilaLadrillos fl = filas.get(i);
+      fl.draw();
     }
-    this.s.endShape(CLOSE);
+    popStyle();
+  }
+}
+
+class FilaLadrillos {
+  int x, y, ancho, alto, cantidad;
+  ArrayList <Ladrillo> ladrillos;
+
+  FilaLadrillos (int x, int y, int ancho, int alto, int cantidad) {
+    this.x=x;
+    this.y=y;
+    this.ancho=ancho;
+    this.alto=alto;
+    this.cantidad=cantidad;
+    this.ladrillos = new ArrayList();
+    int anchoLadrillo = ancho/cantidad;
+    for (int i=0; i<cantidad; i++) {
+      ladrillos.add(new Ladrillo(x+i*anchoLadrillo, y, anchoLadrillo, alto));
+    }
+  }
+
+  void draw() {
+    pushStyle();
+    stroke(255);
+    noFill();
+    rect(x, y, ancho, alto);
+    for (int i=0; i<ladrillos.size(); i++) {
+      Ladrillo l = ladrillos.get(i);
+      l.draw();
+    }
+    popStyle();
+  }
+}
+
+class Ladrillo {
+  int x, y, ancho, alto, color1;
+
+  Ladrillo (int x, int y, int ancho, int alto) {
+    this.x=x;
+    this.y=y;
+    this.ancho=ancho;
+    this.alto=alto;
+    this.color1= color (random(200));
+  }
+
+  void draw() {
+    fill(color1);
+    rect (x, y, ancho, alto);
   }
 }

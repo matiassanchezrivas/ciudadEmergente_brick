@@ -32,4 +32,8 @@ void keyPressed() {
   }
   if (key == 'r'|| key == 'R' ) resetAll();
   if (calibrador) calKeys();
+  
+  if(key == 's') {
+    saveElements();
+  }
 }
