@@ -3,7 +3,7 @@ PFont fuente;
 int contCartel;
 boolean primerFotogramaEnEsteModo = true;
 
-String nombreFuenteBitacora = "Roboto-Light-20.vlw";
+String nombreFuenteBitacora = "Roboto-Light-30.vlw";
 
 int xCartelPrimario = 50;
 int yCartelPrimario = 80;
@@ -36,7 +36,7 @@ void mostrarCartel() {
     pushStyle();
     textFont( fuente, 30 );
     contCartel--;
-    fill( 255, 255, 0 );
+    fill( colorCalibracionAcento.elColor );
     text( br.get(), xCartelPrimario, yCartelPrimario );
     popStyle();
   }

@@ -1,13 +1,12 @@
 //CALIBRACION
 stateHandler shCal;
-String [] shCalStates = {"elementos", "kinect", "keystone"};
+String [] shCalStates = {"elementos", "color"};
 //CALIBRACION ---> ELEMENTOS
 stateHandler shElements;
-String [] shElementStates = {"ventana", "ladrillos", "paleta"};
+String [] shElementStates = {"ventana", "ladrillos"};
 //CALIBRACION ---> ELEMENTOS ---> VENTANAS
 stateHandler shWindows;
 String [] shWindowStates = {"posicion", "dimension", "altoArco"};
-
 //CALIBRACION ---> ELEMENTOS ---> LADRILLOS
 stateHandler shBricks;
 String [] shBrickStates = {"posicion", "dimension"};
@@ -28,7 +27,7 @@ class Breadcrumb {
   String get() {
     String g = "MENU";
     for (int i=0; i<=menuDepth; i++) {
-      g+= " > "+breadcrumb[i];
+      g+= " > "+(breadcrumb[i] !=null ? breadcrumb[i] : "");
     }
     return g;
   }
@@ -159,11 +158,11 @@ class stateHandler {
 void changeBread(boolean last) {
   if (keyCode == 10 && !last) { //ENTER 
     br.menuDepth ++;
-    println("menuDepth++", br.menuDepth);
+    //println("menuDepth++", br.menuDepth);
   }
   if (keyCode == 8 && !backBread) { // backSpace
     br.menuDepth = (br.menuDepth > 0) ? br.menuDepth-1 : 0;
-    println("menuDepth--", br.menuDepth);
+    //println("menuDepth--", br.menuDepth);
     backBread=true;
   }
 }

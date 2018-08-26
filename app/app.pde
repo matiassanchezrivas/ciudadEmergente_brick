@@ -15,13 +15,18 @@ void setup() {
   smooth();
   loadConfig();
   iniciarCartel();
+  iniciarColores();
+  saveBricks();
 }
 
 void draw() {
   background(50);
   if (calibrador) {
-
+    if(shCal.getState() == "color"){
+      imprimirGestoresDeColores();
+    } else {
     drawElements();
+    }
     mostrarCartel();
   } else {
     drawFisica();
@@ -43,5 +48,17 @@ void keyPressed() {
   }
   if (key == 's') {
     saveElements();
+  }
+}
+
+void mouseDragged() {
+  if ( shCal.getState() == "color" ) {
+    ejecutarClickEnColores();
+  }
+}
+
+void mousePressed() {
+  if ( shCal.getState() == "color" ) {
+    ejecutarClickEnColores();
   }
 }

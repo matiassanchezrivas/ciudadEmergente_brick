@@ -17,7 +17,7 @@ void setupFisica() {
   resetBall();
   resetPaleta();
   resetWindows();
-
+  resetBricks();
 }
 //------------------------------------------------
 
@@ -75,8 +75,8 @@ void contactResult(FContactResult result) {
   // ...
 }
 
-void resetBall(){
-//BOLA
+void resetBall() {
+  //BOLA
   FCircle bola = new FCircle(sizeBall);
   bola.setPosition(width/2, height/2);
   bola.setVelocity(1000, 1000);
@@ -86,8 +86,8 @@ void resetBall(){
   world.add(bola);
 }
 
-void resetWindows(){
-for (Ventana ventana : windows) {
+void resetWindows() {
+  for (Ventana ventana : windows) {
     //VENTANA
     FPoly v = new FPoly();
     int numPoints=40;
@@ -148,7 +148,7 @@ for (Ventana ventana : windows) {
   }
 }
 
-void resetPaleta(){
+void resetPaleta() {
   //PALETA
   FBox paleta = new FBox(300, 30);
   paleta.setName("paleta");
@@ -156,11 +156,27 @@ void resetPaleta(){
   world.add(paleta);
 }
 
-void resetAll(){
+void resetBricks() {
+  for (int i=0; i<packLadrillos.filas.size(); i++) {
+    FilaLadrillos fila = packLadrillos.filas.get(i);
+    for (int j=0; j<fila.ladrillos.size(); j++) {
+      Ladrillo l = fila.ladrillos.get(j);
+      FBox c = new FBox(l.ancho, l.alto);
+      c.setName("brick");
+      c.setStatic(true);
+      c.setPosition(l.x+l.ancho/2, l.y+l.alto/2);
+      c.setFill(random(255), 0, 0);
+      world.add(c);
+    }
+  }
+}
+
+void resetAll() {
   world = new FWorld();
   world.setEdges();
 
   resetBall();
   resetPaleta();
   resetWindows();
+  resetBricks();
 }
