@@ -1,7 +1,6 @@
 Ventana [] windows;
 PackLadrillos packLadrillos;
 
-
 void loadElements() {
   //Inicializo ventanas
   windows = new Ventana [2];
@@ -56,20 +55,6 @@ class Ventana {
     this.alto=alto;
     this.altoArco=altoArco;
     this.s = createShape();
-
-    //int numPoints=40;
-    //float angle=PI/(float)numPoints;
-
-    //s.beginShape();
-    //s.vertex(x,y);
-    //for (int i=1; i<numPoints; i++)
-    //{
-    //  s.vertex(x+ancho/2+ancho/2*sin(HALF_PI+PI+angle*i), y+altoArco/2*cos(HALF_PI+TWO_PI+angle*i));
-    //} 
-    //s.vertex(x+ancho,y);
-    //s.vertex(x+ancho,y+alto);
-    //s.vertex(x,y+alto);
-    //s.endShape(CLOSE);
   }
 
   void draw() {
@@ -86,6 +71,7 @@ class Ventana {
 class PackLadrillos {
   ArrayList <FilaLadrillos> filas;
   int x, y, ancho, alto;
+  int cantidad; 
 
   PackLadrillos (int x, int y, int ancho, int alto, int cantidad) {
     this.x=x;
@@ -93,9 +79,9 @@ class PackLadrillos {
     this.ancho=ancho;
     this.alto=alto;
     this.filas = new ArrayList();
+    this.cantidad = cantidad; 
     
     for (int i=0; i<cantidad; i++) {
-      int anchoFila=ancho-i*ancho/cantidad;
       filas.add(new FilaLadrillos(x+ancho/cantidad*i/2, y+alto/cantidad*i, ancho-ancho/cantidad*(i), alto/cantidad, 10-i));
     }
   }
@@ -105,6 +91,11 @@ class PackLadrillos {
     stroke(255);
     noFill();
     rect(x, y, ancho, alto);
+    this.filas = new ArrayList();
+    
+    for (int i=0; i<cantidad; i++) {
+      filas.add(new FilaLadrillos(x+ancho/cantidad*i/2, y+alto/cantidad*i, ancho-ancho/cantidad*(i), alto/cantidad, 10-i));
+    }
 
     for (int i=0; i<filas.size(); i++) {
       FilaLadrillos fl = filas.get(i);

@@ -13,7 +13,6 @@ void saveConfig() {
 }
 
 void loadConfig() {
-
   JSONObject jsonConfig;
   jsonConfig = loadJSONObject("config.json");
   JSONObject c = jsonConfig.getJSONObject("config");
