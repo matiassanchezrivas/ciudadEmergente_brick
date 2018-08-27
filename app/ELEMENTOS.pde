@@ -80,8 +80,7 @@ void saveBricks() {
 
     jsonPackLadrillos.setJSONObject(i, jsonFilaLadrillo);
   }
-
-  saveJSONArray(jsonPackLadrillos, "data/ventanas2.json");
+  saveJSONArray(jsonPackLadrillos, "data/ladrillos.json");
 }
 
 class Ventana {
@@ -102,7 +101,6 @@ class Ventana {
     color c = color(255, 100);
     color cArco = c;
     color cRect = c;
-    println(br.breadcrumb[1]);
     if (shElements.getState() == "ventana") {
       c = (selectedWindow != id) ? color(255, 100) : colorCalibracionAcento.elColor ;
       cArco = (shWindows.getState() == "altoArco") ? c : color(255, 100);

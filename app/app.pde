@@ -3,9 +3,10 @@ import fisica.*;
 Ventana v;
 boolean calibrador;
 String modo;
+Juego juego;
 
 void setup() {
-  size( 1200, 900 );
+  size( 1200, 900);
   initBreadcrumb();
   loadElements();
   setupFisica();
@@ -17,6 +18,7 @@ void setup() {
   iniciarCartel();
   iniciarColores();
   saveBricks();
+  juego = new Juego();
 }
 
 void draw() {
@@ -30,6 +32,7 @@ void draw() {
     mostrarCartel();
   } else {
     drawFisica();
+    juego.draw();
   }
 }
 

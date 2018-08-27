@@ -5,43 +5,38 @@ int brickWidth = 60;
 int numArcBricks = 10;
 int minVelocity = 500;
 int sizeBall = 40;
+int paddleWidth = 300;
+int paddleHeight = 60;
 
-//=================================================================
-
+//=================================================================v
 void setupFisica() {
   //WORLD
   Fisica.init(this);
   world = new FWorld();
   world.setEdges();
 
-  resetBall();
-  resetPaleta();
   resetWindows();
-  resetBricks();
 }
 //------------------------------------------------
 
 void drawFisica() {
-
+  world.step();
+  //PELOTA
   FBody bola = getBody("bola");
   if (bola != null) {
-
     float velx = bola.getVelocityX();
     float vely = bola.getVelocityY();
-
     velx = (velx > 0) ? minVelocity : -minVelocity;
     vely = (vely > 0) ? minVelocity : -minVelocity;
-
     bola.setVelocity(velx, vely);
   }
 
+  //PALETA
   FBody paleta = getBody("paleta");
-
-  if (paleta != null) paleta.setPosition(mouseX, height-100);
-
-
-  world.step();
-  world.draw();
+  if (paleta != null) {
+    paleta.setPosition(mouseX, height-100);
+  }   
+  //world.draw();
 } 
 
 FBody getBody(String bodyName) {
@@ -56,7 +51,6 @@ FBody getBody(String bodyName) {
       //println(e);
     }
   }
-
   return null;
 }
 
@@ -68,22 +62,12 @@ void contactResult(FContactResult result) {
   if (result.getBody1().getName()=="brick") {
     FBody b = result.getBody1();
     b.setFill(255, 255, 0);
+    b.setName("brick_dead");
     world.remove(b);
     //b.addImpulse(100, 100);
   };
   // Trigger your sound here
   // ...
-}
-
-void resetBall() {
-  //BOLA
-  FCircle bola = new FCircle(sizeBall);
-  bola.setPosition(width/2, height/2);
-  bola.setVelocity(1000, 1000);
-  bola.setDensity(0.01);
-  bola.setDamping(-1);
-  bola.setName("bola");
-  world.add(bola);
 }
 
 void resetWindows() {
@@ -110,7 +94,7 @@ void resetWindows() {
     {
       //IZQUIERDA
       FBox b = new FBox(brickWidth, brickHeight);
-      b.setName("brick");
+      b.setName("brickLeft");
       b.setStatic(true);
       b.setPosition(ventana.x+brickWidth/2-brickWidth, ventana.y+brickHeight/2+brickHeight*i);
       b.setFill(random(255), 0, 0);
@@ -118,65 +102,25 @@ void resetWindows() {
 
       //DERECHA
       FBox c = new FBox(brickWidth, brickHeight);
-      c.setName("brick");
+      c.setName("brickRight");
       c.setStatic(true);
       c.setPosition(ventana.x+ventana.ancho+brickWidth/2, ventana.y+brickHeight/2+brickHeight*i);
       c.setFill(random(255), 0, 0);
       world.add(c);
     }
 
-    //ARCO
-    int _numPoints=15;
-    int _numBricksArc=numArcBricks;
-    float _angleSep = PI/_numBricksArc;
-    float _angle=PI/_numBricksArc/(float)_numPoints;
-    for (int j=0; j<_numBricksArc; j++) {
-      FPoly a = new FPoly();
-      for (int i=0; i<=_numPoints; i++)
-      {
-        a.vertex(ventana.x+ventana.ancho/2+ventana.ancho/2*sin(HALF_PI+PI+_angleSep*j+_angle*i), ventana.y+ventana.altoArco/2*cos(HALF_PI+TWO_PI+_angleSep*j+_angle*i));
-      } 
-      for (int i=_numPoints; i>=0; i--)
-      {
-        a.vertex(ventana.x+ventana.ancho/2+(ventana.ancho/2+brickHeight)*sin(HALF_PI+PI+_angleSep*j+_angle*i), ventana.y+(ventana.altoArco/2+brickHeight)*cos(HALF_PI+TWO_PI+_angleSep*j+_angle*i));
-      } 
-      a.setFill(random(255), 0, 0);
-      a.setName("brick");
-      a.setStatic(true);
-      world.add(a);
-    }
+    
   }
 }
 
-void resetPaleta() {
-  //PALETA
-  FBox paleta = new FBox(300, 30);
-  paleta.setName("paleta");
-  paleta.setStatic(true);
-  world.add(paleta);
-}
 
-void resetBricks() {
-  for (int i=0; i<packLadrillos.filas.size(); i++) {
-    FilaLadrillos fila = packLadrillos.filas.get(i);
-    for (int j=0; j<fila.ladrillos.size(); j++) {
-      Ladrillo l = fila.ladrillos.get(j);
-      FBox c = new FBox(l.ancho, l.alto);
-      c.setName("brick");
-      c.setStatic(true);
-      c.setPosition(l.x+l.ancho/2, l.y+l.alto/2);
-      c.setFill(random(255), 0, 0);
-      world.add(c);
-    }
-  }
-}
 
 void resetAll() {
   world = new FWorld();
   world.setEdges();
 
-  resetBall();
-  resetPaleta();
+  juego.reset();
+
   resetWindows();
-  resetBricks();
+  //resetBricks();
 }
