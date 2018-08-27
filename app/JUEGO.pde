@@ -4,21 +4,27 @@ class Juego {
   Pelota pelota;
   LadrillosGrilla ladrillosGrilla;
   LadrillosArcos ladrillosArcos;
+  LadrillosVentana ladrillosVentana;
+  Ventanas ventanas;
 
   Juego () {
     paleta = new Paleta();
     pelota = new Pelota();
     ladrillosGrilla = new LadrillosGrilla();
     ladrillosArcos = new LadrillosArcos();
+    ladrillosVentana = new LadrillosVentana();
+    ventanas = new Ventanas();
   }
 
   void draw() {
-    fill(255, 50);
+    fill(0, 255);
     rect(0, 0, width, height);
     paleta.draw();
     pelota.draw();
     ladrillosGrilla.draw();
     ladrillosArcos.draw();
+    ladrillosVentana.draw();
+    ventanas.draw();
   }
 
   void reset() {
@@ -26,12 +32,58 @@ class Juego {
     paleta.reset();
     ladrillosGrilla.reset();
     ladrillosArcos.reset();
+    ladrillosVentana.reset();
+    ventanas.reset();
   }
 
   void updateInfo() {
   }
 }
 //------------------------------------------------
+class Ventanas {
+  FPoly v;
+  PShape windowShape [] = new PShape [2];
+
+  Ventanas () {
+  }
+  void draw() {
+    for (int i=0; i<windowShape.length; i++) {
+      windowShape[i].setStroke(color(255));
+      windowShape[i].setStrokeWeight(10);
+      windowShape[i].setFill(0);
+      shape(windowShape[i]);
+    }
+  }
+
+  void reset() {
+    for (int i=0; i<windows.length; i++) {
+      //VENTANA
+      v = new FPoly();
+      windowShape[i] = createShape();
+      windowShape[i].beginShape();
+      int numPoints=40;
+      float angle=PI/(float)numPoints;
+      windowShape[i].vertex(windows[i].x, windows[i].y);
+      v.vertex(windows[i].x, windows[i].y);
+      for (int j=0; j<numPoints; j++)
+      {
+        windowShape[i].vertex(windows[i].x+windows[i].ancho/2+windows[i].ancho/2*sin(HALF_PI+PI+angle*j), windows[i].y+windows[i].altoArco/2*cos(HALF_PI+TWO_PI+angle*j));
+        v.vertex(windows[i].x+windows[i].ancho/2+windows[i].ancho/2*sin(HALF_PI+PI+angle*j), windows[i].y+windows[i].altoArco/2*cos(HALF_PI+TWO_PI+angle*j));
+      } 
+      windowShape[i].vertex(windows[i].x+windows[i].ancho, windows[i].y);
+      v.vertex(windows[i].x+windows[i].ancho, windows[i].y);
+      windowShape[i].vertex(windows[i].x+windows[i].ancho, windows[i].y+windows[i].alto);
+      v.vertex(windows[i].x+windows[i].ancho, windows[i].y+windows[i].alto);
+      windowShape[i].vertex(windows[i].x, windows[i].y+windows[i].alto);
+      v.vertex(windows[i].x, windows[i].y+windows[i].alto);
+
+      windowShape[i].endShape(CLOSE);
+      v.setStatic(true);
+      world.add(v);
+    }
+  }
+}
+
 class LadrillosArcos {
   ArrayList <Brick> bricks;
 
@@ -60,7 +112,6 @@ class LadrillosArcos {
         pv = new PVector [_numPoints*2+2];
         for (int i=0; i<=_numPoints; i++)
         {
-          println(i);
           pv [i] = new PVector(ventana.x+ventana.ancho/2+ventana.ancho/2*sin(HALF_PI+PI+_angleSep*j+_angle*i), ventana.y+ventana.altoArco/2*cos(HALF_PI+TWO_PI+_angleSep*j+_angle*i));
         } 
         for (int i=_numPoints; i>=0; i--)
@@ -73,6 +124,37 @@ class LadrillosArcos {
     }
   }
 }
+//------------------------------------------------
+class LadrillosVentana {
+  ArrayList <Brick> bricks;
+
+  LadrillosVentana () {
+    bricks = new ArrayList();
+  }
+
+  void draw() {
+    for (int i=0; i<bricks.size(); i++) {
+      Brick b = bricks.get(i);
+      b.draw();
+    }
+  }
+
+  void reset() {
+    bricks = new ArrayList();
+    for (Ventana ventana : windows) {
+      //LADRILLOS
+      int numberBricks = int(ventana.alto/brickHeight);
+      for (int i=0; i<numberBricks; i++)
+      {
+        //IZQUIERDA
+        bricks.add(new Brick (ventana.x-brickWidth, ventana.y+brickHeight*i, brickWidth, brickHeight, "ventana"));
+        //DERECHA
+        bricks.add(new Brick (ventana.x+ventana.ancho, ventana.y+brickHeight*i, brickWidth, brickHeight, "ventana"));
+      }
+    }
+  }
+}
+
 
 //------------------------------------------------
 class LadrillosGrilla {
@@ -95,7 +177,7 @@ class LadrillosGrilla {
       FilaLadrillos fila = packLadrillos.filas.get(i);
       for (int j=0; j<fila.ladrillos.size(); j++) {
         Ladrillo l = fila.ladrillos.get(j);
-        bricks.add(new Brick (l.x, l.y, l.ancho, l.alto));
+        bricks.add(new Brick (l.x, l.y, l.ancho, l.alto, "grilla"));
       }
     }
   }
@@ -110,26 +192,30 @@ class Brick {
   PShape brickShape;
   int [] factor = new int [8];
   boolean triggerAnimationDead = false;
-   int  timeAnimationDead=500;
-int tiempoDesdeTriggerAnimation;
-  Brick(int x, int y, int ancho, int alto) {
+  int  timeAnimationDead=500;
+  int tiempoDesdeTriggerAnimation;
+  int [] factorArc = new int [4];
+
+  Brick(int x, int y, int ancho, int alto, String type) {
     this.x=x;
     this.y=y;
     this.ancho=ancho;
     this.alto=alto;
-    this.type="normal";
+    this.type=type;
     reset();
-   
   }
 
   Brick (PVector [] vertex) {
     this.type="vertices";
     this.vertex = vertex;
+    for (int i=0; i<4; i++) {
+      factorArc[i] = int(random(0, 6));
+    }
     reset();
   }
 
   void reset() {
-    if (type=="normal") {
+    if (type=="grilla") {
       for (int i=0; i<8; i++) {
         factor[i] = int(random(-5, 5));
       }
@@ -139,27 +225,42 @@ int tiempoDesdeTriggerAnimation;
       brick.setPosition(x+ancho/2, y+alto/2);
       brick.setFill(random(255), 0, 0);
       world.add(brick);
-    } else {
+    } else if (type=="vertices") {
       brickV = new FPoly();
       brickShape = createShape();
       brickShape.beginShape();
       for (int i=0; i<vertex.length; i++)
+      
       {
-        brickShape.vertex(vertex[i].x, vertex[i].y);
-        brickV.vertex(vertex[i].x, vertex[i].y);
+        println("SJDKNASKLDNLK", factorArc[0], vertex.length/2-factorArc[1], vertex.length/2+factorArc[2], vertex.length-factorArc[3]);
+        if ((i>factorArc[0] && i<vertex.length/2-factorArc[1]) || i>vertex.length/2-factorArc[1] && i<vertex.length-factorArc[3]   ) {
+          brickShape.vertex(vertex[i].x, vertex[i].y);
+          brickV.vertex(vertex[i].x, vertex[i].y);
+        }
       } 
+      brickShape.noStroke();
       brickShape.endShape(CLOSE);
       brickV.setFill(random(255), 0, 0);
       brickV.setName("brick");
       brickV.setStatic(true);
       world.add(brickV);
+    } else if (type=="ventana") {
+      for (int i=0; i<8; i++) {
+        factor[i] = int(random(3, 15));
+      }
+      brick = new FBox(ancho, alto);
+      brick.setName("pared");
+      brick.setStatic(true);
+      brick.setPosition(x+ancho/2, y+alto/2);
+      brick.setFill(random(255), 0, 0);
+      world.add(brick);
     }
   }
 
   void draw() {
 
     pushStyle();
-    if (type=="normal") {
+    if (type=="grilla") {
       if (isAlive()) {
         fill(0);
         stroke(255);
@@ -170,14 +271,22 @@ int tiempoDesdeTriggerAnimation;
         triggerAnimationDead=true;
         fill(0, 100);
       }
-    } else {
+    } else if (type=="vertices") {
       if (isAlive()) {
-        brickShape.setStroke(color(255, 0, 0, 100));
-        brickShape.setFill(color(255, 0, 0, 100));
+        //brickShape.setStrokeWeight(6);
+        //brickShape.setStroke(color(255));
+        brickShape.setFill(color(255));
+        shape(brickShape);
       } else {
-        brickShape.setFill(color(0, 100));
+        //brickShape.setFill(color(0, 100));
       }
-      shape(brickShape);
+      
+    } else if (type=="ventana") {
+      if (isAlive()) {
+        noStroke();
+        fill(153);
+        quad(x, y+factor[1], x+ancho, y+factor[3], x+ancho, y+alto-factor[5], x, y+alto-factor[7] );
+      }
     }
     popStyle();
   }
@@ -186,15 +295,15 @@ int tiempoDesdeTriggerAnimation;
     if (triggerAnimationDead==false) {
       triggerAnimationDead = true; 
       tiempoDesdeTriggerAnimation=millis();
-    }else{
-      fill(255,map(millis()-tiempoDesdeTriggerAnimation, 0, timeAnimationDead, 255,0));
+    } else {
+      fill(255, map(millis()-tiempoDesdeTriggerAnimation, 0, timeAnimationDead, 255, 0));
       textAlign(CENTER, CENTER);
-      text("100",x+ancho/2,y+alto/2);
+      text("100", x+ancho/2, y+alto/2);
     }
   }
 
   boolean isAlive() {
-    if (type=="normal" && brick.getName() == "brick_dead") return false;
+    if (type=="grilla" && brick.getName() == "brick_dead") return false;
     if (type=="vertices" && brickV.getName() == "brick_dead") return false;
     return true;
   }

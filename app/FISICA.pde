@@ -71,46 +71,7 @@ void contactResult(FContactResult result) {
 }
 
 void resetWindows() {
-  for (Ventana ventana : windows) {
-    //VENTANA
-    FPoly v = new FPoly();
-    int numPoints=40;
-    float angle=PI/(float)numPoints;
 
-    v.vertex(ventana.x, ventana.y);
-    for (int i=0; i<numPoints; i++)
-    {
-      v.vertex(ventana.x+ventana.ancho/2+ventana.ancho/2*sin(HALF_PI+PI+angle*i), ventana.y+ventana.altoArco/2*cos(HALF_PI+TWO_PI+angle*i));
-    } 
-    v.vertex(ventana.x+ventana.ancho, ventana.y);
-    v.vertex(ventana.x+ventana.ancho, ventana.y+ventana.alto);
-    v.vertex(ventana.x, ventana.y+ventana.alto);
-    v.setStatic(true);
-    world.add(v);
-
-    //LADRILLOS
-    int numberBricks = int(ventana.alto/brickHeight);
-    for (int i=0; i<numberBricks; i++)
-    {
-      //IZQUIERDA
-      FBox b = new FBox(brickWidth, brickHeight);
-      b.setName("brickLeft");
-      b.setStatic(true);
-      b.setPosition(ventana.x+brickWidth/2-brickWidth, ventana.y+brickHeight/2+brickHeight*i);
-      b.setFill(random(255), 0, 0);
-      world.add(b);
-
-      //DERECHA
-      FBox c = new FBox(brickWidth, brickHeight);
-      c.setName("brickRight");
-      c.setStatic(true);
-      c.setPosition(ventana.x+ventana.ancho+brickWidth/2, ventana.y+brickHeight/2+brickHeight*i);
-      c.setFill(random(255), 0, 0);
-      world.add(c);
-    }
-
-    
-  }
 }
 
 
@@ -122,5 +83,4 @@ void resetAll() {
   juego.reset();
 
   resetWindows();
-  //resetBricks();
 }
