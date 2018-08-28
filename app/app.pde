@@ -35,6 +35,7 @@ void draw() {
     drawFisica();
     juego.draw();
   }
+     
 }
 
 void keyPressed() {

@@ -23,7 +23,6 @@ void loadElements() {
   int y = jsonLadrillos.getInt("y");
   int ancho = jsonLadrillos.getInt("ancho");
   int alto = jsonLadrillos.getInt("alto");
-
   packLadrillos = new PackLadrillos( x, y, ancho, alto, 10);
 }
 
