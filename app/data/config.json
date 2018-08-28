@@ -1,9 +1,15 @@
 {
   "config": {
     "sizeBall": 50,
+    "xReloj": 600,
     "brickHeight": 60,
+    "yReloj": 600,
     "minVelocity": 500,
     "numArcBricks": 10,
-    "brickWidth": 60
+    "brickWidth": 60,
+    "tamReloj": 200,
+    "tiempoCountdown": 3000,
+    "puntosLadrillo": 100,
+    "tiempoJuego": 20000
   }
 }

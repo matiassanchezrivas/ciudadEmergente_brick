@@ -6,6 +6,10 @@ class Pelota {
     reset();
     update();
   }
+  
+  void rest(Paleta p){
+  bola.setPosition(p.x, p.y-p.alto/2-tam/2);
+  }
 
   void jugar() {
     float velx = bola.getVelocityX();

@@ -13,8 +13,6 @@ class Paleta {
 
   void update() {
     //PALETA
-
-
     this.x = int(paleta.getX()); 
     this.y = int(paleta.getY()); 
     this.ancho = int(paleta.getWidth());

@@ -10,6 +10,7 @@ class Brick {
   int  timeAnimationDead=500;
   int tiempoDesdeTriggerAnimation;
   int [] factorArc = new int [4];
+  float amount;
 
   Brick(int x, int y, int ancho, int alto, String type) {
     this.x=x;
@@ -107,12 +108,24 @@ class Brick {
 
   void animationDead() {
     if (triggerAnimationDead==false) {
+      puntajeJuego+=puntosLadrillo;
       triggerAnimationDead = true; 
       tiempoDesdeTriggerAnimation=millis();
     } else {
-      fill(255, map(millis()-tiempoDesdeTriggerAnimation, 0, timeAnimationDead, 255, 0));
-      textAlign(CENTER, CENTER);
-      text("100", x+ancho/2, y+alto/2);
+      pushStyle();
+      amount = map(millis()-tiempoDesdeTriggerAnimation, 0, timeAnimationDead, 0, 1);
+      if (amount<=1) {
+        rectMode(CENTER);
+        fill(0, map(amount, .75, 1, 255, 0));
+        noStroke();
+        rect(x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20), textWidth(str(puntosLadrillo))+20, 60, 20);
+        fill(255, map(amount, 0, .75, 255, 0));
+        textAlign(CENTER, CENTER);
+
+        text(puntosLadrillo, x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20));
+
+        popStyle();
+      }
     }
   }
 

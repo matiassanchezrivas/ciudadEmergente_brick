@@ -19,6 +19,7 @@ void setup() {
   iniciarColores();
   saveBricks();
   juego = new Juego();
+  
 }
 
 void draw() {
@@ -51,6 +52,7 @@ void keyPressed() {
   }
   if (key == 's') {
     saveElements();
+    saveConfig();
   }
 }
 
