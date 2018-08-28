@@ -17,7 +17,14 @@ void loadElements() {
   }
 
   //Inicializo ladrillos
-  packLadrillos = new PackLadrillos( 100, 100, 900, 500, 10);
+  JSONObject jsonLadrillos;
+  jsonLadrillos = loadJSONObject("ladrillos.json");
+  int x = jsonLadrillos.getInt("x");
+  int y = jsonLadrillos.getInt("y");
+  int ancho = jsonLadrillos.getInt("ancho");
+  int alto = jsonLadrillos.getInt("alto");
+
+  packLadrillos = new PackLadrillos( x, y, ancho, alto, 10);
 }
 
 void drawElements() {
@@ -49,9 +56,11 @@ void saveWindows() {
 }
 
 void saveBricks() {
+  JSONObject jsonPackLadrillos;
+  jsonPackLadrillos = new JSONObject();
+  JSONArray jsonFilasLadrillos;
+  jsonFilasLadrillos = new JSONArray();
 
-  JSONArray jsonPackLadrillos;
-  jsonPackLadrillos = new JSONArray();
   for (int i=0; i<packLadrillos.filas.size(); i++) {
     FilaLadrillos fl = packLadrillos.filas.get(i);
 
@@ -78,9 +87,16 @@ void saveBricks() {
     jsonFilaLadrillo.setInt("alto", fl.alto);
     jsonFilaLadrillo.setJSONArray("ladrillos", filas);
 
-    jsonPackLadrillos.setJSONObject(i, jsonFilaLadrillo);
+    jsonFilasLadrillos.setJSONObject(i, jsonFilaLadrillo);
   }
-  saveJSONArray(jsonPackLadrillos, "data/ladrillos.json");
+  jsonPackLadrillos.setInt("x", packLadrillos.x);
+  jsonPackLadrillos.setInt("y", packLadrillos.y);
+  jsonPackLadrillos.setInt("ancho", packLadrillos.ancho);
+  jsonPackLadrillos.setInt("alto", packLadrillos.alto);
+  jsonPackLadrillos.setJSONArray("filas", jsonFilasLadrillos);
+
+
+  saveJSONObject(jsonPackLadrillos, "data/ladrillos.json");
 }
 
 class Ventana {

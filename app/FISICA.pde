@@ -14,28 +14,11 @@ void setupFisica() {
   Fisica.init(this);
   world = new FWorld();
   world.setEdges();
-
-  resetWindows();
 }
-//------------------------------------------------
 
+//------------------------------------------------
 void drawFisica() {
   world.step();
-  //PELOTA
-  FBody bola = getBody("bola");
-  if (bola != null) {
-    float velx = bola.getVelocityX();
-    float vely = bola.getVelocityY();
-    velx = (velx > 0) ? minVelocity : -minVelocity;
-    vely = (vely > 0) ? minVelocity : -minVelocity;
-    bola.setVelocity(velx, vely);
-  }
-
-  //PALETA
-  FBody paleta = getBody("paleta");
-  if (paleta != null) {
-    paleta.setPosition(mouseX, height-100);
-  }   
   //world.draw();
 } 
 
@@ -57,30 +40,18 @@ FBody getBody(String bodyName) {
 
 
 void contactResult(FContactResult result) {
-  // Draw an ellipse where the contact took place and as big as the normal impulse of the contact
-  //ellipse(result.getX(), result.getY(), result.getNormalImpulse(), result.getNormalImpulse());
   if (result.getBody1().getName()=="brick") {
     FBody b = result.getBody1();
     b.setFill(255, 255, 0);
     b.setName("brick_dead");
     world.remove(b);
-    //b.addImpulse(100, 100);
   };
   // Trigger your sound here
   // ...
 }
 
-void resetWindows() {
-
-}
-
-
-
 void resetAll() {
   world = new FWorld();
   world.setEdges();
-
   juego.reset();
-
-  resetWindows();
 }
