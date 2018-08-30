@@ -38,3 +38,9 @@ void loadConfig() {
   tiempoJuego= c.getInt("tiempoJuego");
   tiempoCountdown= c.getInt("tiempoCountdown");
 }
+
+//TIPOS
+  PFont consolasBold30;
+void loadTipografias (){
+  consolasBold30 = loadFont("Consolas-Bold-30.vlw");
+}

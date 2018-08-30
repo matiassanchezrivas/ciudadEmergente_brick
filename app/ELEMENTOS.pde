@@ -172,12 +172,6 @@ class PackLadrillos {
     stroke(255);
     noFill();
     rect(x, y, ancho, alto);
-
-    for (int i=0; i<filas.size(); i++) {
-      FilaLadrillos f = filas.get(i);
-      f.update(x+ancho/cantidad*i/2, y+alto/cantidad*i, ancho-ancho/cantidad*(i), alto/cantidad, 10-i);
-    }
-
     for (int i=0; i<filas.size(); i++) {
       FilaLadrillos fl = filas.get(i);
       fl.draw();
@@ -219,7 +213,6 @@ class FilaLadrillos {
     for (int i=0; i<ladrillos.size(); i++) {
       Ladrillo l = ladrillos.get(i);
       int anchoLadrillo = ancho/cantidad;
-      l.update(x+i*anchoLadrillo, y, anchoLadrillo, alto);
       l.draw();
     }
     popStyle();
@@ -235,13 +228,6 @@ class Ladrillo {
     this.ancho=ancho;
     this.alto=alto;
     this.color1= color (random(200));
-  }
-
-  void update(int x, int y, int ancho, int alto) {
-    this.x=x;
-    this.y=y;
-    this.ancho=ancho;
-    this.alto=alto;
   }
 
   void draw() {

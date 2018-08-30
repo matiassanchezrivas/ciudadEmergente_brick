@@ -9,12 +9,15 @@ stateHandler shWindows;
 String [] shWindowStates = {"posicion", "dimension", "altoArco"};
 //CALIBRACION ---> ELEMENTOS ---> LADRILLOS
 stateHandler shBricks;
-String [] shBrickStates = {"posicion", "dimension"};
+String [] shBrickStates = {"posicion total", "dimension total", "posicion fila", "dimension fila", "posicion ladrillo", "fila ladrillo"};
 
 int selectedWindow =0;
+int selectedBrickRow =5;
+int selectedBrick =0;
 int amountChange = 3;
 
 Breadcrumb br;
+
 
 class Breadcrumb {
   int menuDepth = 0;
@@ -31,8 +34,8 @@ class Breadcrumb {
     }
     return g;
   }
-  
-  void add(String s){
+
+  void add(String s) {
     breadcrumb[menuDepth]=s;
   }
 }
@@ -106,13 +109,36 @@ void ventanasKeys() {
 
 //CALIBRACION ---> ELEMENTOS ---> LADRILLOS
 void ladrillosKeys() {
-  if (shBricks.getState() == "posicion") {
+  if (shBricks.getState() == "posicion total") {
     packLadrillos.x = changeVariable(packLadrillos.x, 0, amountChange)[0];
     packLadrillos.y = changeVariable(0, packLadrillos.y, amountChange)[1];
-  } else if (shBricks.getState() == "dimension") {
+  } else if (shBricks.getState() == "dimension total") {
     packLadrillos.ancho = changeVariable(packLadrillos.ancho, 0, amountChange)[0];
     packLadrillos.alto = changeVariable(0, packLadrillos.alto, amountChange)[1];
+  } else if (shBricks.getState() == "posicion fila") {
+    FilaLadrillos r = packLadrillos.filas.get(selectedBrickRow);
+    r.x=changeVariable(r.x, 0, amountChange)[0];
+    r.y = changeVariable(0, r.y, amountChange)[1];
+    println(r.x, r.y);
+  } else if (shBricks.getState() == "dimension fila") {
+    FilaLadrillos r = packLadrillos.filas.get(selectedBrickRow);
+    r.ancho=changeVariable(r.ancho, 0, amountChange)[0];
+    r.alto = changeVariable(0, r.alto, amountChange)[1];
+    println(r.ancho, r.alto);
+  } else if (shBricks.getState() == "posicion ladrillo") {
+    FilaLadrillos r = packLadrillos.filas.get(selectedBrickRow);
+    Ladrillo l = r.ladrillos.get(selectedBrick);
+    l.x=changeVariable(l.x, 0, amountChange)[0];
+    l.y = changeVariable(0, l.y, amountChange)[1];
+  } else if (shBricks.getState() == "dimension ladrillo") {
+     FilaLadrillos r = packLadrillos.filas.get(selectedBrickRow);
+    Ladrillo l = r.ladrillos.get(selectedBrick);
+    l.ancho = changeVariable(packLadrillos.ancho, 0, amountChange)[0];
+    l.alto = changeVariable(0, packLadrillos.alto, amountChange)[1];
   }
+
+
+
   if (br.menuDepth == 2) {
     if (keyCode == 17) { //CTRL
       shBricks.change();

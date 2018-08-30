@@ -46,9 +46,7 @@ class Brick {
       brickShape = createShape();
       brickShape.beginShape();
       for (int i=0; i<vertex.length; i++)
-
       {
-        println("SJDKNASKLDNLK", factorArc[0], vertex.length/2-factorArc[1], vertex.length/2+factorArc[2], vertex.length-factorArc[3]);
         if ((i>factorArc[0] && i<vertex.length/2-factorArc[1]) || i>vertex.length/2-factorArc[1] && i<vertex.length-factorArc[3]   ) {
           brickShape.vertex(vertex[i].x, vertex[i].y);
           brickV.vertex(vertex[i].x, vertex[i].y);
@@ -120,10 +118,9 @@ class Brick {
         noStroke();
         rect(x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20), textWidth(str(puntosLadrillo))+20, 60, 20);
         fill(255, map(amount, 0, .75, 255, 0));
+        textFont(consolasBold30);
         textAlign(CENTER, CENTER);
-
         text(puntosLadrillo, x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20));
-
         popStyle();
       }
     }

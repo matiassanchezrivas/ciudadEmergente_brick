@@ -8,6 +8,7 @@ Juego juego;
 void setup() {
   size( 1200, 900);
   initBreadcrumb();
+  loadTipografias();
   loadElements();
   setupFisica();
   initStateHandlers();
@@ -26,7 +27,7 @@ void draw() {
   background(50);
   if (calibrador) {
     if(shCal.getState() == "color"){
-      imprimirGestoresDeColores();
+      imprimirGestoresDeColores(); 
     } else {
     drawElements();
     }

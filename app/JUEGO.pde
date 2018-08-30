@@ -24,7 +24,8 @@ class Juego {
   Temporizador temporizadorAnimacion;
   Temporizador temporizadorGameOver;
   Temporizador temporizadorGanar;
-  Agua agua; 
+  Agua [] agua = new Agua [2]; 
+  Barrotes [] barrotes = new Barrotes [2];
 
   Juego () {
     state = "animacion";
@@ -39,7 +40,10 @@ class Juego {
     temporizadorGameOver = new Temporizador(tiempoGameOver);
     temporizadorAnimacion = new Temporizador(tiempoAnimacion);
     temporizadorGanar = new Temporizador(tiempoGanar);
-    agua = new Agua();
+    for (int i=0; i<windows.length; i++) {
+      agua[i] = new Agua(i);
+      barrotes[i] = new Barrotes (i, 3);
+    }
   }
 
   void draw() {
@@ -52,6 +56,7 @@ class Juego {
       text("Animacion", width/2, height/2);
       if (temporizadorAnimacion.isOver()) {
         countdown.reset();
+
         state="countDown";
       }
       popStyle();
@@ -60,13 +65,19 @@ class Juego {
       if (countdown.temporizador.isOver()) {
         state="juego";
         temporizadorJuego.reset();
+        for (int i=0; i<windows.length; i++) {
+          barrotes[i].reset();
+        }
       }
       pelota.rest(paleta);
       paleta.jugar();
       paleta.draw();
       pelota.draw();
     } else if (state == "juego") {
-      agua.draw(temporizadorJuego.normalized());
+      for (int i=0; i<windows.length; i++) {
+        agua[i].draw(temporizadorJuego.normalized());
+        barrotes[i].draw();
+      }
       ventanas.drawBehind();
       paleta.jugar();
       pelota.jugar();
@@ -141,7 +152,7 @@ class Temporizador {
   }
 
   float normalized() {
-    return map(millis()-lastReset, 0, duration, 0, 1);
+    return constrain((map(millis()-lastReset, 0, duration, 0, 1)), 0, 1.01);
   }
 
   boolean isOver() {
