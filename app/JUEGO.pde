@@ -1,8 +1,8 @@
 int tiempoCountdown;
 int tiempoJuego;
-int tiempoGameOver = 2000;
-int tiempoAnimacion = 1000;
-int tiempoGanar = 2000;
+int tiempoGameOver = 500;
+int tiempoAnimacion = 500;
+int tiempoGanar = 500;
 
 int xReloj;
 int yReloj;
@@ -26,6 +26,7 @@ class Juego {
   Temporizador temporizadorGanar;
   Agua [] agua = new Agua [2]; 
   Barrotes [] barrotes = new Barrotes [2];
+  Interfaz interfaz; 
 
   Juego () {
     state = "animacion";
@@ -44,11 +45,13 @@ class Juego {
       agua[i] = new Agua(i);
       barrotes[i] = new Barrotes (i, 3);
     }
+    interfaz = new Interfaz();
   }
 
   void draw() {
     fill(0, 255);
     rect(0, 0, width, height);
+    
     if (state=="animacion") {
       pushStyle();
       fill(255);
@@ -74,6 +77,7 @@ class Juego {
       paleta.draw();
       pelota.draw();
     } else if (state == "juego") {
+      
       for (int i=0; i<windows.length; i++) {
         agua[i].draw(temporizadorJuego.normalized());
         barrotes[i].draw();
@@ -91,10 +95,12 @@ class Juego {
         state="gameOver";
         temporizadorGameOver.reset();
       }
+      interfaz.draw();
     } else if (state == "gameOver") {
       pushStyle();
       fill(255);
       textAlign(CENTER, CENTER);
+
       text("GAME OVER", width/2, height/2);
       if (temporizadorGameOver.isOver()) {
         resetAll();
