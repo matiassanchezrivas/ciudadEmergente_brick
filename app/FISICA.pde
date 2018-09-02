@@ -8,12 +8,19 @@ int sizeBall = 40;
 int paddleWidth = 300;
 int paddleHeight = 60;
 
+int worldTopX=0;
+int worldTopY=0;
+int worldBottomX=width;
+int worldBottomY=height;
+
 //=================================================================v
 void setupFisica() {
   //WORLD
   Fisica.init(this);
+  int worldBottomX=width;
+  int worldBottomY=height*2;
   world = new FWorld();
-  world.setEdges();
+  world.setEdges(worldTopX, worldTopY, worldBottomX, worldBottomY);
 }
 
 //------------------------------------------------
@@ -51,7 +58,11 @@ void contactResult(FContactResult result) {
 }
 
 void resetAll() {
+  int worldBottomX=width;
+  int worldBottomY=height*2;
   world = new FWorld();
-  world.setEdges();
+  world.setEdges(worldTopX, worldTopY, worldBottomX, worldBottomY);
+  println("world", worldTopX, worldTopY, worldBottomX, worldBottomY);
+   world.setEdges(worldTopX, worldTopY, worldBottomX, worldBottomY);
   juego.reset();
 }

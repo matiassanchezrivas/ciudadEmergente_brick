@@ -59,12 +59,15 @@ class LadrillosVentana {
     for (Ventana ventana : windows) {
       //LADRILLOS
       int numberBricks = int(ventana.alto/brickHeight);
-      for (int i=0; i<numberBricks; i++)
+      for (int i=numberBricks-1; i>=0; i--)
       {
         //IZQUIERDA
-        bricks.add(new Brick (ventana.x-brickWidth, ventana.y+brickHeight*i, brickWidth, brickHeight, "ventana"));
+        bricks.add(new Brick (ventana.x-brickWidth, ventana.y+brickHeight*i, brickWidth, brickHeight, "ventana", "izquierda"));
+      }
+      for (int i=0; i<numberBricks; i++)
+      {
         //DERECHA
-        bricks.add(new Brick (ventana.x+ventana.ancho, ventana.y+brickHeight*i, brickWidth, brickHeight, "ventana"));
+        bricks.add(new Brick (ventana.x+ventana.ancho, ventana.y+brickHeight*i, brickWidth, brickHeight, "ventana", "derecha"));
       }
     }
   }
@@ -92,7 +95,7 @@ class LadrillosGrilla {
       FilaLadrillos fila = packLadrillos.filas.get(i);
       for (int j=0; j<fila.ladrillos.size(); j++) {
         Ladrillo l = fila.ladrillos.get(j);
-        bricks.add(new Brick (l.x, l.y, l.ancho, l.alto, "grilla"));
+        bricks.add(new Brick (l.x, l.y, l.ancho, l.alto, "grilla", "x"));
       }
     }
   }

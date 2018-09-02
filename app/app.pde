@@ -18,25 +18,28 @@ void setup() {
   loadConfig();
   iniciarCartel();
   iniciarColores();
+  iniciarKinect();
+  iniciarCartel();
   saveBricks();
   juego = new Juego();
-  
 }
 
 void draw() {
+  surface.setTitle(str(frameRate));
   background(50);
   if (calibrador) {
-    if(shCal.getState() == "color"){
-      imprimirGestoresDeColores(); 
+    if (shCal.getState() == "color") {
+      imprimirGestoresDeColores();
+    } else if (shCal.getState() == "kinect") {
+      drawKinect();
     } else {
-    drawElements();
+      drawElements();
     }
     mostrarCartel();
   } else {
     drawFisica();
     juego.draw();
   }
-     
 }
 
 void keyPressed() {
