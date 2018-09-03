@@ -1,6 +1,6 @@
 //CALIBRACION
 stateHandler shCal;
-String [] shCalStates = {"elementos", "color", "kinect"};
+String [] shCalStates = {"elementos", "color", "kinect", "keystone"};
 //CALIBRACION ---> ELEMENTOS
 stateHandler shElements;
 String [] shElementStates = {"ventana", "ladrillos"};
@@ -61,6 +61,8 @@ void calKeys() {
   backBread=false; 
   if (shCal.getState() == "elementos") {
     elementsKeys();
+  } else if (shCal.getState() == "kinect") {
+    kinect.ejecutarTeclas();
   } else if (shCal.getState() == "kinect") {
     kinect.ejecutarTeclas();
   }
