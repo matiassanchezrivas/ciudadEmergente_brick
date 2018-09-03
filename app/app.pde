@@ -1,9 +1,9 @@
 import fisica.*;
 
-Ventana v;
 boolean calibrador;
-String modo;
 Juego juego;
+
+
 
 void setup() {
   size( 1200, 900);
@@ -13,7 +13,6 @@ void setup() {
   setupFisica();
   initStateHandlers();
   calibrador = true; 
-  modo = "elementos";
   smooth();
   loadConfig();
   iniciarCartel();
@@ -37,6 +36,7 @@ void draw() {
     }
     mostrarCartel();
   } else {
+    kinect.actualizar();
     drawFisica();
     juego.draw();
   }
@@ -49,6 +49,7 @@ void keyPressed() {
     resetAll();
   }
   if (key == 'r'|| key == 'R' ) resetAll();
+  if (key == 'k'|| key == 'K' ) useKinect=!useKinect;
   if (calibrador) {
     calKeys();
   };

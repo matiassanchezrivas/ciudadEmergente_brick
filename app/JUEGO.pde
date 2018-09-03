@@ -12,6 +12,8 @@ int tamReloj;
 int puntajeJuego;
 int puntosLadrillo;
 
+boolean useKinect; 
+
 class Juego {
   String state;
   Paleta paleta;

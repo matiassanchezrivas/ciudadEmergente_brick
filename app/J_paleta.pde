@@ -1,14 +1,21 @@
 //------------------------------------------------
 class Paleta {
   int x, y, ancho, alto;
+  int xKinect;
   FBox paleta;
   Paleta () {
     reset();
     update();
+    xKinect=width/2;
   }
 
   void jugar() {
-    paleta.setPosition(mouseX, height-100);
+    if (useKinect) {
+      xKinect = (kinect.getPlayerPosition()!=null) ? xKinect = int(kinect.getPlayerPosition().x) : xKinect;
+      paleta.setPosition(xKinect, height-100);
+    } else {
+      paleta.setPosition(mouseX, height-100);
+    }
   }
 
   void update() {

@@ -5,11 +5,10 @@ float PASO_GRANDE_CALIBRACION = 5;
 //=================================================================
 
 void iniciarKinect() {
-
   kinect = new Kinect();
   kinect.levantarCalibracion();
 
-  iniciarOSCManos();
+  //iniciarOSCManos();
   iniciarOSCSilueta();
   iniciarOSCSalida();
 }
@@ -36,7 +35,7 @@ class Kinect {
   float paso = PASO_GRANDE_CALIBRACION;
   float aumento = 1.05;
 
-  AdminMensajes adminManos, adminSilueta;
+  AdminMensajes adminSilueta;
 
   String archivo = "calibracionKinect.txt";
 
@@ -44,21 +43,21 @@ class Kinect {
 
   Kinect() {
     resetCalibracion();
-    adminManos = new AdminMensajes("/BFollowKinect/Manos", false, false);
+    //adminManos = new AdminMensajes("/BFollowKinect/Manos", false, false);
     adminSilueta = new AdminMensajes("/BFollowKinect/Silueta", false, false);
   }
   //-------------------------------------------------
 
   void actualizar() {
 
-    adminManos.actualizar();
+    //adminManos.actualizar();
     adminSilueta.actualizar();
   }
   //-------------------------------------------------
 
   void dibujar() {
 
-    adminManos.dibujarBlobs( left, top, ancho, alto);    
+    //adminManos.dibujarBlobs( left, top, ancho, alto);    
     adminSilueta.dibujarBlobs( left, top, ancho, alto);
 
     pushStyle();
@@ -69,19 +68,18 @@ class Kinect {
   }
   //-------------------------------------------------
 
-  void dibujarContornosManos() {
+  //void dibujarContornosManos() {
 
-    if (adminManos.blobsNuevos != null) {
-      for ( int i=0; i<adminManos.blobsNuevos.size (); i++) {
-        Blob b = adminManos.blobsNuevos.get(i);
-        b.dibujarContorno( left, top, ancho, alto  );
-      }
-    }
-  }
+  //  if (adminManos.blobsNuevos != null) {
+  //    for ( int i=0; i<adminManos.blobsNuevos.size (); i++) {
+  //      Blob b = adminManos.blobsNuevos.get(i);
+  //      b.dibujarContorno( left, top, ancho, alto  );
+  //    }
+  //  }
+  //}
   //-------------------------------------------------
 
   void dibujarContornosSiluetas() {
-
     if (adminSilueta.blobsNuevos != null) {
       for ( int i=0; i<adminSilueta.blobsNuevos.size (); i++) {
         Blob b = adminSilueta.blobsNuevos.get(i);
@@ -92,7 +90,7 @@ class Kinect {
   //-------------------------------------------------
   void recibirMensaje(OscMessage theOscMessage) {
 
-    adminManos.recibeMensaje(theOscMessage);
+    //adminManos.recibeMensaje(theOscMessage);
     adminSilueta.recibeMensaje(theOscMessage);
   }
   //-------------------------------------------------
@@ -122,7 +120,7 @@ class Kinect {
         resetCalibracion();
       } else if ( key == 'L' || key == 'l' ) {
         levantarCalibracion();
-      } else if ( key == TAB){
+      } else if ( key == TAB) {
         shKinect.change();
       }
 
@@ -175,8 +173,8 @@ class Kinect {
   }
   //-------------------------------------------------
 
-  ArrayList <Blob> entregarManos() {
-    return adminManos.entregarListaBlobs();
+  ArrayList <Blob> entregarSilueta() {
+    return adminSilueta.entregarListaBlobs();
   }
   //-------------------------------------------------
 
@@ -190,27 +188,29 @@ class Kinect {
   }
   //-------------------------------------------------
 
-  void ejecutarAccionesEnManos() {
+  PVector getPlayerPosition() {
 
-    ArrayList <Blob> punteros = entregarManos();
-
-    if ( punteros != null ) {
-      for ( int i=0; i<punteros.size (); i++ ) {
-        Blob mano = punteros.get(i);
-        PVector coordenadas = kinect.traducirCoordenadas( mano ); 
-        ejecutarEnCadaMano( coordenadas.x, coordenadas.y, mano );
-      }
+    ArrayList <Blob> punteros = entregarSilueta();
+    if ( punteros != null && punteros.size()>0) {
+      println("ENTRA");
+      Blob silueta = punteros.get(0);
+      PVector coordenadas = kinect.traducirCoordenadas( silueta ); 
+      return coordenadas;
+    } else {
+     return null;
     }
+    
+   
   } 
+
   //-------------------------------------------------
 }
 
-void ejecutarEnCadaMano( float x, float y, Blob blobMano ) {
-  ellipse( x, y, 70, 70 );
-}
+// void ejecutarEnCadaMano( float x, float y, Blob blobMano ) {
+//   ellipse( x, y, 70, 70 );
+// }
 
 void drawKinect() {
-
   if ( shKinect.getState() == "normal" ) {
     ejecutarModoNormal();
   } else if ( shKinect.getState() == "calibracion" ) {
@@ -230,18 +230,19 @@ void ejecutarModoNormal() {
   strokeWeight( 3 );
   kinect.dibujarContornosSiluetas();
 
-  stroke( 255 );
-  kinect.dibujarContornosManos();
+  // stroke( 255 );
+  // kinect.dibujarContornosManos();
 
-  kinect.ejecutarAccionesEnManos();
-
+  // kinect.ejecutarAccionesEnManos();
 
   popStyle();
 }
 //--------------------------------------------
 
 void ejecutarModoCalibracion() {
+
   background( 100 );
+  drawElements();
   kinect.actualizar();
   kinect.dibujar();
 }
