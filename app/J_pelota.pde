@@ -14,15 +14,15 @@ class Pelota {
   void jugar() {
     float velx = bola.getVelocityX();
     float vely = bola.getVelocityY();
-    velx = (velx > 0) ? minVelocity : -minVelocity;
-    vely = (vely > 0) ? minVelocity : -minVelocity;
+    velx = (velx > 0) ? MIN_VELOCITY : -MIN_VELOCITY;
+    vely = (vely > 0) ? MIN_VELOCITY : -MIN_VELOCITY;
     bola.setVelocity(velx, vely);
   }
 
   void update() {
     this.x = int(bola.getX()); 
     this.y = int(bola.getY()); 
-    this.tam = sizeBall;
+    this.tam = SIZE_BALL;
   }
 
   void draw() {

@@ -17,7 +17,7 @@ class LadrillosArcos {
     for (Ventana ventana : windows) {
       //ARCO
       int _numPoints=15;
-      int _numBricksArc=numArcBricks;
+      int _numBricksArc=NUM_ARC_BRICKS;
       float _angleSep = PI/_numBricksArc;
       float _angle=PI/_numBricksArc/(float)_numPoints;
 
@@ -31,7 +31,7 @@ class LadrillosArcos {
         for (int i=_numPoints; i>=0; i--)
         {
           println(i);
-          pv [_numPoints*2+1-i] = new PVector(ventana.x+ventana.ancho/2+(ventana.ancho/2+brickHeight)*sin(HALF_PI+PI+_angleSep*j+_angle*i), ventana.y+(ventana.altoArco/2+brickHeight)*cos(HALF_PI+TWO_PI+_angleSep*j+_angle*i));
+          pv [_numPoints*2+1-i] = new PVector(ventana.x+ventana.ancho/2+(ventana.ancho/2+BRICK_HEIGHT)*sin(HALF_PI+PI+_angleSep*j+_angle*i), ventana.y+(ventana.altoArco/2+BRICK_HEIGHT)*cos(HALF_PI+TWO_PI+_angleSep*j+_angle*i));
         } 
         bricks.add(new Brick(pv));
       }
@@ -58,13 +58,16 @@ class LadrillosVentana {
     bricks = new ArrayList();
     for (Ventana ventana : windows) {
       //LADRILLOS
-      int numberBricks = int(ventana.alto/brickHeight);
-      for (int i=0; i<numberBricks; i++)
+      int numberBricks = int(ventana.alto/BRICK_HEIGHT);
+      for (int i=numberBricks-1; i>=0; i--)
       {
         //IZQUIERDA
-        bricks.add(new Brick (ventana.x-brickWidth, ventana.y+brickHeight*i, brickWidth, brickHeight, "ventana"));
+        bricks.add(new Brick (ventana.x-BRICK_WIDTH, ventana.y+BRICK_HEIGHT*i, BRICK_WIDTH, BRICK_HEIGHT, "ventana", "izquierda"));
+      }
+      for (int i=0; i<numberBricks; i++)
+      {
         //DERECHA
-        bricks.add(new Brick (ventana.x+ventana.ancho, ventana.y+brickHeight*i, brickWidth, brickHeight, "ventana"));
+        bricks.add(new Brick (ventana.x+ventana.ancho, ventana.y+BRICK_HEIGHT*i, BRICK_WIDTH, BRICK_HEIGHT, "ventana", "derecha"));
       }
     }
   }
@@ -92,7 +95,7 @@ class LadrillosGrilla {
       FilaLadrillos fila = packLadrillos.filas.get(i);
       for (int j=0; j<fila.ladrillos.size(); j++) {
         Ladrillo l = fila.ladrillos.get(j);
-        bricks.add(new Brick (l.x, l.y, l.ancho, l.alto, "grilla"));
+        bricks.add(new Brick (l.x, l.y, l.ancho, l.alto, "grilla", "x"));
       }
     }
   }

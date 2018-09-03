@@ -3,19 +3,31 @@ void saveConfig() {
   jsonConfig = new JSONObject();
   JSONObject v;
   v= new JSONObject();
-  v.setInt("minVelocity", minVelocity);
-  v.setInt("brickHeight", brickHeight);
-  v.setInt("brickWidth", brickWidth);
-  v.setInt("numArcBricks", numArcBricks);
-  v.setInt("sizeBall", sizeBall);
+  v.setInt("MIN_VELOCITY", MIN_VELOCITY);
+  
+  v.setInt("BRICK_HEIGHT", BRICK_HEIGHT);
+  v.setInt("BRICK_WIDTH", BRICK_WIDTH);
+  
+  v.setInt("NUM_ARC_BRICKS", NUM_ARC_BRICKS);
+  
+  v.setInt("SIZE_BALL", SIZE_BALL);
+  
+  v.setInt("X_RELOJ", X_RELOJ);
+  v.setInt("Y_RELOJ", Y_RELOJ);
+  v.setInt("TAM_RELOJ", TAM_RELOJ);
+  
+  v.setInt("TIEMPO_COUNTDOWN", TIEMPO_COUNTDOWN);
+  
+  v.setInt("PADDLE_WIDTH", PADDLE_WIDTH);
+  v.setInt("PADDLE_HEIGHT", PADDLE_HEIGHT);
 
-  v.setInt("xReloj", xReloj);
-  v.setInt("yReloj", yReloj);
-  v.setInt("tamReloj", tamReloj);
-  v.setInt("tiempoCountdown", tiempoCountdown);
+  v.setInt("WORLD_TOP_X", WORLD_TOP_X);
+  v.setInt("WORLD_TOP_Y", WORLD_TOP_Y);
+  v.setInt("WORLD_BOTTOM_X", WORLD_BOTTOM_X);
+  v.setInt("WORLD_BOTTOM_Y", WORLD_BOTTOM_Y);
 
-  v.setInt("puntosLadrillo", puntosLadrillo);
-  v.setInt("tiempoJuego", tiempoJuego);
+  v.setInt("PUNTOS_LADRILLO", PUNTOS_LADRILLO);
+  v.setInt("TIEMPO_JUEGO", TIEMPO_JUEGO);
 
   jsonConfig.setJSONObject("config", v);
   saveJSONObject(jsonConfig, "data/config.json");
@@ -25,16 +37,36 @@ void loadConfig() {
   JSONObject jsonConfig;
   jsonConfig = loadJSONObject("config.json");
   JSONObject c = jsonConfig.getJSONObject("config");
-  minVelocity = c.getInt("minVelocity");
-  brickHeight = c.getInt("brickHeight");
-  brickWidth = c.getInt("brickWidth");
-  numArcBricks = c.getInt("numArcBricks");
-  sizeBall = c.getInt("sizeBall");
-  tamReloj= c.getInt("tamReloj");
-  yReloj= c.getInt("yReloj");
-  xReloj= c.getInt("xReloj");
+  MIN_VELOCITY = c.getInt("MIN_VELOCITY");
+  
+  BRICK_HEIGHT = c.getInt("BRICK_HEIGHT");
+  BRICK_WIDTH = c.getInt("BRICK_WIDTH");
+  
+  NUM_ARC_BRICKS = c.getInt("NUM_ARC_BRICKS");
+  
+  SIZE_BALL = c.getInt("SIZE_BALL");
+  
+  TAM_RELOJ= c.getInt("TAM_RELOJ");
+  Y_RELOJ= c.getInt("Y_RELOJ");
+  X_RELOJ= c.getInt("X_RELOJ");
+  
+  TIEMPO_COUNTDOWN = c.getInt("TIEMPO_COUNTDOWN");
+  
+  PADDLE_WIDTH = c.getInt("PADDLE_WIDTH");
+  PADDLE_HEIGHT = c.getInt("PADDLE_HEIGHT");
+  
+  WORLD_TOP_X = c.getInt("WORLD_TOP_X");
+  WORLD_TOP_Y = c.getInt("WORLD_TOP_Y");
+  WORLD_BOTTOM_X = c.getInt("WORLD_BOTTOM_X");
+  WORLD_BOTTOM_Y = c.getInt("WORLD_BOTTOM_Y");
+  
+  PUNTOS_LADRILLO= c.getInt("PUNTOS_LADRILLO");
+  TIEMPO_JUEGO= c.getInt("TIEMPO_JUEGO");
+  TIEMPO_COUNTDOWN= c.getInt("TIEMPO_COUNTDOWN");
+}
 
-  puntosLadrillo= c.getInt("puntosLadrillo");
-  tiempoJuego= c.getInt("tiempoJuego");
-  tiempoCountdown= c.getInt("tiempoCountdown");
+//TIPOS
+PFont consolasBold30;
+void loadTipografias () {
+  consolasBold30 = loadFont("Consolas-Bold-30.vlw");
 }

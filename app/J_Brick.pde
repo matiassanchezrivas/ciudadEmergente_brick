@@ -1,7 +1,11 @@
+int STROKE_BRICK =5;
+int FACTOR_RANDOM =4;
+
 class Brick {
   FPoly brickV;
   FBox brick;
   int x, y, ancho, alto;
+  float x1, y1, x2, y2, x3, y3, x4, y4;
   String type;
   PVector [] vertex;
   PShape brickShape;
@@ -11,13 +15,17 @@ class Brick {
   int tiempoDesdeTriggerAnimation;
   int [] factorArc = new int [4];
   float amount;
+  String side;
+  boolean animation;
 
-  Brick(int x, int y, int ancho, int alto, String type) {
+  Brick(int x, int y, int ancho, int alto, String type, String side) {
     this.x=x;
     this.y=y;
     this.ancho=ancho;
     this.alto=alto;
     this.type=type;
+    this.side=side;
+    animation=false; 
     reset();
   }
 
@@ -31,10 +39,39 @@ class Brick {
   }
 
   void reset() {
+    animation=false; 
+    resetAnimation();
+    resetFisica();
+  }
+
+  void resetAnimation() {
     if (type=="grilla") {
       for (int i=0; i<8; i++) {
-        factor[i] = int(random(-5, 5));
+        factor[i] = int(random(-FACTOR_RANDOM, FACTOR_RANDOM));
       }
+      x1=x2=x3=x4=x+ancho/2;
+      y1=y2=y3=y4=y+alto/2;
+    } else if (type=="vertices") {
+    } else if (type=="ventana") {
+      //DERECHA
+      if (side=="derecha") {
+        x1=x2=x;
+        y1=y2=y+factor[1];
+        x4=x3=x;
+        y4=y3=y+alto-factor[7];
+      }
+      //IZQUIERDA
+      else if (side=="izquierda") {
+        x2=x1=(x+ancho);
+        y2=y1=(y+factor[3]);
+        x3=x4=(x+ancho);
+        y3=y4=(y+alto-factor[5]);
+      }
+    }
+  }
+
+  void resetFisica() {
+    if (type=="grilla") {
       brick = new FBox(ancho, alto);
       brick.setName("brick");
       brick.setStatic(true);
@@ -46,9 +83,7 @@ class Brick {
       brickShape = createShape();
       brickShape.beginShape();
       for (int i=0; i<vertex.length; i++)
-
       {
-        println("SJDKNASKLDNLK", factorArc[0], vertex.length/2-factorArc[1], vertex.length/2+factorArc[2], vertex.length-factorArc[3]);
         if ((i>factorArc[0] && i<vertex.length/2-factorArc[1]) || i>vertex.length/2-factorArc[1] && i<vertex.length-factorArc[3]   ) {
           brickShape.vertex(vertex[i].x, vertex[i].y);
           brickV.vertex(vertex[i].x, vertex[i].y);
@@ -80,8 +115,18 @@ class Brick {
       if (isAlive()) {
         fill(0);
         stroke(255);
-        strokeWeight(6);
-        quad(x+factor[0], y+factor[1], x+ancho+factor[2], y+factor[3], x+ancho+factor[4], y+alto+factor[5], x+factor[6], y+alto+factor[7] );
+        strokeWeight(STROKE_BRICK);
+        if (animation) {
+          x1=(x+factor[0])*(1-0.9)+x1*0.9;
+          y1=(y+factor[1])*(1-0.9)+y1*0.9;
+          x2=(x+ancho+factor[2])*(1-0.9)+x2*0.9;
+          y2=(y+factor[3])*(1-0.9)+y2*0.9;
+          x3=(x+ancho+factor[4])*(1-0.9)+x3*0.9;
+          y3=(y+alto+factor[5])*(1-0.9)+y3*0.9;
+          x4=(x+factor[6])*(1-0.9)+x4*0.9;
+          y4=(y+alto+factor[7])*(1-0.9)+y4*0.9;
+          quad(x1, y1, x2, y2, x3, y3, x4, y4);
+        }
       } else {
         animationDead(); 
         triggerAnimationDead=true;
@@ -100,15 +145,29 @@ class Brick {
       if (isAlive()) {
         noStroke();
         fill(153);
-        quad(x, y+factor[1], x+ancho, y+factor[3], x+ancho, y+alto-factor[5], x, y+alto-factor[7] );
+        if (animation) {
+          x1=x*(1-0.9)+x1*0.9;
+          y1=(y+factor[1])*(1-0.9)+y1*0.9;
+          x2=(x+ancho)*(1-0.9)+x2*0.9;
+          y2=(y+factor[3])*(1-0.9)+y2*0.9;
+          x3=(x+ancho)*(1-0.9)+x3*0.9;
+          y3=(y+alto-factor[5])*(1-0.9)+y3*0.9;
+          x4=x*(1-0.9)+x4*0.9;
+          y4=(y+alto-factor[7])*(1-0.9)+y4*0.9;
+        }
+        quad(x1, y1, x2, y2, x3, y3, x4, y4);
       }
     }
     popStyle();
   }
 
+  void animate() {
+    animation=true;
+  }
+
   void animationDead() {
     if (triggerAnimationDead==false) {
-      puntajeJuego+=puntosLadrillo;
+      PUNTAJE_JUEGO+=PUNTOS_LADRILLO;
       triggerAnimationDead = true; 
       tiempoDesdeTriggerAnimation=millis();
     } else {
@@ -118,12 +177,11 @@ class Brick {
         rectMode(CENTER);
         fill(0, map(amount, .75, 1, 255, 0));
         noStroke();
-        rect(x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20), textWidth(str(puntosLadrillo))+20, 60, 20);
+        rect(x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20), textWidth(str(PUNTOS_LADRILLO))+20, 60, 20);
         fill(255, map(amount, 0, .75, 255, 0));
+        textFont(consolasBold30);
         textAlign(CENTER, CENTER);
-
-        text(puntosLadrillo, x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20));
-
+        text(PUNTOS_LADRILLO, x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20));
         popStyle();
       }
     }

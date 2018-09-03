@@ -1,56 +1,91 @@
 import fisica.*;
 
-Ventana v;
-boolean calibrador;
-String modo;
+boolean CALIBRADOR;
 Juego juego;
 
 void setup() {
   size( 1200, 900);
+  
+  //BREADCRUMB
   initBreadcrumb();
+  
+  //CARGAR TIPOGRAFÍAS
+  loadTipografias();
+  
+  //CARGAR ELEMENTOS DE DB
   loadElements();
-  setupFisica();
+  
+  //INIT FISICA
+  initFisica();
+  
+  //INIT STATE HANDLERS
   initStateHandlers();
-  calibrador = true; 
-  modo = "elementos";
+  
+  //VARIABLES GLOBALES
+  CALIBRADOR = true; 
+  
+  //CONF PROCESSING
   smooth();
+  
+  //CARGAR CONFIGURACIÓN
   loadConfig();
+  
+  //BIOPUS
   iniciarCartel();
   iniciarColores();
+  iniciarKinect();
+
+  //GUARDAR BRICKS
   saveBricks();
-  juego = new Juego();
   
+  //JUEGO
+  juego = new Juego();
 }
 
 void draw() {
+  //FRAMERATE
+  surface.setTitle(str(frameRate));
+  
+  
   background(50);
-  if (calibrador) {
-    if(shCal.getState() == "color"){
+  if (CALIBRADOR) {
+    if (shCal.getState() == "color") {
       imprimirGestoresDeColores();
+    } else if (shCal.getState() == "kinect") {
+      drawKinect();
     } else {
-    drawElements();
+      drawElements();
     }
     mostrarCartel();
   } else {
+    kinect.actualizar();
     drawFisica();
     juego.draw();
   }
-     
 }
 
 void keyPressed() {
   //println("keycode", keyCode);
   if (key == 'c'|| key == 'C' ) {
-    calibrador =!calibrador;
+    CALIBRADOR =!CALIBRADOR;
     resetAll();
   }
+  //RESET
   if (key == 'r'|| key == 'R' ) resetAll();
-  if (calibrador) {
+  //USAR KINECT
+  if (key == 'k'|| key == 'K' ) useKinect=!useKinect;
+  
+  //CALIBRADOR
+  if (CALIBRADOR) {
     calKeys();
   };
+  
+  //CTRL
   if (keyCode == 17) {
     reiniciarCartel();
   }
+  
+  //GUARDAR
   if (key == 's') {
     saveElements();
     saveConfig();
@@ -58,12 +93,14 @@ void keyPressed() {
 }
 
 void mouseDragged() {
+  //COLOR
   if ( shCal.getState() == "color" ) {
     ejecutarClickEnColores();
   }
 }
 
 void mousePressed() {
+  //COLOR
   if ( shCal.getState() == "color" ) {
     ejecutarClickEnColores();
   }
