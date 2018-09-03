@@ -220,14 +220,14 @@ void drawKinect() {
 //--------------------------------------------
 
 void ejecutarModoNormal() {
-  background( 0 );
+  offscreen.background( 0 );
 
-  pushStyle();
-  noFill();
+  offscreen.pushStyle();
+  offscreen.noFill();
   kinect.actualizar();
 
-  stroke( 155 );
-  strokeWeight( 3 );
+  offscreen.stroke( 155 );
+  offscreen.strokeWeight( 3 );
   kinect.dibujarContornosSiluetas();
 
   // stroke( 255 );
@@ -235,13 +235,13 @@ void ejecutarModoNormal() {
 
   // kinect.ejecutarAccionesEnManos();
 
-  popStyle();
+  offscreen.popStyle();
 }
 //--------------------------------------------
 
 void ejecutarModoCalibracion() {
 
-  background( 100 );
+  offscreen.background( 100 );
   drawElements();
   kinect.actualizar();
   kinect.dibujar();

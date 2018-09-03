@@ -33,12 +33,12 @@ void ejecutarTeclaCambioMenu() {
 
 void mostrarCartel() {
   if ( contCartel > 0 ) {
-    pushStyle();
-    textFont( fuente, 30 );
+    offscreen.pushStyle();
+    offscreen.textFont( fuente, 30 );
     contCartel--;
-    fill( colorCalibracionAcento.elColor );
-    text( br.get(), xCartelPrimario, yCartelPrimario );
-    popStyle();
+    offscreen.fill( colorCalibracionAcento.elColor );
+    offscreen.text( br.get(), xCartelPrimario, yCartelPrimario );
+    offscreen.popStyle();
   }
 }
 //--------------------------------------------

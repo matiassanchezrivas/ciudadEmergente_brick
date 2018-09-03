@@ -15,9 +15,9 @@ void iniciarColores() {
   colorJuegoAgua.ubicar( 50, d*2 );
 }
 
-void ejecutarClickEnColores() {
-  colorCalibracionAcento.hacerClick( mouseX, mouseY );
-  colorJuegoAgua.hacerClick( mouseX, mouseY );
+void ejecutarClickEnColores(int x, int y) {
+  colorCalibracionAcento.hacerClick( x, y );
+  colorJuegoAgua.hacerClick( x, y );
 }
 
 void imprimirGestoresDeColores() {
@@ -106,76 +106,76 @@ class GestorColor {
 
   void imprimir() {
 
-    pushStyle();
-    colorMode( HSB );
+    offscreen.pushStyle();
+    offscreen.colorMode( HSB );
 
-    fill( colorBordes );
-    textSize( m*0.8 );
+    offscreen.fill( colorBordes );
+    offscreen.textSize( m*0.8 );
 
-    text( etiqueta, left+m*6, top+m*0.8 );
-    text( int( hue( elColor )), left+m*6+255, top+m*1.8 );
-    text( int( saturation( elColor )), left+m*6+255, top+m*2.8 );
-    text( int( brightness( elColor )), left+m*6+255, top+m*3.8 );
-    text( int( alpha( elColor )), left+m*6+255, top+m*4.8 );
+    offscreen.text( etiqueta, left+m*6, top+m*0.8 );
+    offscreen.text( int( hue( elColor )), left+m*6+255, top+m*1.8 );
+    offscreen.text( int( saturation( elColor )), left+m*6+255, top+m*2.8 );
+    offscreen.text( int( brightness( elColor )), left+m*6+255, top+m*3.8 );
+    offscreen.text( int( alpha( elColor )), left+m*6+255, top+m*4.8 );
 
 
-    pushStyle();
-    noFill();
-    strokeWeight( 15 );
-    stroke( colorBordes );
-    ellipse( left+m*2.5, top+m*2.5, m*4, m*4 );
-    stroke( colorInverso );
-    ellipse( left+m*2.5, top+m*2.5, m*2, m*2 );
+    offscreen.pushStyle();
+    offscreen.noFill();
+    offscreen.strokeWeight( 15 );
+    offscreen.stroke( colorBordes );
+    offscreen.ellipse( left+m*2.5, top+m*2.5, m*4, m*4 );
+    offscreen.stroke( colorInverso );
+    offscreen.ellipse( left+m*2.5, top+m*2.5, m*2, m*2 );
 
-    popStyle();
+    offscreen.popStyle();
 
-    fill( elColor );
-    rect( left, top, m*5, m*5 );
-
-    for ( int i=0; i<256; i++ ) {
-      stroke( i, 255, 255 );
-      line( left+m*5+i, top+m, left+m*5+i, top+m*2 );
-    }
-    noFill();
-    stroke( colorBordes );
-    rect( left+m*5, top+m, 256, m );
+    offscreen.fill( elColor );
+    offscreen.rect( left, top, m*5, m*5 );
 
     for ( int i=0; i<256; i++ ) {
-      stroke( hue( elColor ), i, 255 );
-      line( left+m*5+i, top+m*2, left+m*5+i, top+m*3 );
+      offscreen.stroke( i, 255, 255 );
+      offscreen.line( left+m*5+i, top+m, left+m*5+i, top+m*2 );
     }
-    stroke( colorBordes );
-    rect( left+m*5, top+m*2, 256, m );
+    offscreen.noFill();
+    offscreen.stroke( colorBordes );
+    offscreen.rect( left+m*5, top+m, 256, m );
 
     for ( int i=0; i<256; i++ ) {
-      stroke( 0, 0, i );
-      line( left+m*5+i, top+m*3, left+m*5+i, top+m*4 );
+      offscreen.stroke( hue( elColor ), i, 255 );
+      offscreen.line( left+m*5+i, top+m*2, left+m*5+i, top+m*3 );
     }
-    stroke( colorBordes );
-    rect( left+m*5, top+m*3, 256, m );
+    offscreen.stroke( colorBordes );
+    offscreen.rect( left+m*5, top+m*2, 256, m );
 
     for ( int i=0; i<256; i++ ) {
-      stroke( 0, 0, i );
-      line( left+m*5+i, top+m*4, left+m*5+i, top+m*5 );
+      offscreen.stroke( 0, 0, i );
+      offscreen.line( left+m*5+i, top+m*3, left+m*5+i, top+m*4 );
     }
-    stroke( colorBordes );
-    rect( left+m*5, top+m*4, 256, m );
+    offscreen.stroke( colorBordes );
+    offscreen.rect( left+m*5, top+m*3, 256, m );
+
+    for ( int i=0; i<256; i++ ) {
+      offscreen.stroke( 0, 0, i );
+      offscreen.line( left+m*5+i, top+m*4, left+m*5+i, top+m*5 );
+    }
+    offscreen.stroke( colorBordes );
+    offscreen.rect( left+m*5, top+m*4, 256, m );
 
     dibujarCruzCirculo( hue(elColor), m );
     dibujarCruzCirculo( saturation(elColor), m*2 );
     dibujarCruzCirculo( brightness(elColor), m*3 );
     dibujarCruzCirculo( alpha(elColor), m*4 );
 
-    fill( (!pressUndo ? colorInverso : colorBordes ) );
-    rect( left+m*8+255, top, m*3, m );
-    fill( (pressUndo ? colorInverso : colorBordes ) );
-    text( "undo", left+m*8.25+255, top+m*0.8);
-    fill( (!pressGuardar ? colorInverso : colorBordes ) );
-    rect( left+m*8+255, top+m*2, m*3, m );
-    fill( (pressGuardar ? colorInverso : colorBordes ) );
-    text( "guardar", left+m*8.25+255, top+m*2.8);
+    offscreen.fill( (!pressUndo ? colorInverso : colorBordes ) );
+    offscreen.rect( left+m*8+255, top, m*3, m );
+    offscreen.fill( (pressUndo ? colorInverso : colorBordes ) );
+    offscreen.text( "undo", left+m*8.25+255, top+m*0.8);
+    offscreen.fill( (!pressGuardar ? colorInverso : colorBordes ) );
+    offscreen.rect( left+m*8+255, top+m*2, m*3, m );
+    offscreen.fill( (pressGuardar ? colorInverso : colorBordes ) );
+    offscreen.text( "guardar", left+m*8.25+255, top+m*2.8);
 
-    popStyle();
+    offscreen.popStyle();
 
     pressUndo = false;
     pressGuardar = false;
@@ -183,15 +183,15 @@ class GestorColor {
   //-----------------------------------------------------
 
   void dibujarCruzCirculo( float valor, float altura ) {
-    pushStyle();
+    offscreen.pushStyle();
     float x = left+m*5+valor;
     float y = top+altura+m/2;
-    stroke( colorBordes );
-    noFill();
-    ellipse( x, y, m, m );
-    stroke( colorInverso );
-    ellipse( x, y, m-3, m-3 );
-    popStyle();
+    offscreen.stroke( colorBordes );
+    offscreen.noFill();
+    offscreen.ellipse( x, y, m, m );
+    offscreen.stroke( colorInverso );
+    offscreen.ellipse( x, y, m-3, m-3 );
+    offscreen.popStyle();
   }
   //-----------------------------------------------------
 

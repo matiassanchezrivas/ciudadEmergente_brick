@@ -27,11 +27,11 @@ class Pelota {
 
   void draw() {
     update();
-    pushStyle();
-    noStroke();
-    fill(255);
-    ellipse (x, y, tam, tam);
-    popStyle();
+    offscreen.pushStyle();
+    offscreen.noStroke();
+    offscreen.fill(255);
+    offscreen.ellipse (x, y, tam, tam);
+    offscreen.popStyle();
   }
 
   void reset() {

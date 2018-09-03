@@ -28,12 +28,12 @@ class Paleta {
 
   void draw() {
     update();
-    pushStyle();
-    noFill();
-    stroke(255);
-    strokeWeight(20);
-    rect (x-ancho/2, y-alto/2, ancho, alto, 978879879);
-    popStyle();
+    offscreen.pushStyle();
+    offscreen.noFill();
+    offscreen.stroke(255);
+    offscreen.strokeWeight(20);
+    offscreen.rect (x-ancho/2, y-alto/2, ancho, alto, 978879879);
+    offscreen.popStyle();
   }
 
   void reset() {

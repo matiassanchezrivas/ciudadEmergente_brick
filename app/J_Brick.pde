@@ -110,12 +110,12 @@ class Brick {
 
   void draw() {
 
-    pushStyle();
+    offscreen.pushStyle();
     if (type=="grilla") {
       if (isAlive()) {
-        fill(0);
-        stroke(255);
-        strokeWeight(STROKE_BRICK);
+        offscreen.fill(0);
+        offscreen.stroke(255);
+        offscreen.strokeWeight(STROKE_BRICK);
         if (animation) {
           x1=(x+factor[0])*(1-0.9)+x1*0.9;
           y1=(y+factor[1])*(1-0.9)+y1*0.9;
@@ -125,26 +125,26 @@ class Brick {
           y3=(y+alto+factor[5])*(1-0.9)+y3*0.9;
           x4=(x+factor[6])*(1-0.9)+x4*0.9;
           y4=(y+alto+factor[7])*(1-0.9)+y4*0.9;
-          quad(x1, y1, x2, y2, x3, y3, x4, y4);
+          offscreen.quad(x1, y1, x2, y2, x3, y3, x4, y4);
         }
       } else {
         animationDead(); 
         triggerAnimationDead=true;
-        fill(0, 100);
+        offscreen.fill(0, 100);
       }
     } else if (type=="vertices") {
       if (isAlive()) {
         //brickShape.setStrokeWeight(6);
         //brickShape.setStroke(color(255));
         brickShape.setFill(color(255));
-        shape(brickShape);
+        offscreen.shape(brickShape);
       } else {
         //brickShape.setFill(color(0, 100));
       }
     } else if (type=="ventana") {
       if (isAlive()) {
-        noStroke();
-        fill(153);
+        offscreen.noStroke();
+        offscreen.fill(153);
         if (animation) {
           x1=x*(1-0.9)+x1*0.9;
           y1=(y+factor[1])*(1-0.9)+y1*0.9;
@@ -155,10 +155,10 @@ class Brick {
           x4=x*(1-0.9)+x4*0.9;
           y4=(y+alto-factor[7])*(1-0.9)+y4*0.9;
         }
-        quad(x1, y1, x2, y2, x3, y3, x4, y4);
+        offscreen.quad(x1, y1, x2, y2, x3, y3, x4, y4);
       }
     }
-    popStyle();
+    offscreen.popStyle();
   }
 
   void animate() {
@@ -171,18 +171,18 @@ class Brick {
       triggerAnimationDead = true; 
       tiempoDesdeTriggerAnimation=millis();
     } else {
-      pushStyle();
+      offscreen.pushStyle();
       amount = map(millis()-tiempoDesdeTriggerAnimation, 0, timeAnimationDead, 0, 1);
       if (amount<=1) {
-        rectMode(CENTER);
-        fill(0, map(amount, .75, 1, 255, 0));
-        noStroke();
-        rect(x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20), textWidth(str(PUNTOS_LADRILLO))+20, 60, 20);
-        fill(255, map(amount, 0, .75, 255, 0));
-        textFont(consolasBold30);
-        textAlign(CENTER, CENTER);
-        text(PUNTOS_LADRILLO, x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20));
-        popStyle();
+        offscreen.rectMode(CENTER);
+        offscreen.fill(0, map(amount, .75, 1, 255, 0));
+        offscreen.noStroke();
+        offscreen.rect(x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20), offscreen.textWidth(str(PUNTOS_LADRILLO))+20, 60, 20);
+        offscreen.fill(255, map(amount, 0, .75, 255, 0));
+        offscreen.textFont(consolasBold30);
+        offscreen.textAlign(CENTER, CENTER);
+        offscreen.text(PUNTOS_LADRILLO, x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20));
+        offscreen.popStyle();
       }
     }
   }

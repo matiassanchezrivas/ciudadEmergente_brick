@@ -9,6 +9,8 @@ PGraphics offscreen;
 boolean CALIBRADOR;
 Juego juego;
 
+PVector surfaceMouse;
+
 void setup() {
   size( 1200, 900, P3D);
 
@@ -57,14 +59,16 @@ void draw() {
   offscreen.beginDraw();
   //FRAMERATE
   surface.setTitle(str(frameRate));
- PVector surfaceMouse = surf.getTransformedMouse();
-
+  surfaceMouse = surf.getTransformedMouse();
   background(50);
+  offscreen.background(50);
   if (CALIBRADOR) {
     if (shCal.getState() == "color") {
       imprimirGestoresDeColores();
     } else if (shCal.getState() == "kinect") {
       drawKinect();
+    }else if (shCal.getState() == "keystone") {
+      drawKeystone(20);
     } else {
       drawElements();
     }
@@ -74,9 +78,6 @@ void draw() {
     drawFisica();
     juego.draw();
   }
-  offscreen.background(255);
-  offscreen.fill(0, 255, 0);
-  offscreen.ellipse(surfaceMouse.x, surfaceMouse.y, 75, 75);
   offscreen.endDraw();
   surf.render(offscreen);
 }
@@ -91,6 +92,7 @@ void keyPressed() {
   if (key == 'r'|| key == 'R' ) resetAll();
   //USAR KINECT
   if (key == 'k'|| key == 'K' ) useKinect=!useKinect;
+  if (key == 'l'|| key == 'L' ) ks.load();
 
   switch(key) {
   case 'p':
@@ -114,19 +116,20 @@ void keyPressed() {
   if (key == 's') {
     saveElements();
     saveConfig();
+    ks.save();
   }
 }
 
 void mouseDragged() {
   //COLOR
   if ( shCal.getState() == "color" ) {
-    ejecutarClickEnColores();
+    ejecutarClickEnColores(int(surfaceMouse.x), int(surfaceMouse.y));
   }
 }
 
 void mousePressed() {
   //COLOR
   if ( shCal.getState() == "color" ) {
-    ejecutarClickEnColores();
+    ejecutarClickEnColores(int(surfaceMouse.x), int(surfaceMouse.y));
   }
 }
