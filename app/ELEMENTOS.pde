@@ -1,5 +1,9 @@
+// ----- Elementos a calibrar
+
 Ventana [] windows;
 PackLadrillos packLadrillos;
+
+// ----- Cargar desde DB
 
 void loadElements() {
   //Inicializo ventanas
@@ -23,8 +27,10 @@ void loadElements() {
   int y = jsonLadrillos.getInt("y");
   int ancho = jsonLadrillos.getInt("ancho");
   int alto = jsonLadrillos.getInt("alto");
-  packLadrillos = new PackLadrillos( x, y, ancho, alto, 10);
+  packLadrillos = new PackLadrillos( x, y, ancho, alto, 4);
 }
+
+// ----- Dibujar elementos
 
 void drawElements() {
   for (Ventana ventana : windows) {
@@ -33,10 +39,14 @@ void drawElements() {
   packLadrillos.draw();
 }
 
+// ----- Guardar elementos
+
 void saveElements() {
   saveWindows();
   saveBricks();
 }
+
+// ----- Guardar ventanas
 
 void saveWindows() {
   JSONArray jsonVentanas;
@@ -53,6 +63,8 @@ void saveWindows() {
   }
   saveJSONArray(jsonVentanas, "data/ventanas.json");
 }
+
+// ----- Guardar ladrillos
 
 void saveBricks() {
   JSONObject jsonPackLadrillos;
@@ -97,6 +109,8 @@ void saveBricks() {
 
   saveJSONObject(jsonPackLadrillos, "data/ladrillos.json");
 }
+
+//CLASE VENTANA ELEMENTO
 
 class Ventana {
   int x, y, ancho, alto, altoArco, id;
@@ -149,6 +163,8 @@ class Ventana {
   }
 }
 
+//CLASE GRILLA LADRILLOS
+
 class PackLadrillos {
   ArrayList <FilaLadrillos> filas;
   int x, y, ancho, alto;
@@ -163,7 +179,11 @@ class PackLadrillos {
     this.cantidad = cantidad; 
 
     for (int i=0; i<cantidad; i++) {
-      filas.add(new FilaLadrillos(x+ancho/cantidad*i/2, y+alto/cantidad*i, ancho-ancho/cantidad*(i), alto/cantidad, 10-i));
+      if (i%2==0) {
+        filas.add(new FilaLadrillos(x, y+alto/cantidad*i, ancho/9*8, alto/cantidad, 8));
+      } else {
+        filas.add(new FilaLadrillos(x+ancho/8/2, y+alto/cantidad*i, ancho/9*8, alto/cantidad, 8));
+      }
     }
   }
 
@@ -174,11 +194,14 @@ class PackLadrillos {
     rect(x, y, ancho, alto);
     for (int i=0; i<filas.size(); i++) {
       FilaLadrillos fl = filas.get(i);
+      //fl.update(x, y, ancho, alto, 8);
       fl.draw();
     }
     popStyle();
   }
 }
+
+//FILA DE LADRILLOS
 
 class FilaLadrillos {
   int x, y, ancho, alto, cantidad;
@@ -207,6 +230,7 @@ class FilaLadrillos {
 
   void draw() {
     pushStyle();
+    strokeWeight(4);
     stroke(255);
     noFill();
     rect(x, y, ancho, alto);
@@ -218,6 +242,8 @@ class FilaLadrillos {
     popStyle();
   }
 }
+
+//CLASE LADRILLOS
 
 class Ladrillo {
   int x, y, ancho, alto, color1;
@@ -231,6 +257,7 @@ class Ladrillo {
   }
 
   void draw() {
+    strokeWeight(.5);
     fill(color1);
     rect (x, y, ancho, alto);
   }

@@ -1,16 +1,18 @@
-int tiempoCountdown;
-int tiempoJuego;
-int tiempoGameOver = 500;
-int tiempoAnimacion = 500;
-int tiempoGanar = 500;
-int tiempoAparicionElementos=3000;
+int TIEMPO_COUNTDOWN;
+int TIEMPO_JUEGO;
+int TIEMPO_GAME_OVER = 500;
+int TIEMPO_ANIMACION = 500;
+int TIEMPO_GANAR = 500;
+int TIEMPO_APARICION_ELEMENTOS=3000;
 
-int xReloj;
-int yReloj;
-int tamReloj;
+float FPS = 24;
 
-int puntajeJuego;
-int puntosLadrillo;
+int X_RELOJ;
+int Y_RELOJ;
+int TAM_RELOJ;
+
+int PUNTAJE_JUEGO;
+int PUNTOS_LADRILLO;
 
 boolean useKinect; 
 
@@ -41,11 +43,11 @@ class Juego {
     ladrillosVentana = new LadrillosVentana();
     ventanas = new Ventanas();
     countdown = new Countdown();
-    temporizadorJuego = new Temporizador(tiempoJuego);
-    temporizadorGameOver = new Temporizador(tiempoGameOver);
-    temporizadorAnimacion = new Temporizador(tiempoAnimacion);
-    temporizadorGanar = new Temporizador(tiempoGanar);
-    temporizadorAparicionElementos = new Temporizador(tiempoAparicionElementos);
+    temporizadorJuego = new Temporizador(TIEMPO_JUEGO);
+    temporizadorGameOver = new Temporizador(TIEMPO_GAME_OVER);
+    temporizadorAnimacion = new Temporizador(TIEMPO_ANIMACION);
+    temporizadorGanar = new Temporizador(TIEMPO_GANAR);
+    temporizadorAparicionElementos = new Temporizador(TIEMPO_APARICION_ELEMENTOS);
     for (int i=0; i<windows.length; i++) {
       agua[i] = new Agua(i);
       barrotes[i] = new Barrotes (i, 3);
@@ -54,7 +56,7 @@ class Juego {
   }
 
   void draw() {
-    fill(0, 100);
+    fill(0, 255);
     rect(0, 0, width, height);
     if (state=="animacion") {
       pushStyle();
@@ -71,6 +73,7 @@ class Juego {
       popStyle();
     } else if (state=="aparicionElementos") {
       float n = temporizadorAparicionElementos.normalized();
+
       for (int i=0; i<(ladrillosVentana.bricks.size()-1)*n; i++) {
         Brick b = ladrillosVentana.bricks.get(i);
         b.animate();
@@ -84,8 +87,9 @@ class Juego {
         countdown.reset();
         state="countDown";
       }
-      drawElementos(false);
       drawCelda(false);
+      drawElementos(false);
+      
     } else if (state=="countDown") {
       drawCelda(false);
       countdown.draw();
@@ -94,6 +98,7 @@ class Juego {
         temporizadorJuego.reset();
       }
       pelota.rest(paleta);
+      println(pelota.y);
       paleta.jugar();
       drawElementos(true);
     } else if (state == "juego") {
@@ -147,18 +152,37 @@ class Juego {
     ventanas.reset();
     state = "animacion";
     temporizadorAnimacion.reset();
-    puntajeJuego=0;
+    PUNTAJE_JUEGO=0;
   }
 }
 //------------------------------------------------
 
 class Countdown {
-  PShape reloj;
+  PImage reloj;
+  PImage entradaReloj [];
+  PImage salidaReloj [];
   Temporizador temporizador;
 
+  int fotogramasEntrada = 40;
+  int fotogramasSalida = 12;
+  int tiempoEntrada;
+  int tiempoSalida;
+
   Countdown() {
-    reloj = loadShape("reloj.svg");
-    temporizador = new Temporizador(tiempoCountdown);
+
+    tiempoEntrada=int(1000/FPS*fotogramasEntrada);
+    tiempoSalida=int(1000/FPS*fotogramasEntrada);
+
+    entradaReloj = new PImage [fotogramasEntrada];
+    for (int i=0; i<fotogramasEntrada; i++) {
+      entradaReloj[i]=loadImage("img/entrada_reloj/entrada_reloj_"+nf(i, 5)+".png");
+    }
+    salidaReloj = new PImage [fotogramasSalida];
+    for (int i=0; i<fotogramasSalida; i++) {
+      salidaReloj[i]=loadImage("img/salida_reloj/salida_reloj_"+nf(242+i, 5)+".png");
+    }
+    reloj = loadImage("img/reloj.png");
+    temporizador = new Temporizador(TIEMPO_COUNTDOWN+tiempoSalida+tiempoEntrada);
     reset();
   }
 
@@ -168,10 +192,18 @@ class Countdown {
 
   void draw() {
     pushStyle();
-    shapeMode(CENTER);
+    imageMode(CENTER);
     fill(255, 100);
-    arc(xReloj, yReloj, tamReloj*.55, tamReloj*.55, -HALF_PI, map(temporizador.normalized(), 0, 1, -HALF_PI, 3*HALF_PI));
-    shape(reloj, xReloj, yReloj, tamReloj, tamReloj);
+    //
+    if (temporizador.progress()<tiempoEntrada) {
+      image(entradaReloj[constrain(temporizador.progress()/24, 0, fotogramasEntrada-1)], X_RELOJ, Y_RELOJ, TAM_RELOJ, TAM_RELOJ);
+    } else if (temporizador.progress()<tiempoEntrada+TIEMPO_COUNTDOWN) {
+      arc(X_RELOJ, Y_RELOJ, TAM_RELOJ*.55, TAM_RELOJ*.55, -HALF_PI, map(temporizador.progress(), tiempoEntrada, tiempoEntrada+TIEMPO_COUNTDOWN, -HALF_PI, 3*HALF_PI));
+      image(entradaReloj[39], X_RELOJ, Y_RELOJ, TAM_RELOJ, TAM_RELOJ);
+    } else {
+      int f = constrain((temporizador.progress()-tiempoEntrada-TIEMPO_COUNTDOWN)/24, 0, fotogramasSalida-1);
+      image(salidaReloj[f], X_RELOJ, Y_RELOJ, TAM_RELOJ, TAM_RELOJ);
+    }
     popStyle();
   }
 }
@@ -189,6 +221,10 @@ class Temporizador {
 
   float normalized() {
     return constrain((map(millis()-lastReset, 0, duration, 0, 1)), 0, 1.01);
+  }
+
+  int progress() {
+    return millis()-lastReset;
   }
 
   boolean isOver() {

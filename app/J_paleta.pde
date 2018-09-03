@@ -37,7 +37,7 @@ class Paleta {
   }
 
   void reset() {
-    paleta = new FBox(paddleWidth, paddleHeight);
+    paleta = new FBox(PADDLE_WIDTH, PADDLE_HEIGHT);
     paleta.setName("paleta");
     paleta.setStatic(true);
     world.add(paleta);

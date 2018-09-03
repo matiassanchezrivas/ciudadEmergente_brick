@@ -27,7 +27,7 @@ class Info {
     pushMatrix();
     pushStyle();
     fill(0);
-    float anchoString = (textWidth(str(puntajeJuego)) > textWidth(type)) ? textWidth(str(puntajeJuego)) : textWidth(type);
+    float anchoString = (textWidth(str(PUNTAJE_JUEGO)) > textWidth(type)) ? textWidth(str(PUNTAJE_JUEGO)) : textWidth(type);
     float alto= textSize*2+calle*3;
     ellipse(x, y, 10, 10);
     if (type=="puntos") {
@@ -45,7 +45,7 @@ class Info {
       textSize(textSize);
       textFont(consolasBold30);
       text(type, 0, 0);
-      text(puntajeJuego, 0, calle+textSize);
+      text(PUNTAJE_JUEGO, 0, calle+textSize);
     } else if (type=="tiempo") {
       fill(0);
       //CONTAINER

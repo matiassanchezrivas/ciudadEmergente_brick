@@ -15,7 +15,7 @@ stateHandler shKinect;
 String [] shKinectStates = {"normal", "calibracion"};
 
 int selectedWindow =0;
-int selectedBrickRow =5;
+int selectedBrickRow =0;
 int selectedBrick =0;
 int amountChange = 3;
 
