@@ -72,6 +72,8 @@ void draw() {
       drawKinect();
     } else if (shCal.getState() == "keystone") {
       drawKeystone(20);
+    }else if (shCal.getState() == "elementos 2") {
+      drawElements2();
     } else {
       drawElements();
     }
@@ -120,6 +122,26 @@ void keyPressed() {
     saveElements();
     saveConfig();
     ks.save();
+  }
+
+  if (key == 'e') {
+    saltar();
+  }
+
+  if (!CALIBRADOR) {
+    println("MIN VELOC", MIN_VELOCITY, "paddle width", PADDLE_WIDTH);
+    if (key == '+') {
+      MIN_VELOCITY+=10;
+    }
+    else if (key == '-') {
+      MIN_VELOCITY-=10;
+    }
+    else if (key == '1') {
+      PADDLE_WIDTH-=10;
+    }
+    else if (key == '2') {
+      PADDLE_WIDTH+=10;
+    }
   }
 }
 

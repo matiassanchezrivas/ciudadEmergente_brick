@@ -1,6 +1,6 @@
 //CALIBRACION
 stateHandler shCal;
-String [] shCalStates = {"elementos", "color", "kinect", "keystone"};
+String [] shCalStates = {"elementos", "elementos 2", "color", "kinect", "keystone"};
 //CALIBRACION ---> ELEMENTOS
 stateHandler shElements;
 String [] shElementStates = {"ventana", "ladrillos"};
@@ -13,6 +13,9 @@ String [] shBrickStates = {"posicion total", "dimension total", "posicion fila",
 //CALIBRACION ---> KINECT
 stateHandler shKinect;
 String [] shKinectStates = {"normal", "calibracion"};
+//CALIBRACION ---> ELEMENTOS 2
+stateHandler shElements2;
+String [] shElementStates2 = {"tiempo", "puntos", "reloj", "worldTop", "worldBottom"};
 
 int selectedWindow =0;
 int selectedBrickRow =0;
@@ -47,6 +50,7 @@ boolean backBread;
 void initStateHandlers() {
   shCal = new stateHandler(shCalStates);
   shElements = new stateHandler(shElementStates);
+  shElements2 = new stateHandler(shElementStates2);
   shWindows = new stateHandler(shWindowStates);
   shBricks = new stateHandler(shBrickStates);
   shKinect = new stateHandler(shKinectStates);
@@ -63,8 +67,8 @@ void calKeys() {
     elementsKeys();
   } else if (shCal.getState() == "kinect") {
     kinect.ejecutarTeclas();
-  } else if (shCal.getState() == "kinect") {
-    kinect.ejecutarTeclas();
+  } else if (shCal.getState() == "elementos 2") {
+    elements2Keys();
   }
   if (br.menuDepth == 0) {
     if (keyCode == 17) { //CTRL cambiar modo calibrador
@@ -91,19 +95,66 @@ void elementsKeys() {
   }
 }
 
+void elements2Keys() {
+  if (shElements2.getState() == "puntos") {
+    puntosKeys();
+  } else if (shElements2.getState() == "tiempo") {
+    tiempoKeys();
+  } else if (shElements2.getState() == "worldTop") {
+    worldTopKeys();
+  } else if (shElements2.getState() == "worldBottom") {
+    worldBottomKeys();
+  } else if (shElements2.getState() == "reloj") {
+    relojKeys();
+  }
+  if (br.menuDepth == 1) {
+    if (keyCode == 17) { //CTRL
+      shElements2.change();
+      br.add(shElements2.getState().toUpperCase());
+    } 
+    changeBread(false);
+  }
+}
+
+void tiempoKeys() {
+  INTERFAZ_TIEMPO_X = changeVariable(INTERFAZ_TIEMPO_X, 0, 0, 0, amountChange)[0];
+  INTERFAZ_TIEMPO_Y = changeVariable(0, INTERFAZ_TIEMPO_Y, 0, 0, amountChange)[1];
+}
+
+void worldTopKeys() {
+  WORLD_TOP_X = changeVariable(WORLD_TOP_X, 0, 0, 0, amountChange)[0];
+  WORLD_TOP_Y = changeVariable(0, WORLD_TOP_Y, 0, 0, amountChange)[1];
+}
+
+void worldBottomKeys() {
+  WORLD_BOTTOM_X = changeVariable(WORLD_BOTTOM_X, 0, 0, 0, amountChange)[0];
+  WORLD_BOTTOM_Y = changeVariable(0, WORLD_BOTTOM_Y, 0, 0, amountChange)[1];
+}
+
+void puntosKeys() {
+  INTERFAZ_PUNTOS_X = changeVariable(INTERFAZ_PUNTOS_X, 0, 0, 0, amountChange)[0];
+  INTERFAZ_PUNTOS_Y = changeVariable(0, INTERFAZ_PUNTOS_Y, 0, 0, amountChange)[1];
+}
+
+void relojKeys() {
+  X_RELOJ = changeVariable(X_RELOJ, 0, 0, 0, amountChange)[0];
+  Y_RELOJ = changeVariable(0, Y_RELOJ, 0, 0, amountChange)[1];
+  TAM_RELOJ = changeVariable(0, 0, TAM_RELOJ, 0, amountChange)[2];
+}
+
 //CALIBRACION ---> ELEMENTOS ---> VENTANAS
 void ventanasKeys() {
   if (keyCode == 9) { //BARRA ESPACIADORA
     selectedWindow = selectedWindow == 0 ? 1 : 0;
   }
   if (shWindows.getState() == "posicion") {
-    windows[selectedWindow].x = changeVariable(windows[selectedWindow].x, 0, amountChange)[0];
-    windows[selectedWindow].y = changeVariable(0, windows[selectedWindow].y, amountChange)[1];
+    windows[selectedWindow].x = changeVariable(windows[selectedWindow].x, 0, 0, 0, amountChange)[0];
+    windows[selectedWindow].y = changeVariable(0, windows[selectedWindow].y, 0, 0, amountChange)[1];
   } else if (shWindows.getState() == "dimension") {
-    windows[selectedWindow].ancho = changeVariable(windows[selectedWindow].ancho, 0, amountChange)[0];
-    windows[selectedWindow].alto = changeVariable(0, windows[selectedWindow].alto, amountChange)[1];
+    windows[selectedWindow].ancho = changeVariable(windows[selectedWindow].ancho, 0, 0, 0, amountChange)[0];
+    windows[selectedWindow].alto = changeVariable(0, windows[selectedWindow].alto, 0, 0, amountChange)[1];
   } else if (shWindows.getState() == "altoArco") {
-    windows[selectedWindow].altoArco = changeVariable(0, windows[selectedWindow].altoArco, -amountChange)[1];
+    windows[selectedWindow].altoArco = changeVariable(0, windows[selectedWindow].altoArco, -0, 0, amountChange)[1];
   }
   if (br.menuDepth == 2) {
     if (keyCode == 17) { //CTRL
@@ -117,29 +168,29 @@ void ventanasKeys() {
 //CALIBRACION ---> ELEMENTOS ---> LADRILLOS
 void ladrillosKeys() {
   if (shBricks.getState() == "posicion total") {
-    packLadrillos.x = changeVariable(packLadrillos.x, 0, amountChange)[0];
-    packLadrillos.y = changeVariable(0, packLadrillos.y, amountChange)[1];
+    packLadrillos.x = changeVariable(packLadrillos.x, 0, 0, 0, amountChange)[0];
+    packLadrillos.y = changeVariable(0, packLadrillos.y, 0, 0, amountChange)[1];
   } else if (shBricks.getState() == "dimension total") {
-    packLadrillos.ancho = changeVariable(packLadrillos.ancho, 0, amountChange)[0];
-    packLadrillos.alto = changeVariable(0, packLadrillos.alto, amountChange)[1];
+    packLadrillos.ancho = changeVariable(packLadrillos.ancho, 0, 0, 0, amountChange)[0];
+    packLadrillos.alto = changeVariable(0, packLadrillos.alto, 0, 0, amountChange)[1];
   } else if (shBricks.getState() == "posicion fila") {
     FilaLadrillos r = packLadrillos.filas.get(selectedBrickRow);
-    r.x=changeVariable(r.x, 0, amountChange)[0];
-    r.y = changeVariable(0, r.y, amountChange)[1];
+    r.x=changeVariable(r.x, 0, 0, 0, amountChange)[0];
+    r.y = changeVariable(0, r.y, 0, 0, amountChange)[1];
   } else if (shBricks.getState() == "dimension fila") {
     FilaLadrillos r = packLadrillos.filas.get(selectedBrickRow);
-    r.ancho=changeVariable(r.ancho, 0, amountChange)[0];
-    r.alto = changeVariable(0, r.alto, amountChange)[1];
+    r.ancho=changeVariable(r.ancho, 0, 0, 0, amountChange)[0];
+    r.alto = changeVariable(0, r.alto, 0, 0, amountChange)[1];
   } else if (shBricks.getState() == "posicion ladrillo") {
     FilaLadrillos r = packLadrillos.filas.get(selectedBrickRow);
     Ladrillo l = r.ladrillos.get(selectedBrick);
-    l.x=changeVariable(l.x, 0, amountChange)[0];
-    l.y = changeVariable(0, l.y, amountChange)[1];
+    l.x=changeVariable(l.x, 0, 0, 0, amountChange)[0];
+    l.y = changeVariable(0, l.y, 0, 0, amountChange)[1];
   } else if (shBricks.getState() == "dimension ladrillo") {
     FilaLadrillos r = packLadrillos.filas.get(selectedBrickRow);
     Ladrillo l = r.ladrillos.get(selectedBrick);
-    l.ancho = changeVariable(packLadrillos.ancho, 0, amountChange)[0];
-    l.alto = changeVariable(0, packLadrillos.alto, amountChange)[1];
+    l.ancho = changeVariable(packLadrillos.ancho, 0, 0, 0, amountChange)[0];
+    l.alto = changeVariable(0, packLadrillos.alto, 0, 0, amountChange)[1];
   }
 
 
@@ -153,7 +204,7 @@ void ladrillosKeys() {
   }
 }
 
-int [] changeVariable(int hor, int ver, int amount) {
+int [] changeVariable(int hor, int ver, int ancho, int alto, int amount) {
   if (keyCode == UP ) {
     ver-=amount;
   } else if (keyCode == DOWN ) {
@@ -162,8 +213,12 @@ int [] changeVariable(int hor, int ver, int amount) {
     hor-=amount;
   } else if (keyCode == RIGHT ) {
     hor+=amount;
+  } else if (key == '+' ) {
+    ancho+=amount;
+  } else if (key == '-' ) {
+    ancho+=amount;
   }
-  int res [] = {hor, ver};
+  int res [] = {hor, ver, ancho, alto};
   return res;
 }
 

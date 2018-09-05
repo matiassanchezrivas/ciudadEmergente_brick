@@ -28,7 +28,7 @@ class Ventanas {
       v = new FPoly();
       windowShape[i] = createShape();
       windowShape[i].beginShape();
-      int numPoints=40;
+      int numPoints=20;
       float angle=PI/(float)numPoints;
       windowShape[i].vertex(windows[i].x, windows[i].y);
       v.vertex(windows[i].x, windows[i].y);
@@ -66,7 +66,7 @@ class Ventanas {
       //negativeWindowShape[i].vertex(windows[i].x-calle, windows[i].y);
 
       negativeWindowShape[i].beginContour();
-      int numPoints=40;
+      int numPoints=20;
       float angle=PI/(float)numPoints;
 
 

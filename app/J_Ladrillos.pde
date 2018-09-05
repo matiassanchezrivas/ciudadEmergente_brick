@@ -21,9 +21,13 @@ class LadrillosArcos {
       float _angleSep = PI/_numBricksArc;
       float _angle=PI/_numBricksArc/(float)_numPoints;
 
+
       for (int j=0; j<_numBricksArc; j++) {
         PVector [] pv;
         pv = new PVector [_numPoints*2+2];
+        float centerx=0;
+        float centery=0;
+        float rotAngle=0;
         for (int i=0; i<=_numPoints; i++)
         {
           pv [i] = new PVector(ventana.x+ventana.ancho/2+ventana.ancho/2*sin(HALF_PI+PI+_angleSep*j+_angle*i), ventana.y+ventana.altoArco/2*cos(HALF_PI+TWO_PI+_angleSep*j+_angle*i));
@@ -32,8 +36,24 @@ class LadrillosArcos {
         {
           pv [_numPoints*2+1-i] = new PVector(ventana.x+ventana.ancho/2+(ventana.ancho/2+BRICK_HEIGHT)*sin(HALF_PI+PI+_angleSep*j+_angle*i), ventana.y+(ventana.altoArco/2+BRICK_HEIGHT)*cos(HALF_PI+TWO_PI+_angleSep*j+_angle*i));
         } 
-        bricks.add(new Brick(pv));
+        centerx=ventana.x+ventana.ancho/2+ventana.ancho/2*sin(HALF_PI+PI+_angleSep*j+_angleSep/2);
+        centery=ventana.y+ventana.altoArco/2*cos(HALF_PI+TWO_PI+_angleSep*j+_angleSep/2);
+        rotAngle=HALF_PI+PI+_angleSep*j+_angleSep/2;
+          bricks.add(new Brick(pv, centerx, centery, rotAngle));
       }
+    }
+  }
+  void explosion(int x, int y) {
+    for (int i=0; i<bricks.size(); i++) {
+      Brick b=bricks.get(i);
+      b.explosion(x, y);
+    }
+  }
+
+  void saltar() {
+    for (int i=0; i<bricks.size(); i++) {
+      Brick b=bricks.get(i);
+      b.saltar();
     }
   }
 }
@@ -70,6 +90,13 @@ class LadrillosVentana {
       }
     }
   }
+
+  void saltar() {
+    for (int i=0; i<bricks.size(); i++) {
+      Brick b=bricks.get(i);
+      b.saltar();
+    }
+  }
 }
 
 
@@ -90,12 +117,31 @@ class LadrillosGrilla {
 
   void reset() {
     bricks = new ArrayList();
+
     for (int i=0; i<packLadrillos.filas.size(); i++) {
       FilaLadrillos fila = packLadrillos.filas.get(i);
       for (int j=0; j<fila.ladrillos.size(); j++) {
         Ladrillo l = fila.ladrillos.get(j);
-        bricks.add(new Brick (l.x, l.y, l.ancho, l.alto, "grilla", "x"));
+        int oro =int(random(fila.ladrillos.size()-1));
+        String type = "grilla";
+        if (i==3 && j==2) {
+          type= "oro";
+          println("ES OROOOO");
+        }
+        bricks.add(new Brick (l.x, l.y, l.ancho, l.alto, type, "x"));
       }
+    }
+  }
+  void explosion(int x, int y) {
+    for (int i=0; i<bricks.size(); i++) {
+      Brick b=bricks.get(i);
+      b.explosion(x, y);
+    }
+  }
+  void saltar() {
+    for (int i=0; i<bricks.size(); i++) {
+      Brick b=bricks.get(i);
+      b.saltar();
     }
   }
 }

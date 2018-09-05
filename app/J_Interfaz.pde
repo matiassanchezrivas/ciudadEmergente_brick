@@ -1,3 +1,9 @@
+int INTERFAZ_PUNTOS_X = 0;
+int INTERFAZ_PUNTOS_Y= 0;
+
+int INTERFAZ_TIEMPO_X =0;
+int INTERFAZ_TIEMPO_Y= 0;
+
 class Interfaz {
   Info infoPuntos; 
   Info infoTiempo;
@@ -7,10 +13,11 @@ class Interfaz {
     infoPuntos = new Info("puntos");
     infoTiempo = new Info("tiempo");
     calle=20;
+ 
   }
   void draw() {
-    infoPuntos.draw(width, 0, calle);
-    infoTiempo.draw(0, 0, calle);
+    infoPuntos.draw(INTERFAZ_PUNTOS_X, INTERFAZ_PUNTOS_Y, calle);
+    infoTiempo.draw(INTERFAZ_TIEMPO_X, INTERFAZ_TIEMPO_Y, calle);
   }
 }
 

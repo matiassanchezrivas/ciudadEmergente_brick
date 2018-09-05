@@ -111,7 +111,7 @@ class Juego {
       pelota.jugar();
       drawElementos(true);
 
-      if (pelota.y>height) {
+      if (pelota.y>WORLD_BOTTOM_Y) {
         if (vidasLeft>0) {
           vidasLeft--;
           countdown.reset(TIEMPO_COUNTDOWN_INTRAVIDA);
@@ -212,7 +212,7 @@ class Countdown {
     offscreen.fill(255);
     //
     if (temporizador.progress()<=tiempoEntrada) {
-     
+
       int f=constrain(temporizador.progress()*FPS/1000, 0, fotogramasEntrada-1);
       offscreen.image(entradaReloj[f], X_RELOJ, Y_RELOJ, TAM_RELOJ, TAM_RELOJ);
     } else if (temporizador.progress()<=tiempoEntrada+time) {
@@ -248,4 +248,15 @@ class Temporizador {
   boolean isOver() {
     return normalized() > 1;
   }
+}
+
+void explode(int x, int y) {
+  juego.ladrillosGrilla.explosion(x, y);
+  juego.ladrillosArcos.explosion(x, y);
+}
+
+void saltar() {
+  juego.ladrillosGrilla.saltar();
+  juego.ladrillosArcos.saltar();
+  juego.ladrillosVentana.saltar();
 }

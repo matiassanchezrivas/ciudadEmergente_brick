@@ -26,8 +26,19 @@ void initFisica() {
 //------------------------------------------------
 void drawFisica() {
   world.step();
-  //world.draw();
 } 
+
+void fisicaImpulse() {
+  ArrayList <FBody> bodies = world.getBodies();
+  for (int i=0; i<bodies.size(); i++) {
+    FBody b = bodies.get(i);
+    if (b.getName() == "brick") {
+      b.addImpulse(random(-1000000, 10000000), random(-1000000, 1000000));
+    }
+  }
+}
+
+
 
 FBody getBody(String bodyName) {
   ArrayList<FBody> bodies=world.getBodies();
@@ -45,7 +56,7 @@ FBody getBody(String bodyName) {
 }
 
 void contactResult(FContactResult result) {
-  if (result.getBody1().getName()=="brick") {
+  if (result.getBody1().getName()=="brick" && result.getBody2().getName()=="bola") {
     FBody b = result.getBody1();
     b.setFill(255, 255, 0);
     b.setName("brick_dead");
@@ -56,9 +67,8 @@ void contactResult(FContactResult result) {
 }
 
 void resetAll() {
-  int WORLD_BOTTOM_X=width;
-  int WORLD_BOTTOM_Y=height*2;
   world = new FWorld();
-  world.setEdges(WORLD_TOP_X, WORLD_TOP_Y, WORLD_BOTTOM_X, WORLD_BOTTOM_Y);
+  world.setGravity(0,1000);
+  world.setEdges(WORLD_TOP_X, WORLD_TOP_Y, WORLD_BOTTOM_X, WORLD_BOTTOM_Y+400);
   juego.reset();
 }
