@@ -14,6 +14,9 @@ PVector surfaceMouse;
 void setup() {
   size( 1200, 900, P3D);
 
+  //IMAGENES ANIMACIONES
+  loadImages();
+
   //KEYSTONE
   ks = new Keystone(this);
   surf = ks.createCornerPinSurface(1200, 900, 20);
@@ -67,17 +70,17 @@ void draw() {
       imprimirGestoresDeColores();
     } else if (shCal.getState() == "kinect") {
       drawKinect();
-    }else if (shCal.getState() == "keystone") {
+    } else if (shCal.getState() == "keystone") {
       drawKeystone(20);
     } else {
       drawElements();
     }
-    mostrarCartel();
   } else {
     kinect.actualizar();
     drawFisica();
     juego.draw();
   }
+  mostrarCartel();
   offscreen.endDraw();
   surf.render(offscreen);
 }

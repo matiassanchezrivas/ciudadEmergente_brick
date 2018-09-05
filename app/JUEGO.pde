@@ -1,11 +1,13 @@
 int TIEMPO_COUNTDOWN;
+int TIEMPO_COUNTDOWN_INTRAVIDA;
 int TIEMPO_JUEGO;
 int TIEMPO_GAME_OVER = 500;
 int TIEMPO_ANIMACION = 500;
 int TIEMPO_GANAR = 500;
 int TIEMPO_APARICION_ELEMENTOS=3000;
+int CANTIDAD_VIDAS=2;
 
-float FPS = 24;
+int FPS = 35;
 
 int X_RELOJ;
 int Y_RELOJ;
@@ -15,6 +17,8 @@ int PUNTAJE_JUEGO;
 int PUNTOS_LADRILLO;
 
 boolean useKinect; 
+int vidasLeft;
+
 
 class Juego {
   String state;
@@ -84,21 +88,21 @@ class Juego {
       }
 
       if (temporizadorAparicionElementos.isOver()) {
-        countdown.reset();
+        countdown.reset(TIEMPO_COUNTDOWN);
         state="countDown";
       }
       drawCelda(false);
       drawElementos(false);
-      
     } else if (state=="countDown") {
-      drawCelda(false);
-      countdown.draw();
+      drawCelda(!(vidasLeft==CANTIDAD_VIDAS));
+      countdown.draw((vidasLeft==CANTIDAD_VIDAS) ? TIEMPO_COUNTDOWN : TIEMPO_COUNTDOWN_INTRAVIDA);
       if (countdown.temporizador.isOver()) {
         state="juego";
-        temporizadorJuego.reset();
+        if (vidasLeft==CANTIDAD_VIDAS) {
+          temporizadorJuego.reset();
+        }
       }
       pelota.rest(paleta);
-      println(pelota.y);
       paleta.jugar();
       drawElementos(true);
     } else if (state == "juego") {
@@ -106,7 +110,19 @@ class Juego {
       paleta.jugar();
       pelota.jugar();
       drawElementos(true);
-      if (temporizadorJuego.isOver() || pelota.y>height) {
+
+      if (pelota.y>height) {
+        if (vidasLeft>0) {
+          vidasLeft--;
+          countdown.reset(TIEMPO_COUNTDOWN_INTRAVIDA);
+          state="countDown";
+        } else {
+          temporizadorGameOver.reset();
+          state="gameOver";
+        }
+      }
+
+      if (temporizadorJuego.isOver()) {
         state="gameOver";
         temporizadorGameOver.reset();
       }
@@ -153,6 +169,7 @@ class Juego {
     state = "animacion";
     temporizadorAnimacion.reset();
     PUNTAJE_JUEGO=0;
+    vidasLeft=CANTIDAD_VIDAS;
   }
 }
 //------------------------------------------------
@@ -171,7 +188,7 @@ class Countdown {
   Countdown() {
 
     tiempoEntrada=int(1000/FPS*fotogramasEntrada);
-    tiempoSalida=int(1000/FPS*fotogramasEntrada);
+    tiempoSalida=int(1000/FPS*fotogramasSalida);
 
     entradaReloj = new PImage [fotogramasEntrada];
     for (int i=0; i<fotogramasEntrada; i++) {
@@ -181,27 +198,28 @@ class Countdown {
     for (int i=0; i<fotogramasSalida; i++) {
       salidaReloj[i]=loadImage("img/salida_reloj/salida_reloj_"+nf(242+i, 5)+".png");
     }
-    reloj = loadImage("img/reloj.png");
-    temporizador = new Temporizador(TIEMPO_COUNTDOWN+tiempoSalida+tiempoEntrada);
-    reset();
+    reloj = loadImage("img/entrada_reloj/entrada_reloj_00040.png");
   }
 
-  void reset() {
+  void reset(int tiempo) {
+    temporizador = new Temporizador(tiempo+tiempoSalida+tiempoEntrada);
     temporizador.reset();
   }
 
-  void draw() {
+  void draw(int time) {
     offscreen.pushStyle();
     offscreen.imageMode(CENTER);
-    offscreen.fill(255, 100);
+    offscreen.fill(255);
     //
-    if (temporizador.progress()<tiempoEntrada) {
-      offscreen.image(entradaReloj[constrain(temporizador.progress()/24, 0, fotogramasEntrada-1)], X_RELOJ, Y_RELOJ, TAM_RELOJ, TAM_RELOJ);
-    } else if (temporizador.progress()<tiempoEntrada+TIEMPO_COUNTDOWN) {
-      offscreen.arc(X_RELOJ, Y_RELOJ, TAM_RELOJ*.55, TAM_RELOJ*.55, -HALF_PI, map(temporizador.progress(), tiempoEntrada, tiempoEntrada+TIEMPO_COUNTDOWN, -HALF_PI, 3*HALF_PI));
-      offscreen.image(entradaReloj[39], X_RELOJ, Y_RELOJ, TAM_RELOJ, TAM_RELOJ);
+    if (temporizador.progress()<=tiempoEntrada) {
+     
+      int f=constrain(temporizador.progress()*FPS/1000, 0, fotogramasEntrada-1);
+      offscreen.image(entradaReloj[f], X_RELOJ, Y_RELOJ, TAM_RELOJ, TAM_RELOJ);
+    } else if (temporizador.progress()<=tiempoEntrada+time) {
+      offscreen.arc(X_RELOJ-TAM_RELOJ/2+TAM_RELOJ*.516, Y_RELOJ-TAM_RELOJ/2+TAM_RELOJ*.577, TAM_RELOJ*.50, TAM_RELOJ*.50, -HALF_PI, map(temporizador.progress(), tiempoEntrada, tiempoEntrada+time, -HALF_PI, 3*HALF_PI));
+      offscreen.image(reloj, X_RELOJ, Y_RELOJ, TAM_RELOJ, TAM_RELOJ);
     } else {
-      int f = constrain((temporizador.progress()-tiempoEntrada-TIEMPO_COUNTDOWN)/24, 0, fotogramasSalida-1);
+      int f = constrain(int((temporizador.progress()-time-tiempoEntrada)*FPS/1000), 0, fotogramasSalida-1);
       offscreen.image(salidaReloj[f], X_RELOJ, Y_RELOJ, TAM_RELOJ, TAM_RELOJ);
     }
     offscreen.popStyle();

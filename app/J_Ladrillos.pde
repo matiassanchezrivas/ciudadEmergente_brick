@@ -30,7 +30,6 @@ class LadrillosArcos {
         } 
         for (int i=_numPoints; i>=0; i--)
         {
-          println(i);
           pv [_numPoints*2+1-i] = new PVector(ventana.x+ventana.ancho/2+(ventana.ancho/2+BRICK_HEIGHT)*sin(HALF_PI+PI+_angleSep*j+_angle*i), ventana.y+(ventana.altoArco/2+BRICK_HEIGHT)*cos(HALF_PI+TWO_PI+_angleSep*j+_angle*i));
         } 
         bricks.add(new Brick(pv));

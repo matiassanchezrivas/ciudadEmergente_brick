@@ -126,12 +126,10 @@ void ladrillosKeys() {
     FilaLadrillos r = packLadrillos.filas.get(selectedBrickRow);
     r.x=changeVariable(r.x, 0, amountChange)[0];
     r.y = changeVariable(0, r.y, amountChange)[1];
-    println(r.x, r.y);
   } else if (shBricks.getState() == "dimension fila") {
     FilaLadrillos r = packLadrillos.filas.get(selectedBrickRow);
     r.ancho=changeVariable(r.ancho, 0, amountChange)[0];
     r.alto = changeVariable(0, r.alto, amountChange)[1];
-    println(r.ancho, r.alto);
   } else if (shBricks.getState() == "posicion ladrillo") {
     FilaLadrillos r = packLadrillos.filas.get(selectedBrickRow);
     Ladrillo l = r.ladrillos.get(selectedBrick);

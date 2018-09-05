@@ -60,11 +60,11 @@ class Kinect {
     //adminManos.dibujarBlobs( left, top, ancho, alto);    
     adminSilueta.dibujarBlobs( left, top, ancho, alto);
 
-    pushStyle();
-    noFill();
-    stroke( 255, 255, 0 );
-    rect( left, top, ancho, alto);
-    popStyle();
+    offscreen.pushStyle();
+    offscreen.noFill();
+    offscreen.stroke( 255, 255, 0 );
+    offscreen.rect( left, top, ancho, alto);
+    offscreen.popStyle();
   }
   //-------------------------------------------------
 
@@ -192,7 +192,6 @@ class Kinect {
 
     ArrayList <Blob> punteros = entregarSilueta();
     if ( punteros != null && punteros.size()>0) {
-      println("ENTRA");
       Blob silueta = punteros.get(0);
       PVector coordenadas = kinect.traducirCoordenadas( silueta ); 
       return coordenadas;

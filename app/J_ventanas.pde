@@ -82,6 +82,7 @@ class Ventanas {
 
       negativeWindowShape[i].endContour();
       negativeWindowShape[i].noStroke();
+      negativeWindowShape[i].fill(0);
       negativeWindowShape[i].endShape(CLOSE);
     }
   }

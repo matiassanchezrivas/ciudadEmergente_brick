@@ -11,12 +11,14 @@ class Brick {
   PShape brickShape;
   int [] factor = new int [8];
   boolean triggerAnimationDead = false;
-  int  timeAnimationDead=500;
+  int  timeAnimationDead=1000;
   int tiempoDesdeTriggerAnimation;
   int [] factorArc = new int [4];
   float amount;
   String side;
   boolean animation;
+  Motion motionDesaparece;
+  Motion motionLadrilloOro;
 
   Brick(int x, int y, int ancho, int alto, String type, String side) {
     this.x=x;
@@ -27,6 +29,8 @@ class Brick {
     this.side=side;
     animation=false; 
     reset();
+    motionDesaparece= new Motion(IMG_ladrilloDesaparece, FPS);
+    motionLadrilloOro = new Motion(IMG_ladrilloOro, FPS);
   }
 
   Brick (PVector [] vertex) {
@@ -51,7 +55,6 @@ class Brick {
       }
       x1=x2=x3=x4=x+ancho/2;
       y1=y2=y3=y4=y+alto/2;
-    } else if (type=="vertices") {
     } else if (type=="ventana") {
       //DERECHA
       if (side=="derecha") {
@@ -105,11 +108,17 @@ class Brick {
       brick.setPosition(x+ancho/2, y+alto/2);
       brick.setFill(random(255), 0, 0);
       world.add(brick);
+    } else if (type=="oro") {
+      brick = new FBox(ancho, alto);
+      brick.setName("brick");
+      brick.setStatic(true);
+      brick.setPosition(x+ancho/2, y+alto/2);
+      brick.setFill(random(255), 0, 0);
+      world.add(brick);
     }
   }
 
   void draw() {
-
     offscreen.pushStyle();
     if (type=="grilla") {
       if (isAlive()) {
@@ -134,13 +143,9 @@ class Brick {
       }
     } else if (type=="vertices") {
       if (isAlive()) {
-        //brickShape.setStrokeWeight(6);
-        //brickShape.setStroke(color(255));
         brickShape.setFill(color(255));
         offscreen.shape(brickShape);
-      } else {
-        //brickShape.setFill(color(0, 100));
-      }
+      } 
     } else if (type=="ventana") {
       if (isAlive()) {
         offscreen.noStroke();
@@ -157,6 +162,19 @@ class Brick {
         }
         offscreen.quad(x1, y1, x2, y2, x3, y3, x4, y4);
       }
+    } else if (type=="oro") {
+      if (isAlive()) {
+        offscreen.fill(0);
+        offscreen.stroke(255);
+        offscreen.strokeWeight(STROKE_BRICK);
+        if (animation) {
+
+        }
+      } else {
+        animationDead(); 
+        triggerAnimationDead=true;
+        
+      }
     }
     offscreen.popStyle();
   }
@@ -170,21 +188,27 @@ class Brick {
       PUNTAJE_JUEGO+=PUNTOS_LADRILLO;
       triggerAnimationDead = true; 
       tiempoDesdeTriggerAnimation=millis();
+      motionDesaparece.reset();
     } else {
       offscreen.pushStyle();
+      motionDesaparece.draw(ladrilloDesaparece, x+ancho/2, y+alto/2, 150, 150);
       amount = map(millis()-tiempoDesdeTriggerAnimation, 0, timeAnimationDead, 0, 1);
       if (amount<=1) {
-        offscreen.rectMode(CENTER);
-        offscreen.fill(0, map(amount, .75, 1, 255, 0));
-        offscreen.noStroke();
-        offscreen.rect(x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20), offscreen.textWidth(str(PUNTOS_LADRILLO))+20, 60, 20);
-        offscreen.fill(255, map(amount, 0, .75, 255, 0));
-        offscreen.textFont(consolasBold30);
-        offscreen.textAlign(CENTER, CENTER);
-        offscreen.text(PUNTOS_LADRILLO, x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20));
-        offscreen.popStyle();
+        verPuntaje();
       }
     }
+  }
+
+  void verPuntaje() {
+    offscreen.rectMode(CENTER);
+    offscreen.fill(0, map(amount, .75, 1, 255, 0));
+    offscreen.noStroke();
+    //offscreen.rect(x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20), offscreen.textWidth(str(PUNTOS_LADRILLO))+20, 60, 20);
+    offscreen.fill(255, map(amount, 0, .75, 255, 0));
+    offscreen.textFont(consolasBold30);
+    offscreen.textAlign(CENTER, CENTER);
+    offscreen.text(PUNTOS_LADRILLO, x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20));
+    offscreen.popStyle();
   }
 
   boolean isAlive() {
