@@ -3,7 +3,8 @@ void saveConfig() {
   jsonConfig = new JSONObject();
   JSONObject v;
   v= new JSONObject();
-  v.setInt("MIN_VELOCITY", MIN_VELOCITY);
+  v.setInt("MIN_VELOCITY_NIVEL1", MIN_VELOCITY_NIVEL1);
+    v.setInt("MIN_VELOCITY_NIVEL2", MIN_VELOCITY_NIVEL2);
 
   v.setInt("BRICK_HEIGHT", BRICK_HEIGHT);
   v.setInt("BRICK_WIDTH", BRICK_WIDTH);
@@ -51,7 +52,8 @@ void loadConfig() {
   JSONObject jsonConfig;
   jsonConfig = loadJSONObject("config.json");
   JSONObject c = jsonConfig.getJSONObject("config");
-  MIN_VELOCITY = c.getInt("MIN_VELOCITY");
+  MIN_VELOCITY_NIVEL1 = c.getInt("MIN_VELOCITY_NIVEL1");
+  MIN_VELOCITY_NIVEL2 = c.getInt("MIN_VELOCITY_NIVEL2");
 
   BRICK_HEIGHT = c.getInt("BRICK_HEIGHT");
   BRICK_WIDTH = c.getInt("BRICK_WIDTH");
@@ -85,7 +87,7 @@ void loadConfig() {
   PUNTOS_LADRILLO= c.getInt("PUNTOS_LADRILLO");
   TIEMPO_JUEGO= c.getInt("TIEMPO_JUEGO");
   TIEMPO_COUNTDOWN= c.getInt("TIEMPO_COUNTDOWN");
-  
+
   STROKE_BRICK= c.getInt("STROKE_BRICK");
   FACTOR_RANDOM= c.getInt("FACTOR_RANDOM");
 }

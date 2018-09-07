@@ -15,7 +15,7 @@ stateHandler shKinect;
 String [] shKinectStates = {"normal", "calibracion"};
 //CALIBRACION ---> ELEMENTOS 2
 stateHandler shElements2;
-String [] shElementStates2 = {"tiempo", "puntos", "reloj", "worldTop", "worldBottom"};
+String [] shElementStates2 = {"tiempo", "puntos", "reloj", "worldTop", "worldBottom", "pastilla", "fijos"};
 
 int selectedWindow =0;
 int selectedBrickRow =0;
@@ -72,7 +72,13 @@ void calKeys() {
   }
   if (br.menuDepth == 0) {
     if (keyCode == 17) { //CTRL cambiar modo calibrador
+      if (shCal.getState()=="elementos") {
+        println("RESEEEEEET");
+        resetAll(false); //PARA VER PELOTAS
+        fisicaCalibracion.reset();
+      }
       shCal.change();
+
       br.add(shCal.getState().toUpperCase());
     }
     changeBread(false);
@@ -106,6 +112,10 @@ void elements2Keys() {
     worldBottomKeys();
   } else if (shElements2.getState() == "reloj") {
     relojKeys();
+  } else if (shElements2.getState() == "pastilla") {
+    //relojKeys();
+  } else if (shElements2.getState() == "fijos") {
+    fijosKeys();
   }
   if (br.menuDepth == 1) {
     if (keyCode == 17) { //CTRL
@@ -114,6 +124,32 @@ void elements2Keys() {
     } 
     changeBread(false);
   }
+}
+
+void fijosKeys() {
+  if (key==ENTER) fijos.changeVertex();
+  if (keyCode==8) fijos.removeVertex();
+  if (fijos.poligonos[fijos.selected].vertices.size() > 0) {
+    PVector pv = fijos.poligonos[fijos.selected].vertices.get(fijos.poligonos[fijos.selected].selected);
+    fijos.poligonos[fijos.selected].updateVertex(changeVariableV( int(pv.x), int(pv.y), 1));
+  }
+  if (keyCode==9) {
+    fijos.change();
+  }
+}
+
+PVector changeVariableV(int hor, int ver, int amount) {
+  if (keyCode == UP ) {
+    ver-=amount;
+  } else if (keyCode == DOWN ) {
+    ver+=amount;
+  } else if (keyCode == LEFT ) {
+    hor-=amount;
+  } else if (keyCode == RIGHT ) {
+    hor+=amount;
+  }
+  PVector pv = new PVector(hor, ver);
+  return pv;
 }
 
 void tiempoKeys() {
@@ -156,7 +192,7 @@ void ventanasKeys() {
   } else if (shWindows.getState() == "altoArco") {
     windows[selectedWindow].altoArco = changeVariable(0, windows[selectedWindow].altoArco, -0, 0, amountChange)[1];
     BRICK_HEIGHT = changeVariable(0, 0, BRICK_HEIGHT, 0, amountChange)[2];
-  }else if (shWindows.getState() == "barrotes") {
+  } else if (shWindows.getState() == "barrotes") {
     CANTIDAD_BARROTES = changeVariable(0, CANTIDAD_BARROTES, -0, 0, 1)[1];
     STROKE_BARROTE = changeVariable(0, 0, STROKE_BARROTE, 0, 1)[2];
   }

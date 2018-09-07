@@ -113,14 +113,12 @@ class MotionLive {
 
   void draw(float x, float y, int ancho, int alto) {  
     if (!temporizador.isOver()) {
-      offscreen.pushStyle();
-
-      offscreen.imageMode(CENTER);
       if (number!=int(temporizador.normalized()*(cantFotogramas))) {
         number=int(temporizador.normalized()*(cantFotogramas));
         i = loadImage(ruta+nf(number+1, 5)+".png");
       }
-
+      offscreen.pushStyle();
+      offscreen.imageMode(CENTER);
       offscreen.image(i, x, y);
       offscreen.popStyle();
     }
@@ -131,6 +129,10 @@ class MotionLive {
     if (temporizador.isOver()) {
       temporizador.reset();
     }
+  }
+
+  boolean isOver() {
+    return temporizador.isOver();
   }
 
   void reset() {

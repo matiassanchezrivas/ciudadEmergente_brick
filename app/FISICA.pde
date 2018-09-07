@@ -3,7 +3,8 @@ FWorld world;
 int BRICK_HEIGHT = 60;
 int BRICK_WIDTH = 60;
 int NUM_ARC_BRICKS = 10;
-int MIN_VELOCITY = 500;
+int MIN_VELOCITY_NIVEL1 = 500;
+int MIN_VELOCITY_NIVEL2 = 800;
 int SIZE_BALL = 40;
 int PADDLE_WIDTH = 300;
 int PADDLE_HEIGHT = 60;
@@ -21,6 +22,7 @@ void initFisica() {
   WORLD_BOTTOM_Y=height*2;
   world = new FWorld();
   world.setEdges(WORLD_TOP_X, WORLD_TOP_Y, WORLD_BOTTOM_X, WORLD_BOTTOM_Y);
+  fisicaCalibracion.reset();
 }
 
 //------------------------------------------------
@@ -66,9 +68,14 @@ void contactResult(FContactResult result) {
   // ...
 }
 
-void resetAll() {
+void resetAll(boolean game) {
   world = new FWorld();
-  world.setGravity(0,1000);
-  world.setEdges(WORLD_TOP_X, WORLD_TOP_Y, WORLD_BOTTOM_X, WORLD_BOTTOM_Y+400);
-  juego.reset();
+  world.setGravity(0, 1000);
+
+  if (game) {
+    world.setEdges(WORLD_TOP_X, WORLD_TOP_Y, WORLD_BOTTOM_X, WORLD_BOTTOM_Y+400);
+    juego.reset();
+  } else {
+    world.setEdges(WORLD_TOP_X, WORLD_TOP_Y, WORLD_BOTTOM_X, WORLD_BOTTOM_Y);
+  }
 }

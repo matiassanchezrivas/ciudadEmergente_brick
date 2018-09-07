@@ -6,16 +6,21 @@ class Pelota {
     reset();
     update();
   }
-  
-  void rest(Paleta p){
-  bola.setPosition(p.x, p.y-p.alto/2-tam/2);
+
+  void rest(Paleta p) {
+    bola.setPosition(p.x, p.y-p.alto/2-tam/2);
   }
 
-  void jugar() {
+  void jugar(int nivel) {
     float velx = bola.getVelocityX();
     float vely = bola.getVelocityY();
-    velx = (velx > 0) ? MIN_VELOCITY : -MIN_VELOCITY;
-    vely = (vely > 0) ? MIN_VELOCITY : -MIN_VELOCITY;
+    if (nivel==0) {
+      velx = (velx > 0) ? MIN_VELOCITY_NIVEL1  : -MIN_VELOCITY_NIVEL1;
+      vely = (vely > 0) ? MIN_VELOCITY_NIVEL1  : -MIN_VELOCITY_NIVEL1;
+    } else {
+      velx = (velx > 0) ? MIN_VELOCITY_NIVEL2  : -MIN_VELOCITY_NIVEL2;
+      vely = (vely > 0) ? MIN_VELOCITY_NIVEL2  : -MIN_VELOCITY_NIVEL2;
+    }
     bola.setVelocity(velx, vely);
   }
 

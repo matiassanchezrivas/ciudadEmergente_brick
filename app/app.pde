@@ -30,6 +30,7 @@ void setup() {
 
   //CARGAR ELEMENTOS DE DB
   loadElements();
+  loadElements2();
 
   //INIT FISICA
   initFisica();
@@ -93,10 +94,10 @@ void keyPressed() {
   //println("keycode", keyCode);
   if (key == 'c'|| key == 'C' ) {
     CALIBRADOR =!CALIBRADOR;
-    resetAll();
+    resetAll(true);
   }
   //RESET
-  if (key == 'r'|| key == 'R' ) resetAll();
+  if (key == 'r'|| key == 'R' ) resetAll(true);
   //USAR KINECT
   if (key == 'k'|| key == 'K' ) useKinect=!useKinect;
   if (key == 'l'|| key == 'L' ) ks.load();
@@ -122,26 +123,28 @@ void keyPressed() {
   //GUARDAR
   if (key == 's') {
     saveElements();
+    saveFijos();
     saveConfig();
     ks.save();
+    
   }
 
   if (key == 'e') {
     saltar();
   }
 
-  if (!CALIBRADOR) {
-    println("MIN VELOC", MIN_VELOCITY, "paddle width", PADDLE_WIDTH);
-    if (key == '+') {
-      MIN_VELOCITY+=10;
-    } else if (key == '-') {
-      MIN_VELOCITY-=10;
-    } else if (key == '1') {
-      PADDLE_WIDTH-=10;
-    } else if (key == '2') {
-      PADDLE_WIDTH+=10;
-    }
-  }
+  //if (!CALIBRADOR) {
+  //  println("MIN VELOC", MIN_VELOCITY, "paddle width", PADDLE_WIDTH);
+  //  if (key == '+') {
+  //    MIN_VELOCITY+=10;
+  //  } else if (key == '-') {
+  //    MIN_VELOCITY-=10;
+  //  } else if (key == '1') {
+  //    PADDLE_WIDTH-=10;
+  //  } else if (key == '2') {
+  //    PADDLE_WIDTH+=10;
+  //  }
+  //}
 }
 
 void mouseDragged() {
@@ -153,7 +156,11 @@ void mouseDragged() {
 
 void mousePressed() {
   //COLOR
-  if ( shCal.getState() == "color" ) {
+  if ( CALIBRADOR && shCal.getState() == "color" ) {
     ejecutarClickEnColores(int(surfaceMouse.x), int(surfaceMouse.y));
   }
+  if ( CALIBRADOR && shCal.getState() == "elementos 2" && shElements2.getState() == "fijos") {
+    fijos.poligonos[fijos.selected].addVertex(int(surfaceMouse.x), int(surfaceMouse.y));
+  }
+  
 }

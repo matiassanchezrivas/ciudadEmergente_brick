@@ -30,7 +30,6 @@ class Juego {
   Ventanas ventanas;
   Countdown countdown;
   Temporizador temporizadorJuego;
-  Temporizador temporizadorAnimacion;
   Temporizador temporizadorGameOver;
   Temporizador temporizadorGanar;
   Temporizador temporizadorAparicionElementos;
@@ -50,7 +49,6 @@ class Juego {
     countdown = new Countdown();
     temporizadorJuego = new Temporizador(TIEMPO_JUEGO);
     temporizadorGameOver = new Temporizador(TIEMPO_GAME_OVER);
-    temporizadorAnimacion = new Temporizador(TIEMPO_ANIMACION);
     temporizadorGanar = new Temporizador(TIEMPO_GANAR);
     temporizadorAparicionElementos = new Temporizador(TIEMPO_APARICION_ELEMENTOS);
     for (int i=0; i<windows.length; i++) {
@@ -67,21 +65,19 @@ class Juego {
     offscreen.fill(0, 255);
     offscreen.rect(0, 0, width, height);
     if (state=="animacion") {
-      motionIntro.loop();
-      motionIntro.draw(width/2, height/2, width, height);
-      offscreen.pushStyle();
-      offscreen.fill(255);
-      offscreen.textAlign(CENTER, CENTER);
-      offscreen.text("Animacion", width/2, height/2);
+       motionIntro.draw(width/2, height/2, width, height);     
+      ventanas.drawBlack();
+
+      ventanas.draw();
       
-      if (temporizadorAnimacion.isOver()) {
+      if (motionIntro.isOver()) {
         temporizadorAparicionElementos.reset();
-        //state="aparicionElementos";
+        state="aparicionElementos";
         for (int i=0; i<windows.length; i++) {
           barrotes[i].reset();
         }
       }
-      offscreen.popStyle();
+
     } else if (state=="aparicionElementos") {
       float n = temporizadorAparicionElementos.normalized();
 
@@ -115,7 +111,7 @@ class Juego {
     } else if (state == "juego") {
       drawCelda(true);
       paleta.jugar();
-      pelota.jugar();
+      pelota.jugar(0);
       drawElementos(true);
 
       if (pelota.y>WORLD_BOTTOM_Y) {
@@ -141,7 +137,7 @@ class Juego {
 
       offscreen.text("GAME OVER", width/2, height/2);
       if (temporizadorGameOver.isOver()) {
-        resetAll();
+        resetAll(true);
       }
       offscreen.popStyle();
     }
@@ -174,9 +170,9 @@ class Juego {
     ladrillosVentana.reset();
     ventanas.reset();
     state = "animacion";
-    temporizadorAnimacion.reset();
     PUNTAJE_JUEGO=0;
     vidasLeft=CANTIDAD_VIDAS;
+    motionIntro.reset();
   }
 }
 //------------------------------------------------

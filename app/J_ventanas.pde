@@ -14,14 +14,22 @@ class Ventanas {
 
   void draw() {
     for (int i=0; i<windowShape.length; i++) {
-
+      windowShape[i].setFill(color(0,0));
+      windowShape[i].setStroke(color(255));
+      offscreen.shape(windowShape[i]);
+    }
+  }
+  
+  void drawBlack() {
+    for (int i=0; i<windowShape.length; i++) {
+      windowShape[i].setFill(color(0));
+      windowShape[i].setStroke(color(0));
       offscreen.shape(windowShape[i]);
     }
   }
 
   void drawBehind() {
     for (int i=0; i<negativeWindowShape.length; i++) {
-      negativeWindowShape[i].setFill(0);
       offscreen.shape(negativeWindowShape[i]);
     }
   }
@@ -47,7 +55,7 @@ class Ventanas {
       v.vertex(windows[i].x+windows[i].ancho, windows[i].y+windows[i].alto);
       windowShape[i].vertex(windows[i].x, windows[i].y+windows[i].alto);
       v.vertex(windows[i].x, windows[i].y+windows[i].alto);
-      windowShape[i].noFill();
+      windowShape[i].fill(255);
       windowShape[i].stroke(color(255));
       windowShape[i].strokeWeight(STROKE_VENTANA);
       windowShape[i].endShape(CLOSE);
