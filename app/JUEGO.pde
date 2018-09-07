@@ -37,6 +37,7 @@ class Juego {
   Agua [] agua = new Agua [2]; 
   Barrotes [] barrotes = new Barrotes [2];
   Interfaz interfaz; 
+  MotionLive motionIntro;
 
   Juego () {
     state = "animacion";
@@ -54,22 +55,28 @@ class Juego {
     temporizadorAparicionElementos = new Temporizador(TIEMPO_APARICION_ELEMENTOS);
     for (int i=0; i<windows.length; i++) {
       agua[i] = new Agua(i);
-      barrotes[i] = new Barrotes (i, 3);
+      barrotes[i] = new Barrotes (i);
     }
     interfaz = new Interfaz();
+    motionIntro= new MotionLive(FOTOGRAMAS_INTRO, FPS, "img/"+"intro_1024/"+"Intro_1024_");
+    //motionIntro= new MotionLive(FOTOGRAMAS_LADRILLO_DESAPARECE, FPS, "img/"+"ladrillo_desaparece"+"/ladrillo_desaparece_");
+    
   }
 
   void draw() {
     offscreen.fill(0, 255);
     offscreen.rect(0, 0, width, height);
     if (state=="animacion") {
+      motionIntro.loop();
+      motionIntro.draw(width/2, height/2, width, height);
       offscreen.pushStyle();
       offscreen.fill(255);
       offscreen.textAlign(CENTER, CENTER);
       offscreen.text("Animacion", width/2, height/2);
+      
       if (temporizadorAnimacion.isOver()) {
         temporizadorAparicionElementos.reset();
-        state="aparicionElementos";
+        //state="aparicionElementos";
         for (int i=0; i<windows.length; i++) {
           barrotes[i].reset();
         }

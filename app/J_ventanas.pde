@@ -1,4 +1,8 @@
 int DURACION_BARROTES = 2000;
+int STROKE_VENTANA = 10;
+int STROKE_BARROTE = 6;
+int CANTIDAD_BARROTES = 4;
+
 
 class Ventanas {
   FPoly v;
@@ -44,8 +48,8 @@ class Ventanas {
       windowShape[i].vertex(windows[i].x, windows[i].y+windows[i].alto);
       v.vertex(windows[i].x, windows[i].y+windows[i].alto);
       windowShape[i].noFill();
-            windowShape[i].stroke(color(255));
-      windowShape[i].strokeWeight(10);
+      windowShape[i].stroke(color(255));
+      windowShape[i].strokeWeight(STROKE_VENTANA);
       windowShape[i].endShape(CLOSE);
       v.setStatic(true);
       world.add(v);
@@ -167,17 +171,10 @@ class Agua {
 
 class Barrotes {
   int windowNumber;
-  int numberBarrotes;
-  int positions [];
   Temporizador temporizador;
 
-  Barrotes(int windowNumber, int numberBarrotes) {
+  Barrotes(int windowNumber) {
     this.windowNumber = windowNumber;
-    this.numberBarrotes = numberBarrotes;
-    positions = new int [numberBarrotes];
-    for (int i=0; i<positions.length; i++) {
-      positions[i] = int(windows[windowNumber].ancho/numberBarrotes*i);
-    }
     temporizador = new Temporizador(DURACION_BARROTES);
   }
   
@@ -188,11 +185,16 @@ class Barrotes {
   void draw() {
     float amount = temporizador.normalized();
     offscreen.pushStyle();
-    offscreen.stroke(255);
-    offscreen.strokeWeight(6);
+    if(CALIBRADOR && shElements.getState() == "ventana" && shWindows.getState() == "barrotes"){
+     offscreen.stroke(colorCalibracionAcento.elColor);
+    }else{
+     offscreen.stroke(255);
+    }
+    
+    offscreen.strokeWeight(STROKE_BARROTE);
     Ventana v = windows[windowNumber];
-    for (int i=0; i<positions.length; i++) {
-      offscreen.line(v.x+positions[i], v.y-v.altoArco/2, v.x+positions[i], v.y-v.altoArco/2+(v.alto+v.altoArco/2)*amount);
+    for (int i=1; i<CANTIDAD_BARROTES; i++) {
+      offscreen.line(v.x+windows[windowNumber].ancho/CANTIDAD_BARROTES*i, v.y-v.altoArco/2, v.x+windows[windowNumber].ancho/CANTIDAD_BARROTES*i, v.y-v.altoArco/2+(v.alto+v.altoArco/2)*amount);
     }
     offscreen.line(v.x, v.y-v.altoArco/2+(v.alto+v.altoArco/2)*amount, v.x+v.ancho, v.y-v.altoArco/2+(v.alto+v.altoArco/2)*amount);
     offscreen.popStyle();

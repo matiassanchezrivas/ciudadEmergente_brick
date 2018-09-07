@@ -6,7 +6,7 @@ stateHandler shElements;
 String [] shElementStates = {"ventana", "ladrillos"};
 //CALIBRACION ---> ELEMENTOS ---> VENTANAS
 stateHandler shWindows;
-String [] shWindowStates = {"posicion", "dimension", "altoArco"};
+String [] shWindowStates = {"posicion", "dimension", "altoArco", "barrotes"};
 //CALIBRACION ---> ELEMENTOS ---> LADRILLOS
 stateHandler shBricks;
 String [] shBrickStates = {"posicion total", "dimension total", "posicion fila", "dimension fila", "posicion ladrillo", "fila ladrillo"};
@@ -155,6 +155,10 @@ void ventanasKeys() {
     windows[selectedWindow].alto = changeVariable(0, windows[selectedWindow].alto, 0, 0, amountChange)[1];
   } else if (shWindows.getState() == "altoArco") {
     windows[selectedWindow].altoArco = changeVariable(0, windows[selectedWindow].altoArco, -0, 0, amountChange)[1];
+    BRICK_HEIGHT = changeVariable(0, 0, BRICK_HEIGHT, 0, amountChange)[2];
+  }else if (shWindows.getState() == "barrotes") {
+    CANTIDAD_BARROTES = changeVariable(0, CANTIDAD_BARROTES, -0, 0, 1)[1];
+    STROKE_BARROTE = changeVariable(0, 0, STROKE_BARROTE, 0, 1)[2];
   }
   if (br.menuDepth == 2) {
     if (keyCode == 17) { //CTRL
@@ -216,7 +220,7 @@ int [] changeVariable(int hor, int ver, int ancho, int alto, int amount) {
   } else if (key == '+' ) {
     ancho+=amount;
   } else if (key == '-' ) {
-    ancho+=amount;
+    ancho-=amount;
   }
   int res [] = {hor, ver, ancho, alto};
   return res;

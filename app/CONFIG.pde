@@ -27,7 +27,6 @@ void saveConfig() {
   v.setInt("TIEMPO_JUEGO", TIEMPO_JUEGO);
   v.setInt("TIEMPO_GAME_OVER", TIEMPO_GAME_OVER);
 
-
   v.setInt("PADDLE_WIDTH", PADDLE_WIDTH);
   v.setInt("PADDLE_HEIGHT", PADDLE_HEIGHT);
 
@@ -41,7 +40,8 @@ void saveConfig() {
   v.setInt("TAM_RELOJ", TAM_RELOJ);
 
   v.setInt("PUNTOS_LADRILLO", PUNTOS_LADRILLO);
-
+  v.setInt("STROKE_BRICK", STROKE_BRICK);
+  v.setInt("FACTOR_RANDOM", FACTOR_RANDOM);
 
   jsonConfig.setJSONObject("config", v);
   saveJSONObject(jsonConfig, "data/config.json");
@@ -85,6 +85,9 @@ void loadConfig() {
   PUNTOS_LADRILLO= c.getInt("PUNTOS_LADRILLO");
   TIEMPO_JUEGO= c.getInt("TIEMPO_JUEGO");
   TIEMPO_COUNTDOWN= c.getInt("TIEMPO_COUNTDOWN");
+  
+  STROKE_BRICK= c.getInt("STROKE_BRICK");
+  FACTOR_RANDOM= c.getInt("FACTOR_RANDOM");
 }
 
 //TIPOS

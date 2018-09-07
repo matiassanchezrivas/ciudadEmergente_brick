@@ -36,6 +36,9 @@ void drawElements() {
   for (Ventana ventana : windows) {
     ventana.draw();
   }
+  for (Barrotes barrote : juego.barrotes) {
+    barrote.draw();
+  }
   packLadrillos.draw();
 }
 
@@ -138,11 +141,15 @@ class Ventana {
 
     offscreen.pushStyle();
     if (shElements.getState() == "ventana" && shWindows.getState() == "posicion" && selectedWindow == id) {
-      offscreen.strokeWeight(.5);
+      offscreen.strokeWeight(STROKE_VENTANA);
       offscreen.stroke(c);
     } else {
       offscreen.noStroke();
     }
+    offscreen.strokeWeight(1);
+    offscreen.fill(cArco,100);
+    offscreen.arc(x+ancho/2, y, ancho+BRICK_HEIGHT, altoArco+BRICK_HEIGHT, PI, TWO_PI);    
+    offscreen.strokeWeight(STROKE_VENTANA);
     offscreen.fill(cArco);
     offscreen.arc(x+ancho/2, y, ancho, altoArco, PI, TWO_PI);
 

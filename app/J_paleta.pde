@@ -32,7 +32,8 @@ class Paleta {
     offscreen.noFill();
     offscreen.stroke(255);
     offscreen.strokeWeight(20);
-    offscreen.rect (x-ancho/2, y-alto/2, ancho, alto, 978879879);
+    //offscreen.rect (x-ancho/2, y-alto/2, ancho, alto, 978879879);
+    offscreen.shape(skate, x-ancho/2, y-alto/2, ancho*1.5, ancho*skate.height/skate.width*1.5);
     offscreen.popStyle();
   }
 

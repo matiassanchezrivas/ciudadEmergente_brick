@@ -12,7 +12,7 @@ Juego juego;
 PVector surfaceMouse;
 
 void setup() {
-  size( 1200, 900, P3D);
+  size( 1024, 768, P3D);
 
   //IMAGENES ANIMACIONES
   loadImages();
@@ -72,7 +72,7 @@ void draw() {
       drawKinect();
     } else if (shCal.getState() == "keystone") {
       drawKeystone(20);
-    }else if (shCal.getState() == "elementos 2") {
+    } else if (shCal.getState() == "elementos 2") {
       drawElements2();
     } else {
       drawElements();
@@ -83,7 +83,9 @@ void draw() {
     juego.draw();
   }
   mostrarCartel();
+
   offscreen.endDraw();
+
   surf.render(offscreen);
 }
 
@@ -132,14 +134,11 @@ void keyPressed() {
     println("MIN VELOC", MIN_VELOCITY, "paddle width", PADDLE_WIDTH);
     if (key == '+') {
       MIN_VELOCITY+=10;
-    }
-    else if (key == '-') {
+    } else if (key == '-') {
       MIN_VELOCITY-=10;
-    }
-    else if (key == '1') {
+    } else if (key == '1') {
       PADDLE_WIDTH-=10;
-    }
-    else if (key == '2') {
+    } else if (key == '2') {
       PADDLE_WIDTH+=10;
     }
   }

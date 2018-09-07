@@ -41,7 +41,7 @@ class Brick {
     motionDesaparece= new Motion(IMG_ladrilloDesaparece, FPS);
     motionLadrilloOro = new Motion(IMG_ladrilloOro, FPS);
     motionDesapareceOro = new Motion(IMG_ladrilloDesapareceOro, FPS);
-    
+
     reset();
   }
 
@@ -189,8 +189,7 @@ class Brick {
       if (isAlive()) {
         brickShape.setFill(color(255));
         offscreen.shape(brickShape);
-        offscreen.fill(255,0,255);
-        
+        offscreen.fill(255, 0, 255);
       } else {
         animationDead(); 
         triggerAnimationDead=true;
@@ -260,6 +259,7 @@ class Brick {
         motionDesapareceOro.draw(IMG_ladrilloDesapareceOro, x+ancho/2, y+alto/2, 150, 150, 1);
       } else if (type=="vertices") {
         motionDesapareceVentana.rot(rotAngle);
+        motionDesapareceVentana.trans(-70);
         motionDesapareceVentana.draw(IMG_ladrilloDesapareceVentana, centerx, centery, 150, 150, 1);
       } else {
         motionDesaparece.draw(IMG_ladrilloDesaparece, x+ancho/2, y+alto/2, 150, 150, 1);
@@ -276,10 +276,18 @@ class Brick {
     offscreen.fill(0, map(amount, .75, 1, 255, 0));
     offscreen.noStroke();
     //offscreen.rect(x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20), offscreen.textWidth(str(PUNTOS_LADRILLO))+20, 60, 20);
-    offscreen.fill(255, map(amount, 0, .75, 255, 0));
+    offscreen.fill(255, map(amount, .5, 1, 255, 0));
     offscreen.textFont(consolasBold30);
     offscreen.textAlign(CENTER, CENTER);
-    offscreen.text(PUNTOS_LADRILLO, x+ancho/2, y+alto/2+map(amount, 0, .75, 10, -20));
+    if (type!="vertices") {
+      offscreen.text(PUNTOS_LADRILLO, x+ancho/2, y+alto/2+map(amount, 0, 1, 10, -20));
+    } else {
+      offscreen.pushMatrix();
+      offscreen.translate(centerx, centery);
+      offscreen.rotate(rotAngle);
+      offscreen.text(PUNTOS_LADRILLO, 0, map(amount, 0, 1, -70+10, -70-20));
+      offscreen.popMatrix();
+    }
     offscreen.popStyle();
   }
 
