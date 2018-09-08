@@ -1,7 +1,7 @@
 int FOTOGRAMAS_LADRILLO_DESAPARECE = 12;
 int FOTOGRAMAS_LADRILLO_ORO = 35;
 int FOTOGRAMAS_LADRILLO_ORO_DESAPARECE = 46;
-int FOTOGRAMAS_INTRO = 482;
+int FOTOGRAMAS_INTRO = 483;
 int FOTOGRAMAS_LADRILLO_VENTANA_DESAPARECE = 17;
 
 
@@ -115,7 +115,7 @@ class MotionLive {
     if (!temporizador.isOver()) {
       if (number!=int(temporizador.normalized()*(cantFotogramas))) {
         number=int(temporizador.normalized()*(cantFotogramas));
-        i = loadImage(ruta+nf(number+1, 5)+".png");
+        i = loadImage(ruta+nf(number, 5)+".png");
       }
       offscreen.pushStyle();
       offscreen.imageMode(CENTER);

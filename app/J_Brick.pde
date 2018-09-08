@@ -190,6 +190,7 @@ class Brick {
         brickShape.setFill(color(255));
         offscreen.shape(brickShape);
         offscreen.fill(255, 0, 255);
+        offscreen.ellipse(centerx, centery, 10, 10);
       } else {
         animationDead(); 
         triggerAnimationDead=true;

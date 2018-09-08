@@ -1,11 +1,7 @@
-int START_ANGLE_1=10;
-int STOP_ANGLE_1=80;
-
-int START_ANGLE_2=100;
-int STOP_ANGLE_2=170;
-
 class LadrillosArcos {
   ArrayList <Brick> bricks;
+  float startAngle [] = new float [2];
+  float stopAngle [] = new float [2];
 
   LadrillosArcos () {
     bricks = new ArrayList();
@@ -19,24 +15,16 @@ class LadrillosArcos {
   }
 
   void reset() {
-
     bricks = new ArrayList();
-    crearArco(START_ANGLE_1, STOP_ANGLE_1);
-    crearArco(START_ANGLE_2, STOP_ANGLE_2);
-  }
-  void crearArco(int start, int stop) {
     for (int w=0; w<windows.length; w++) {
       //ARCO
-      float startAngle, stopAngle;
-
-      startAngle=radians(start);
-      stopAngle=radians(stop);
-
-      Ventana ventana = windows[w];
+      startAngle [w]=QUARTER_PI;
+      stopAngle[w]=HALF_PI*2;
       int _numPoints=15;
       int _numBricksArc=NUM_ARC_BRICKS;
-      float _angleSep = (stopAngle-startAngle)/_numBricksArc;
-      float _angle=_angleSep/(float)_numPoints;
+      float _angleSep = (stopAngle[w]-startAngle[w])/_numBricksArc;
+      float _angle=(startAngle[w]-stopAngle[w])/_numBricksArc/(float)_numPoints;
+
 
       for (int j=0; j<_numBricksArc; j++) {
         PVector [] pv;
@@ -46,20 +34,19 @@ class LadrillosArcos {
         float rotAngle=0;
         for (int i=0; i<=_numPoints; i++)
         {
-          pv [i] = new PVector(ventana.x+ventana.ancho/2+ventana.ancho/2*sin(startAngle+HALF_PI+PI+_angleSep*j+_angle*i), ventana.y+ventana.altoArco/2*cos(startAngle+HALF_PI+TWO_PI+_angleSep*j+_angle*i));
+          pv [i] = new PVector(windows[w].x+windows[w].ancho/2+windows[w].ancho/2*sin(HALF_PI+PI+startAngle[w]+_angleSep*j+_angle*i), windows[w].y+windows[w].altoArco/2*cos(HALF_PI+PI+startAngle[w]+_angleSep*j+_angle*i));
         } 
         for (int i=_numPoints; i>=0; i--)
         {
-          pv [_numPoints*2+1-i] = new PVector(ventana.x+ventana.ancho/2+(ventana.ancho/2+BRICK_HEIGHT)*sin(startAngle+HALF_PI+PI+_angleSep*j+_angle*i), ventana.y+(ventana.altoArco/2+BRICK_HEIGHT)*cos(startAngle+HALF_PI+TWO_PI+_angleSep*j+_angle*i));
+          pv [_numPoints*2+1-i] = new PVector(windows[w].x+windows[w].ancho/2+(windows[w].ancho/2+BRICK_HEIGHT)*sin(HALF_PI+PI+startAngle[w]+_angleSep*j+_angle*i), windows[w].y+(windows[w].altoArco/2+BRICK_HEIGHT)*cos(HALF_PI+PI+startAngle[w]+_angleSep*j+_angle*i));
         } 
-        centerx=ventana.x+ventana.ancho/2+ventana.ancho/2*sin(startAngle+HALF_PI+PI+_angleSep*j+_angleSep/2);
-        centery=ventana.y+ventana.altoArco/2*cos(startAngle+HALF_PI+TWO_PI+_angleSep*j+_angleSep/2);
-        rotAngle=startAngle+HALF_PI+PI+_angleSep*j+_angleSep/2;
+        centerx=windows[w].x+windows[w].ancho/2+windows[w].ancho/2*sin(HALF_PI+PI+_angleSep*j+_angleSep/2);
+        centery=windows[w].y+windows[w].altoArco/2*cos(HALF_PI+PI+_angleSep*j+_angleSep/2);
+        rotAngle=HALF_PI+PI+_angleSep*j+_angleSep/2;
         bricks.add(new Brick(pv, centerx, centery, rotAngle));
       }
     }
   }
-
   void explosion(int x, int y) {
     for (int i=0; i<bricks.size(); i++) {
       Brick b=bricks.get(i);

@@ -6,6 +6,7 @@ int TIEMPO_ANIMACION = 500;
 int TIEMPO_GANAR = 500;
 int TIEMPO_APARICION_ELEMENTOS=3000;
 int CANTIDAD_VIDAS=2;
+int TIEMPO_TRANSICION = 500;
 
 int FPS = 35;
 
@@ -33,6 +34,7 @@ class Juego {
   Temporizador temporizadorGameOver;
   Temporizador temporizadorGanar;
   Temporizador temporizadorAparicionElementos;
+  Temporizador temporizadorTransicion;
   Agua [] agua = new Agua [2]; 
   Barrotes [] barrotes = new Barrotes [2];
   Interfaz interfaz; 
@@ -51,6 +53,7 @@ class Juego {
     temporizadorGameOver = new Temporizador(TIEMPO_GAME_OVER);
     temporizadorGanar = new Temporizador(TIEMPO_GANAR);
     temporizadorAparicionElementos = new Temporizador(TIEMPO_APARICION_ELEMENTOS);
+    temporizadorTransicion = new Temporizador (TIEMPO_TRANSICION);
     for (int i=0; i<windows.length; i++) {
       agua[i] = new Agua(i);
       barrotes[i] = new Barrotes (i);
@@ -58,26 +61,28 @@ class Juego {
     interfaz = new Interfaz();
     motionIntro= new MotionLive(FOTOGRAMAS_INTRO, FPS, "img/"+"intro_1024/"+"Intro_1024_");
     //motionIntro= new MotionLive(FOTOGRAMAS_LADRILLO_DESAPARECE, FPS, "img/"+"ladrillo_desaparece"+"/ladrillo_desaparece_");
-    
   }
 
   void draw() {
     offscreen.fill(0, 255);
     offscreen.rect(0, 0, width, height);
     if (state=="animacion") {
-       motionIntro.draw(width/2, height/2, width, height);     
+      motionIntro.draw(width/2, height/2, width, height);     
       ventanas.drawBlack();
-
       ventanas.draw();
-      
-      if (motionIntro.isOver()) {
-        temporizadorAparicionElementos.reset();
-        state="aparicionElementos";
-        for (int i=0; i<windows.length; i++) {
-          barrotes[i].reset();
-        }
-      }
 
+      if (true) {
+        if (temporizadorTransicion.isOver()) {
+          println("over");
+          temporizadorAparicionElementos.reset();
+          state="aparicionElementos";
+          for (int i=0; i<windows.length; i++) {
+            barrotes[i].reset();
+          }
+        }
+      } else {
+        temporizadorTransicion.reset();
+      }
     } else if (state=="aparicionElementos") {
       float n = temporizadorAparicionElementos.normalized();
 
