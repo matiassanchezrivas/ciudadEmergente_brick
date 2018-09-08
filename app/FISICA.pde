@@ -27,7 +27,10 @@ void initFisica() {
 
 //------------------------------------------------
 void drawFisica() {
+  if(CALIBRADOR || juego.state=="juego"){
   world.step();
+  }
+  
 } 
 
 void fisicaImpulse() {

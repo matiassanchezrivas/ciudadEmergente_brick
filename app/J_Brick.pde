@@ -187,10 +187,15 @@ class Brick {
       }
     } else if (type=="vertices") {
       if (isAlive()) {
-        brickShape.setFill(color(255));
-        offscreen.shape(brickShape);
-        offscreen.fill(255, 0, 255);
-        offscreen.ellipse(centerx, centery, 10, 10);
+        if (animation) {
+          scale=1*(1-0.9)+scale*0.9;
+        }
+        offscreen.pushMatrix();
+        offscreen.translate(centerx, centery);
+        offscreen.scale(scale);
+        //brickShape.setFill(color(255, scale*255));
+        offscreen.shape(brickShape,-centerx, -centery);
+        offscreen.popMatrix();
       } else {
         animationDead(); 
         triggerAnimationDead=true;
@@ -242,6 +247,7 @@ class Brick {
 
   void animationDead() {
     if (triggerAnimationDead==false) {
+      sonidista.ejecutarSonido(2);
       PUNTAJE_JUEGO+=PUNTOS_LADRILLO;
       triggerAnimationDead = true; 
       tiempoDesdeTriggerAnimation=millis();
@@ -252,6 +258,7 @@ class Brick {
         motionDesapareceVentana.reset();
       }
       if (type=="oro") {
+        sonidista.ejecutarSonido(3);
         explode(this.x, this.y);
       }
     } else {

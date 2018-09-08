@@ -1,4 +1,4 @@
-int DURACION_BARROTES = 2000;
+int DURACION_BARROTES = 1000;
 int STROKE_VENTANA = 10;
 int STROKE_BARROTE = 6;
 int CANTIDAD_BARROTES = 4;
@@ -7,6 +7,7 @@ int CANTIDAD_BARROTES = 4;
 class Ventanas {
   FPoly v;
   PShape windowShape [] = new PShape [2];
+  PShape windowShapeBlack [] = new PShape [2];
   PShape negativeWindowShape [] = new PShape [2];
 
   Ventanas () {
@@ -14,22 +15,23 @@ class Ventanas {
 
   void draw() {
     for (int i=0; i<windowShape.length; i++) {
-      windowShape[i].setFill(color(0,0));
+      windowShape[i].setFill(color(255,0,0, 0));
       windowShape[i].setStroke(color(255));
       offscreen.shape(windowShape[i]);
     }
   }
-  
+
   void drawBlack() {
     for (int i=0; i<windowShape.length; i++) {
-      windowShape[i].setFill(color(0));
-      windowShape[i].setStroke(color(0));
-      offscreen.shape(windowShape[i]);
+      windowShapeBlack[i].setFill(color(0, 255));
+      windowShapeBlack[i].setStroke(color(0));
+      offscreen.shape(windowShapeBlack[i]);
     }
   }
 
   void drawBehind() {
     for (int i=0; i<negativeWindowShape.length; i++) {
+      //negativeWindowShape[i].setFill(color(0,0,255));
       offscreen.shape(negativeWindowShape[i]);
     }
   }
@@ -53,12 +55,16 @@ class Ventanas {
       v.vertex(windows[i].x+windows[i].ancho, windows[i].y);
       windowShape[i].vertex(windows[i].x+windows[i].ancho, windows[i].y+windows[i].alto);
       v.vertex(windows[i].x+windows[i].ancho, windows[i].y+windows[i].alto);
+      v.vertex(windows[i].x+windows[i].ancho, Y_PALETA);
       windowShape[i].vertex(windows[i].x, windows[i].y+windows[i].alto);
+      v.vertex(windows[i].x, Y_PALETA);
       v.vertex(windows[i].x, windows[i].y+windows[i].alto);
+      
       windowShape[i].fill(255);
       windowShape[i].stroke(color(255));
       windowShape[i].strokeWeight(STROKE_VENTANA);
       windowShape[i].endShape(CLOSE);
+      windowShapeBlack[i]=windowShape[i];
       v.setStatic(true);
       world.add(v);
     }
@@ -180,25 +186,32 @@ class Agua {
 class Barrotes {
   int windowNumber;
   Temporizador temporizador;
+  boolean llego= false;
 
   Barrotes(int windowNumber) {
     this.windowNumber = windowNumber;
     temporizador = new Temporizador(DURACION_BARROTES);
   }
-  
+
   void reset() {
     temporizador.reset();
+    llego=false;
   }
 
   void draw() {
     float amount = temporizador.normalized();
-    offscreen.pushStyle();
-    if(CALIBRADOR && shElements.getState() == "ventana" && shWindows.getState() == "barrotes"){
-     offscreen.stroke(colorCalibracionAcento.elColor);
-    }else{
-     offscreen.stroke(255);
+    if(amount>=1 && !llego){
+    llego=true;
+    dispararSonidoBarrotes();
     }
     
+    offscreen.pushStyle();
+    if (CALIBRADOR && shElements.getState() == "ventana" && shWindows.getState() == "barrotes") {
+      offscreen.stroke(colorCalibracionAcento.elColor);
+    } else {
+      offscreen.stroke(255);
+    }
+
     offscreen.strokeWeight(STROKE_BARROTE);
     Ventana v = windows[windowNumber];
     for (int i=1; i<CANTIDAD_BARROTES; i++) {

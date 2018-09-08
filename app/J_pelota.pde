@@ -1,6 +1,10 @@
 //------------------------------------------------
 class Pelota {
   int x, y, tam;
+  int alpha=0;
+  int amount=5;
+  float transp=1;
+  
   FCircle bola;
   Pelota () {
     reset();
@@ -9,6 +13,10 @@ class Pelota {
 
   void rest(Paleta p) {
     bola.setPosition(p.x, p.y-p.alto/2-tam/2);
+  }
+
+  void rest() {
+    bola.setPosition(x, y);
   }
 
   void jugar(int nivel) {
@@ -28,13 +36,19 @@ class Pelota {
     this.x = int(bola.getX()); 
     this.y = int(bola.getY()); 
     this.tam = SIZE_BALL;
+    transp=(map(y,WORLD_BOTTOM_Y,height, 1,0));
   }
 
-  void draw() {
+  void draw(boolean seVe) {
     update();
+    if (seVe) {
+      alpha = (alpha<255) ? alpha+=amount : 255;
+    } else {
+      alpha = (alpha>0) ? alpha-=amount : 0;
+    }
     offscreen.pushStyle();
     offscreen.noStroke();
-    offscreen.fill(255);
+    offscreen.fill(255, alpha*transp);
     offscreen.ellipse (x, y, tam, tam);
     offscreen.popStyle();
   }

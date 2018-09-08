@@ -4,9 +4,10 @@ int TIEMPO_JUEGO;
 int TIEMPO_GAME_OVER = 500;
 int TIEMPO_ANIMACION = 500;
 int TIEMPO_GANAR = 500;
-int TIEMPO_APARICION_ELEMENTOS=3000;
+int TIEMPO_APARICION_ELEMENTOS=4000;
 int CANTIDAD_VIDAS=2;
 int TIEMPO_TRANSICION = 500;
+float PORCENTAJE_DESTRUCCION_ARCOS=.7;
 
 int FPS = 35;
 
@@ -26,8 +27,8 @@ class Juego {
   Paleta paleta;
   Pelota pelota;
   LadrillosGrilla ladrillosGrilla;
-  LadrillosArcos ladrillosArcos;
-  LadrillosVentana ladrillosVentana;
+  LadrillosArcos [] ladrillosArcos;
+  //LadrillosVentana ladrillosVentana;
   Ventanas ventanas;
   Countdown countdown;
   Temporizador temporizadorJuego;
@@ -39,14 +40,19 @@ class Juego {
   Barrotes [] barrotes = new Barrotes [2];
   Interfaz interfaz; 
   MotionLive motionIntro;
+  MotionLive motionPerdiste;
+  MotionLive motionVictoria;
+  MotionLive motionGanaPerro;
+  MotionLive motionGanaAstronauta;
+  int nivel;
 
   Juego () {
     state = "animacion";
     paleta = new Paleta();
     pelota = new Pelota();
     ladrillosGrilla = new LadrillosGrilla();
-    ladrillosArcos = new LadrillosArcos();
-    ladrillosVentana = new LadrillosVentana();
+    ladrillosArcos = new LadrillosArcos [2];
+    //ladrillosVentana = new LadrillosVentana();
     ventanas = new Ventanas();
     countdown = new Countdown();
     temporizadorJuego = new Temporizador(TIEMPO_JUEGO);
@@ -57,10 +63,14 @@ class Juego {
     for (int i=0; i<windows.length; i++) {
       agua[i] = new Agua(i);
       barrotes[i] = new Barrotes (i);
+      ladrillosArcos [i] = new LadrillosArcos(i);
     }
     interfaz = new Interfaz();
     motionIntro= new MotionLive(FOTOGRAMAS_INTRO, FPS, "img/"+"intro_1024/"+"Intro_1024_");
-    //motionIntro= new MotionLive(FOTOGRAMAS_LADRILLO_DESAPARECE, FPS, "img/"+"ladrillo_desaparece"+"/ladrillo_desaparece_");
+    motionPerdiste= new MotionLive(FOTOGRAMAS_PERDISTE, FPS, "img/perdiste/perdiste_");
+    motionVictoria= new MotionLive(FOTOGRAMAS_VICTORIA, FPS, "img/ganaste/ganaste_");
+    motionGanaPerro= new MotionLive(FOTOGRAMAS_LIBERA_PERRO, FPS, "img/libera_perro/bien-hecho-perro_");
+    motionGanaAstronauta= new MotionLive(FOTOGRAMAS_LIBERA_ASTRONAUTA, FPS, "img/libera_astronauta/bien-hecho-astronauta_");
   }
 
   void draw() {
@@ -70,15 +80,25 @@ class Juego {
       motionIntro.draw(width/2, height/2, width, height);     
       ventanas.drawBlack();
       ventanas.draw();
-
-      if (true) {
+      if (motionIntro.temporizador.normalized()<.75) {
+        barrotes[0].reset();
+      } else {
+        drawCeldaIntro(0);
+      }
+      if (motionIntro.temporizador.normalized()<.9) {
+        barrotes[1].reset();
+      } else {
+        drawCeldaIntro(1);
+      }
+      
+      
+      if (motionIntro.isOver()) {
+        detenerSonidoIntro();
         if (temporizadorTransicion.isOver()) {
           println("over");
           temporizadorAparicionElementos.reset();
+          dispararSonidoLadrillos();
           state="aparicionElementos";
-          for (int i=0; i<windows.length; i++) {
-            barrotes[i].reset();
-          }
         }
       } else {
         temporizadorTransicion.reset();
@@ -86,9 +106,11 @@ class Juego {
     } else if (state=="aparicionElementos") {
       float n = temporizadorAparicionElementos.normalized();
 
-      for (int i=0; i<(ladrillosVentana.bricks.size()-1)*n; i++) {
-        Brick b = ladrillosVentana.bricks.get(i);
-        b.animate();
+      for (int l=0; l<windows.length; l++) {
+        for (int i=0; i<(ladrillosArcos[l].bricks.size()-1)*n; i++) {
+          Brick b = ladrillosArcos[l].bricks.get(i);
+          b.animate();
+        }
       }
       for (int i=0; i<(ladrillosGrilla.bricks.size()-1)*n; i++) {
         Brick b = ladrillosGrilla.bricks.get(i);
@@ -96,8 +118,10 @@ class Juego {
       }
 
       if (temporizadorAparicionElementos.isOver()) {
+        iniciarSonidoJuego();
         countdown.reset(TIEMPO_COUNTDOWN);
         state="countDown";
+        dispararSonidoReloj();
       }
       drawCelda(false);
       drawElementos(false);
@@ -106,58 +130,121 @@ class Juego {
       countdown.draw((vidasLeft==CANTIDAD_VIDAS) ? TIEMPO_COUNTDOWN : TIEMPO_COUNTDOWN_INTRAVIDA);
       if (countdown.temporizador.isOver()) {
         state="juego";
+        sonidista.ejecutarSonido(1); //DISPARAR PELOTA
         if (vidasLeft==CANTIDAD_VIDAS) {
           temporizadorJuego.reset();
         }
       }
       pelota.rest(paleta);
       paleta.jugar();
+
       drawElementos(true);
     } else if (state == "juego") {
       drawCelda(true);
       paleta.jugar();
-      pelota.jugar(0);
+      pelota.jugar(nivel);
+      pelota.draw(true);
+
       drawElementos(true);
 
-      if (pelota.y>WORLD_BOTTOM_Y) {
+      if (pelota.y>width) {
         if (vidasLeft>0) {
           vidasLeft--;
           countdown.reset(TIEMPO_COUNTDOWN_INTRAVIDA);
           state="countDown";
+          dispararSonidoReloj();
         } else {
-          temporizadorGameOver.reset();
+          motionPerdiste.reset();
+          iniciarSonidoGameOver();
           state="gameOver";
         }
       }
-
+      sonarAgua(temporizadorJuego.normalized());
       if (temporizadorJuego.isOver()) {
         state="gameOver";
-        temporizadorGameOver.reset();
+        motionPerdiste.reset();
+        iniciarSonidoGameOver();
       }
       interfaz.draw();
-    } else if (state == "gameOver") {
-      offscreen.pushStyle();
-      offscreen.fill(255);
-      offscreen.textAlign(CENTER, CENTER);
 
-      offscreen.text("GAME OVER", width/2, height/2);
-      if (temporizadorGameOver.isOver()) {
+      //GANAR
+      if (nivel==0) {
+        if (ladrillosArcos[1].porcentajeMuertos() >= PORCENTAJE_DESTRUCCION_ARCOS) {
+          state = "liberaPerro";
+          motionGanaPerro.reset();
+          nivel=1;
+        } else if (ladrillosArcos[0].porcentajeMuertos() >= PORCENTAJE_DESTRUCCION_ARCOS) {
+          state = "liberaAstronauta";
+          motionGanaAstronauta.reset();
+          nivel=1;
+        }
+      } else if (nivel==1 && ladrillosArcos[0].porcentajeMuertos() >= PORCENTAJE_DESTRUCCION_ARCOS && ladrillosArcos[1].porcentajeMuertos() >= PORCENTAJE_DESTRUCCION_ARCOS) {
+        state = "victoria";
+        motionVictoria.reset();
+        iniciarSonidoVictoria();
+      }
+    } else if (state == "gameOver") {
+      pelota.draw(false);
+      paleta.jugar();
+      drawCelda(true);
+      drawElementos(false);
+      detenerSonidoJuego();
+      detenerSonidoAgua();
+
+      motionPerdiste.draw(X_RELOJ, Y_RELOJ, 0, 0);
+      if (motionPerdiste.isOver()) {
+        detenerSonidoGameOver();
         resetAll(true);
       }
-      offscreen.popStyle();
+    } else if (state == "liberaPerro") {
+      pelota.draw(false);
+      paleta.jugar();
+      drawCelda(true);
+      drawElementos(false);
+      pelota.rest();
+      motionGanaPerro.draw(X_RELOJ, Y_RELOJ, 0, 0);
+      if (motionGanaPerro.isOver()) {
+        countdown.reset(TIEMPO_COUNTDOWN_INTRAVIDA);
+        state="countDown";
+        dispararSonidoReloj();
+      }
+    } else if (state == "liberaAstronauta") {
+      pelota.draw(false);
+      paleta.jugar();
+      pelota.rest();
+      drawCelda(true);
+      drawElementos(false);
+      motionGanaAstronauta.draw(X_RELOJ, Y_RELOJ, 0, 0);
+      if (motionGanaAstronauta.isOver()) {
+        countdown.reset(TIEMPO_COUNTDOWN_INTRAVIDA);
+        state="countDown";
+        dispararSonidoReloj();
+      }
+    } else if (state == "victoria") {
+      pelota.draw(false);
+      paleta.jugar();
+      detenerSonidoJuego();
+      detenerSonidoAgua();
+      drawCelda(true);
+      drawElementos(false);
+      motionVictoria.draw(X_RELOJ, Y_RELOJ, 0, 0);
+      if (motionVictoria.isOver()) {
+        detenerSonidoVictoria();
+        resetAll(true);
+      }
     }
   }
 
-  void drawElementos(boolean jugador) {
+  void drawElementos(boolean dibujar) {
     ventanas.drawBehind();
-    if (jugador) {
-      paleta.draw();
-      pelota.draw();
-    }
+    pelota.draw(dibujar);
+    paleta.draw(dibujar);
     ladrillosGrilla.draw();
-    ladrillosVentana.draw();
+    //ladrillosVentana.draw();
     ventanas.draw();
-    ladrillosArcos.draw();
+    for (int i=0; i<windows.length; i++) {
+      ladrillosArcos[i].draw();
+    }
   }
 
   void drawCelda(boolean agua) {
@@ -166,18 +253,28 @@ class Juego {
       barrotes[i].draw();
     }
   }
+  
+  void drawCeldaIntro(int i) {
+   
+      barrotes[i].draw();
+    
+  }
 
   void reset() {
     pelota.reset();
     paleta.reset();
     ladrillosGrilla.reset();
-    ladrillosArcos.reset();
-    ladrillosVentana.reset();
+    for (int i=0; i<windows.length; i++) {
+      ladrillosArcos[i].reset();
+    }
+    //ladrillosVentana.reset();
     ventanas.reset();
     state = "animacion";
+    iniciarSonidoIntro();
     PUNTAJE_JUEGO=0;
     vidasLeft=CANTIDAD_VIDAS;
     motionIntro.reset();
+    nivel=0;
   }
 }
 //------------------------------------------------
@@ -224,9 +321,11 @@ class Countdown {
       int f=constrain(temporizador.progress()*FPS/1000, 0, fotogramasEntrada-1);
       offscreen.image(entradaReloj[f], X_RELOJ, Y_RELOJ, TAM_RELOJ, TAM_RELOJ);
     } else if (temporizador.progress()<=tiempoEntrada+time) {
+      iniciarLoopReloj();
       offscreen.arc(X_RELOJ-TAM_RELOJ/2+TAM_RELOJ*.516, Y_RELOJ-TAM_RELOJ/2+TAM_RELOJ*.577, TAM_RELOJ*.50, TAM_RELOJ*.50, -HALF_PI, map(temporizador.progress(), tiempoEntrada, tiempoEntrada+time, -HALF_PI, 3*HALF_PI));
       offscreen.image(reloj, X_RELOJ, Y_RELOJ, TAM_RELOJ, TAM_RELOJ);
     } else {
+      detenerLoopReloj();
       int f = constrain(int((temporizador.progress()-time-tiempoEntrada)*FPS/1000), 0, fotogramasSalida-1);
       offscreen.image(salidaReloj[f], X_RELOJ, Y_RELOJ, TAM_RELOJ, TAM_RELOJ);
     }
@@ -260,11 +359,15 @@ class Temporizador {
 
 void explode(int x, int y) {
   juego.ladrillosGrilla.explosion(x, y);
-  juego.ladrillosArcos.explosion(x, y);
+  for (int i=0; i<windows.length; i++) {
+    juego.ladrillosArcos[i].explosion(x, y);
+  }
 }
 
 void saltar() {
   juego.ladrillosGrilla.saltar();
-  juego.ladrillosArcos.saltar();
-  juego.ladrillosVentana.saltar();
+  for (int i=0; i<windows.length; i++) {
+    juego.ladrillosArcos[i].saltar();
+  } 
+  //juego.ladrillosVentana.saltar();
 }

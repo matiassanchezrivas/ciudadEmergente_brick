@@ -40,9 +40,12 @@ String ipSonido = "127.0.0.1";
 int puerto = 13000;
 
 Sonidista sonidista;
-void initSounds(){
+void initSounds() {
 
-sonidista = new Sonidista(10);
+  sonidista = new Sonidista(15);
+  sonidista.ejecutarSonido(4, true, 0, 0.0, 1.0); // agua
+  sonidista.ejecutarSonido(5, true, 0, 0.0, 1.0); // musicaJuego
+  sonidista.ejecutarSonido(9, true, 0, 0, 1.0); //loopReloj
 }
 
 //======================CONSTANTES================================
@@ -66,7 +69,7 @@ class Sonidista {
   Sonidista(int _totalSonidos) {
 
     totalSonidos = _totalSonidos;
-    
+
     sonido = new Sonido [totalSonidos];
 
     for (int i = 0; i < totalSonidos; i++) {
@@ -147,7 +150,7 @@ class Sonidista {
       sonido[id].setAmp(amp);
     }
   }
-  
+
   //-------------------------------------
   void setAmp(int id, int amp) {
     if (sonido[id] != null) {
@@ -359,4 +362,66 @@ void enviarSpeed (int cual, float speed ) {
   mensaje.add(speed);
 
   oscP5.send(mensaje, direccionRemota); //Se envia el mensaje
+}
+
+//------------------------------------------------------------------------------------------------
+
+void iniciarSonidoJuego() {
+  sonidista.ejecutarSonido(5, true, 0.3, 0, 1.0);
+}
+
+void detenerSonidoJuego() {
+  sonidista.fadeOut(5, 200);
+}
+
+void detenerSonidoAgua() {
+  sonidista.fadeOut(4, 200);
+}
+
+void sonarAgua(float nivel) {
+  sonidista.setAmp(4, nivel);
+}
+
+void iniciarSonidoGameOver() {
+  sonidista.ejecutarSonido(6, false, 0.5, 0, 1.0);
+}
+
+void detenerSonidoGameOver() {
+  sonidista.fadeOut(6, 200);
+}
+
+void iniciarSonidoVictoria() {
+  sonidista.ejecutarSonido(7, false, 0.5, 0, 1.0);
+}
+
+void detenerSonidoVictoria() {
+  sonidista.fadeOut(7, 200);
+}
+
+void dispararSonidoReloj() {
+  sonidista.ejecutarSonido(8, false, 0.5, 0, 1.0);
+}
+
+void iniciarLoopReloj() {
+  sonidista.setAmp(9, 1);
+}
+
+void detenerLoopReloj() {
+  sonidista.fadeOut(9, 200);
+}
+
+void dispararSonidoBarrotes() {
+  sonidista.ejecutarSonido(10, false, 0.5, 0, 1.0);
+}
+
+void dispararSonidoLadrillos() {
+  sonidista.ejecutarSonido(11, false, 0.9, 0, 1.0);
+}
+
+void iniciarSonidoIntro() {
+  sonidista.ejecutarSonido(12, false, 0.9, 0, 1.0);
+}
+
+void detenerSonidoIntro() {
+  sonidista.fadeOut(12, 200);
 }
