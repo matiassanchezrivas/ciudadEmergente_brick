@@ -58,7 +58,10 @@ FBody getBody(String bodyName) {
 }
 
 void contactResult(FContactResult result) {
-  if (result.getBody1().getName()=="brick" && result.getBody2().getName()=="bola") {
+  if (juego.state=="juego" && result.getBody1().getName()!="brick" && result.getBody2().getName()=="bola") {
+    sonidista.ejecutarSonido(0);
+  }
+  else if (result.getBody1().getName()=="brick" && result.getBody2().getName()=="bola") {
     FBody b = result.getBody1();
     b.setFill(255, 255, 0);
     b.setName("brick_dead");

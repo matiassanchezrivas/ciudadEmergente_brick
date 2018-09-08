@@ -16,6 +16,9 @@ void setup() {
 
   //IMAGENES ANIMACIONES
   loadImages();
+  
+  //SONIDO
+  initSounds();
 
   //KEYSTONE
   ks = new Keystone(this);
@@ -155,6 +158,7 @@ void mouseDragged() {
 }
 
 void mousePressed() {
+
   //COLOR
   if ( CALIBRADOR && shCal.getState() == "color" ) {
     ejecutarClickEnColores(int(surfaceMouse.x), int(surfaceMouse.y));
