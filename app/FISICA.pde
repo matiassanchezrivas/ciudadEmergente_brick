@@ -14,6 +14,7 @@ int WORLD_TOP_Y=0;
 int WORLD_BOTTOM_X=width;
 int WORLD_BOTTOM_Y=height;
 
+int RANDOM_ANGLE_CHANGE=50;
 //=================================================================v
 void initFisica() {
   //WORLD
@@ -27,10 +28,9 @@ void initFisica() {
 
 //------------------------------------------------
 void drawFisica() {
-  if(CALIBRADOR || juego.state=="juego"){
-  world.step();
+  if (CALIBRADOR || juego.state=="juego") {
+    world.step();
   }
-  
 } 
 
 void fisicaImpulse() {
@@ -63,12 +63,13 @@ FBody getBody(String bodyName) {
 void contactResult(FContactResult result) {
   if (juego.state=="juego" && result.getBody1().getName()!="brick" && result.getBody2().getName()=="bola") {
     sonidista.ejecutarSonido(0);
-  }
-  else if (result.getBody1().getName()=="brick" && result.getBody2().getName()=="bola") {
+    generarRandomAngle();
+  } else if (result.getBody1().getName()=="brick" && result.getBody2().getName()=="bola") {
     FBody b = result.getBody1();
     b.setFill(255, 255, 0);
     b.setName("brick_dead");
     world.remove(b);
+    generarRandomAngle();
   };
   // Trigger your sound here
   // ...
@@ -84,4 +85,9 @@ void resetAll(boolean game) {
   } else {
     world.setEdges(WORLD_TOP_X, WORLD_TOP_Y, WORLD_BOTTOM_X, WORLD_BOTTOM_Y);
   }
+}
+
+void generarRandomAngle() {
+  RANDOM_ANGLE=int(random(-RANDOM_ANGLE_CHANGE, RANDOM_ANGLE_CHANGE));
+  RANDOM_ANGLE2=int(random(-RANDOM_ANGLE_CHANGE, RANDOM_ANGLE_CHANGE));
 }

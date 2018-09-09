@@ -16,10 +16,16 @@ class Paleta {
   void jugar() {
     if (useKinect) {
       xKinect = (kinect.getPlayerPosition()!=null) ? xKinect = int(kinect.getPlayerPosition().x) : xKinect;
-      paleta.setPosition(xKinect, Y_PALETA);
+      paleta.setPosition(limitar(xKinect), Y_PALETA);
     } else {
-      paleta.setPosition(mouseX, Y_PALETA);
+      paleta.setPosition(limitar(mouseX), Y_PALETA);
+      
     }
+  }
+  
+  float limitar(float x){
+  return constrain(x, windows[0].x+windows[0].ancho, windows[1].x);
+    
   }
 
   void update() {

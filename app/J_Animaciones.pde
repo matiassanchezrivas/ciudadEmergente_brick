@@ -8,7 +8,6 @@ int FOTOGRAMAS_VICTORIA = 238;
 int FOTOGRAMAS_LIBERA_PERRO = 250;
 int FOTOGRAMAS_LIBERA_ASTRONAUTA = 250;
 
-
 void saveAnim() {
   JSONObject jsonConfig;
   jsonConfig = new JSONObject();

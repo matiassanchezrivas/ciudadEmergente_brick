@@ -16,7 +16,7 @@ void setup() {
 
   //IMAGENES ANIMACIONES
   loadImages();
-  
+
   //SONIDO
   initSounds();
 
@@ -95,9 +95,13 @@ void draw() {
 
 void keyPressed() {
   //println("keycode", keyCode);
+  if (!CALIBRADOR && juego.state=="inicio" && key == ENTER) {
+    resetAll(true);
+  }
+
   if (key == 'c'|| key == 'C' ) {
     CALIBRADOR =!CALIBRADOR;
-    resetAll(true);
+    juego.resetInicio();
   }
   //RESET
   if (key == 'r'|| key == 'R' ) resetAll(true);
@@ -129,7 +133,6 @@ void keyPressed() {
     saveFijos();
     saveConfig();
     ks.save();
-    
   }
 
   if (key == 'e') {
@@ -166,5 +169,4 @@ void mousePressed() {
   if ( CALIBRADOR && shCal.getState() == "elementos 2" && shElements2.getState() == "fijos") {
     fijos.poligonos[fijos.selected].addVertex(int(surfaceMouse.x), int(surfaceMouse.y));
   }
-  
 }

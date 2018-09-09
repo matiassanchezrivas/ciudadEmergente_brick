@@ -39,6 +39,7 @@ class Juego {
   Agua [] agua = new Agua [2]; 
   Barrotes [] barrotes = new Barrotes [2];
   Interfaz interfaz; 
+  MotionLive motionInicioLoop;
   MotionLive motionIntro;
   MotionLive motionPerdiste;
   MotionLive motionVictoria;
@@ -47,7 +48,7 @@ class Juego {
   int nivel;
 
   Juego () {
-    state = "animacion";
+    state = "inicio";
     paleta = new Paleta();
     pelota = new Pelota();
     ladrillosGrilla = new LadrillosGrilla();
@@ -66,6 +67,7 @@ class Juego {
       ladrillosArcos [i] = new LadrillosArcos(i);
     }
     interfaz = new Interfaz();
+    motionInicioLoop= new MotionLive(FOTOGRAMAS_LADRILLO_ORO, FPS, "img/"+"ladrillo_oro"+"/ladrillo oro_");
     motionIntro= new MotionLive(FOTOGRAMAS_INTRO, FPS, "img/"+"intro_1024/"+"Intro_1024_");
     motionPerdiste= new MotionLive(FOTOGRAMAS_PERDISTE, FPS, "img/perdiste/perdiste_");
     motionVictoria= new MotionLive(FOTOGRAMAS_VICTORIA, FPS, "img/ganaste/ganaste_");
@@ -76,7 +78,13 @@ class Juego {
   void draw() {
     offscreen.fill(0, 255);
     offscreen.rect(0, 0, width, height);
-    if (state=="animacion") {
+
+
+    if (state=="inicio") {
+      motionInicioLoop.loop();
+      motionInicioLoop.draw(width/2, height/2, width, height);
+    }
+    else if (state=="animacion") {
       motionIntro.draw(width/2, height/2, width, height);     
       ventanas.drawBlack();
       ventanas.draw();
@@ -90,8 +98,8 @@ class Juego {
       } else {
         drawCeldaIntro(1);
       }
-      
-      
+
+
       if (motionIntro.isOver()) {
         detenerSonidoIntro();
         if (temporizadorTransicion.isOver()) {
@@ -194,14 +202,13 @@ class Juego {
       motionPerdiste.draw(X_RELOJ, Y_RELOJ, 0, 0);
       if (motionPerdiste.isOver()) {
         detenerSonidoGameOver();
-        resetAll(true);
+        resetInicio();
       }
     } else if (state == "liberaPerro") {
       pelota.draw(false);
       paleta.jugar();
       drawCelda(true);
       drawElementos(false);
-      pelota.rest();
       motionGanaPerro.draw(X_RELOJ, Y_RELOJ, 0, 0);
       if (motionGanaPerro.isOver()) {
         countdown.reset(TIEMPO_COUNTDOWN_INTRAVIDA);
@@ -211,7 +218,6 @@ class Juego {
     } else if (state == "liberaAstronauta") {
       pelota.draw(false);
       paleta.jugar();
-      pelota.rest();
       drawCelda(true);
       drawElementos(false);
       motionGanaAstronauta.draw(X_RELOJ, Y_RELOJ, 0, 0);
@@ -230,7 +236,7 @@ class Juego {
       motionVictoria.draw(X_RELOJ, Y_RELOJ, 0, 0);
       if (motionVictoria.isOver()) {
         detenerSonidoVictoria();
-        resetAll(true);
+        resetInicio();
       }
     }
   }
@@ -253,11 +259,14 @@ class Juego {
       barrotes[i].draw();
     }
   }
-  
+
   void drawCeldaIntro(int i) {
-   
-      barrotes[i].draw();
-    
+
+    barrotes[i].draw();
+  }
+
+  void resetInicio() {
+    state = "inicio";
   }
 
   void reset() {
@@ -269,11 +278,11 @@ class Juego {
     }
     //ladrillosVentana.reset();
     ventanas.reset();
-    state = "animacion";
     iniciarSonidoIntro();
+    state = "animacion";
+    motionIntro.reset();
     PUNTAJE_JUEGO=0;
     vidasLeft=CANTIDAD_VIDAS;
-    motionIntro.reset();
     nivel=0;
   }
 }

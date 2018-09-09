@@ -1,3 +1,6 @@
+int RANDOM_ANGLE;
+int RANDOM_ANGLE2;
+
 //------------------------------------------------
 class Pelota {
   int x, y, tam;
@@ -15,19 +18,15 @@ class Pelota {
     bola.setPosition(p.x, p.y-p.alto/2-tam/2);
   }
 
-  void rest() {
-    bola.setPosition(x, y);
-  }
-
   void jugar(int nivel) {
     float velx = bola.getVelocityX();
     float vely = bola.getVelocityY();
     if (nivel==0) {
-      velx = (velx > 0) ? MIN_VELOCITY_NIVEL1  : -MIN_VELOCITY_NIVEL1;
-      vely = (vely > 0) ? MIN_VELOCITY_NIVEL1  : -MIN_VELOCITY_NIVEL1;
+      velx = (velx > 0) ? MIN_VELOCITY_NIVEL1+RANDOM_ANGLE  : -MIN_VELOCITY_NIVEL1+RANDOM_ANGLE2;
+      vely = (vely > 0) ? MIN_VELOCITY_NIVEL1+RANDOM_ANGLE  : -MIN_VELOCITY_NIVEL1+RANDOM_ANGLE2;
     } else {
-      velx = (velx > 0) ? MIN_VELOCITY_NIVEL2  : -MIN_VELOCITY_NIVEL2;
-      vely = (vely > 0) ? MIN_VELOCITY_NIVEL2  : -MIN_VELOCITY_NIVEL2;
+      velx = (velx > 0) ? MIN_VELOCITY_NIVEL2+RANDOM_ANGLE  : -MIN_VELOCITY_NIVEL2+RANDOM_ANGLE2;
+      vely = (vely > 0) ? MIN_VELOCITY_NIVEL2+RANDOM_ANGLE  : -MIN_VELOCITY_NIVEL2+RANDOM_ANGLE2;
     }
     bola.setVelocity(velx, vely);
   }
