@@ -1,0 +1,151 @@
+class LadrillosArcos {
+  ArrayList <Brick> bricks;
+  float startAngle [] = new float [2];
+  float stopAngle [] = new float [2];
+
+  LadrillosArcos () {
+    bricks = new ArrayList();
+  }
+
+  void draw() {
+    for (int i=0; i<bricks.size(); i++) {
+      Brick b = bricks.get(i);
+      b.draw();
+    }
+  }
+
+  void reset() {
+    bricks = new ArrayList();
+    for (int w=0; w<windows.length; w++) {
+      //ARCO
+      startAngle [w]=QUARTER_PI;
+      stopAngle[w]=HALF_PI*2;
+      int _numPoints=15;
+      int _numBricksArc=NUM_ARC_BRICKS;
+      float _angleSep = (stopAngle[w]-startAngle[w])/_numBricksArc;
+      float _angle=(startAngle[w]-stopAngle[w])/_numBricksArc/(float)_numPoints;
+
+
+      for (int j=0; j<_numBricksArc; j++) {
+        PVector [] pv;
+        pv = new PVector [_numPoints*2+2];
+        float centerx=0;
+        float centery=0;
+        float rotAngle=0;
+        for (int i=0; i<=_numPoints; i++)
+        {
+          pv [i] = new PVector(windows[w].x+windows[w].ancho/2+windows[w].ancho/2*sin(HALF_PI+PI+startAngle[w]+_angleSep*j+_angle*i), windows[w].y+windows[w].altoArco/2*cos(HALF_PI+PI+startAngle[w]+_angleSep*j+_angle*i));
+        } 
+        for (int i=_numPoints; i>=0; i--)
+        {
+          pv [_numPoints*2+1-i] = new PVector(windows[w].x+windows[w].ancho/2+(windows[w].ancho/2+BRICK_HEIGHT)*sin(HALF_PI+PI+startAngle[w]+_angleSep*j+_angle*i), windows[w].y+(windows[w].altoArco/2+BRICK_HEIGHT)*cos(HALF_PI+PI+startAngle[w]+_angleSep*j+_angle*i));
+        } 
+        centerx=windows[w].x+windows[w].ancho/2+windows[w].ancho/2*sin(HALF_PI+PI+_angleSep*j+_angleSep/2);
+        centery=windows[w].y+windows[w].altoArco/2*cos(HALF_PI+PI+_angleSep*j+_angleSep/2);
+        rotAngle=HALF_PI+PI+_angleSep*j+_angleSep/2;
+        bricks.add(new Brick(pv, centerx, centery, rotAngle));
+      }
+    }
+  }
+  void explosion(int x, int y) {
+    for (int i=0; i<bricks.size(); i++) {
+      Brick b=bricks.get(i);
+      b.explosion(x, y);
+    }
+  }
+
+  void saltar() {
+    for (int i=0; i<bricks.size(); i++) {
+      Brick b=bricks.get(i);
+      b.saltar();
+    }
+  }
+}
+
+//------------------------------------------------
+class LadrillosVentana {
+  ArrayList <Brick> bricks;
+
+  LadrillosVentana () {
+    bricks = new ArrayList();
+  }
+
+  void draw() {
+    for (int i=0; i<bricks.size(); i++) {
+      Brick b = bricks.get(i);
+      b.draw();
+    }
+  }
+
+  void reset() {
+    bricks = new ArrayList();
+    for (Ventana ventana : windows) {
+      //LADRILLOS
+      int numberBricks = int(ventana.alto/BRICK_HEIGHT);
+      for (int i=numberBricks-1; i>=0; i--)
+      {
+        //IZQUIERDA
+        bricks.add(new Brick (ventana.x-BRICK_WIDTH, ventana.y+BRICK_HEIGHT*i, BRICK_WIDTH, BRICK_HEIGHT, "ventana", "izquierda"));
+      }
+      for (int i=0; i<numberBricks; i++)
+      {
+        //DERECHA
+        bricks.add(new Brick (ventana.x+ventana.ancho, ventana.y+BRICK_HEIGHT*i, BRICK_WIDTH, BRICK_HEIGHT, "ventana", "derecha"));
+      }
+    }
+  }
+
+  void saltar() {
+    for (int i=0; i<bricks.size(); i++) {
+      Brick b=bricks.get(i);
+      b.saltar();
+    }
+  }
+}
+
+
+//------------------------------------------------
+class LadrillosGrilla {
+  ArrayList <Brick> bricks;
+
+  LadrillosGrilla () {
+    bricks = new ArrayList();
+  }
+
+  void draw() {
+    for (int i=0; i<bricks.size(); i++) {
+      Brick b = bricks.get(i);
+      b.draw();
+    }
+  }
+
+  void reset() {
+    bricks = new ArrayList();
+
+    for (int i=0; i<packLadrillos.filas.size(); i++) {
+      FilaLadrillos fila = packLadrillos.filas.get(i);
+      for (int j=0; j<fila.ladrillos.size(); j++) {
+        Ladrillo l = fila.ladrillos.get(j);
+        int oro =int(random(fila.ladrillos.size()-1));
+        String type = "grilla";
+        if (i==3 && j==2) {
+          type= "oro";
+          println("ES OROOOO");
+        }
+        bricks.add(new Brick (l.x, l.y, l.ancho, l.alto, type, "x"));
+      }
+    }
+  }
+  void explosion(int x, int y) {
+    for (int i=0; i<bricks.size(); i++) {
+      Brick b=bricks.get(i);
+      b.explosion(x, y);
+    }
+  }
+  void saltar() {
+    for (int i=0; i<bricks.size(); i++) {
+      Brick b=bricks.get(i);
+      b.saltar();
+    }
+  }
+}

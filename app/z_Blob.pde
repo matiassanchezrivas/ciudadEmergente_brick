@@ -40,38 +40,38 @@ class Blob {
     ancho = _ancho;
     alto = _alto;
 
-    pushStyle();
-    noFill();
-    stroke(255, 0, 0);
+    offscreen.pushStyle();
+    offscreen.noFill();
+    offscreen.stroke(255, 0, 0);
     
-    rect( x + boundingRectX * ancho, 
+    offscreen.rect( x + boundingRectX * ancho, 
     y + boundingRectY * alto, 
     boundingRectWidth * ancho, 
     boundingRectHeight * alto);
-    stroke(0, 255, 0);
+    offscreen.stroke(0, 255, 0);
     
-    line( x + centroidX * ancho - 5, 
+    offscreen.line( x + centroidX * ancho - 5, 
     y + centroidY * alto, 
     x + centroidX * ancho + 5, 
     y + centroidY * alto);
     
-    line( x + centroidX * ancho, 
+    offscreen.line( x + centroidX * ancho, 
     y + centroidY * alto -5, 
     x + centroidX * ancho, 
     y + centroidY * alto + 5);
 
     float val = map(depth, 0, 1, 0, 255 );
-    stroke(val, 40, 40);
-    ellipse(x + highestX * ancho, y + highestY * alto, 15, 15);
+    offscreen.stroke(val, 40, 40);
+    offscreen.ellipse(x + highestX * ancho, y + highestY * alto, 15, 15);
 
-    fill(255, 0, 0);
+    offscreen.fill(255, 0, 0);
     String t = "pid[" + pid + "] | " + "oid[" + oid + "] | " + "age[" + age + "]";
-    text(t, x + centroidX * ancho + 10, y + centroidY * alto);
+    offscreen.text(t, x + centroidX * ancho + 10, y + centroidY * alto);
 
-    stroke( 0 , 255 , 0 );
-    noFill();
+    offscreen.stroke( 0 , 255 , 0 );
+    offscreen.noFill();
     dibujarContorno( x, y, ancho, alto);
-    popStyle();
+    offscreen.popStyle();
   }
   //---------------------------------------------------------------
 
@@ -83,18 +83,18 @@ class Blob {
       stroke(0, 255, 0);
        noFill();
        stroke(0, 255, 0);*/
-      beginShape();
+      offscreen.beginShape();
 
       for (int i = 0; i < contours.size (); i ++) {
 
         PVector point = contours.get(i);
 
-        vertex(x + point.x * ancho + boundingRectX, y + point.y * alto + boundingRectY);
+        offscreen.vertex(x + point.x * ancho + boundingRectX, y + point.y * alto + boundingRectY);
 
         //println("punto xNorm:  " + point.x + " | punto yNorm: " + point.y);
         //println("punto    x:  " + point.x * ancho + boundingRectX+ " | punto     y: " + point.y * alto + boundingRectY);
       }
-      endShape(CLOSE);
+      offscreen.endShape(CLOSE);
     }
   }
 }

@@ -36,6 +36,9 @@ void drawElements() {
   for (Ventana ventana : windows) {
     ventana.draw();
   }
+  for (Barrotes barrote : juego.barrotes) {
+    barrote.draw();
+  }
   packLadrillos.draw();
 }
 
@@ -136,30 +139,34 @@ class Ventana {
       cRect = (shWindows.getState() == "dimension") ? c : color(255, 100);
     }
 
-    pushStyle();
+    offscreen.pushStyle();
     if (shElements.getState() == "ventana" && shWindows.getState() == "posicion" && selectedWindow == id) {
-      strokeWeight(.5);
-      stroke(c);
+      offscreen.strokeWeight(STROKE_VENTANA);
+      offscreen.stroke(c);
     } else {
-      noStroke();
+      offscreen.noStroke();
     }
-    fill(cArco);
-    arc(x+ancho/2, y, ancho, altoArco, PI, TWO_PI);
+    offscreen.strokeWeight(1);
+    offscreen.fill(cArco,100);
+    offscreen.arc(x+ancho/2, y, ancho+BRICK_HEIGHT, altoArco+BRICK_HEIGHT, PI, TWO_PI);    
+    offscreen.strokeWeight(STROKE_VENTANA);
+    offscreen.fill(cArco);
+    offscreen.arc(x+ancho/2, y, ancho, altoArco, PI, TWO_PI);
 
-    fill(cRect);
-    shape(s);
-    rect (x, y, ancho, alto);
+    offscreen.fill(cRect);
+    offscreen.shape(s);
+    offscreen.rect (x, y, ancho, alto);
     if (shElements.getState() == "ventana" && shWindows.getState() == "posicion" && selectedWindow == id) {
-      pushMatrix();
-      translate(x, y);
-      noStroke();
-      fill(c);
-      ellipse(0, 0, 10, 10);
-      rotate(radians(frameCount*2));
-      ellipse(0, 15, 10, 10);
-      popMatrix();
+      offscreen.pushMatrix();
+      offscreen.translate(x, y);
+      offscreen.noStroke();
+      offscreen.fill(c);
+      offscreen.ellipse(0, 0, 10, 10);
+      offscreen.rotate(radians(frameCount*2));
+      offscreen.ellipse(0, 15, 10, 10);
+      offscreen.popMatrix();
     }
-    popStyle();
+    offscreen.popStyle();
   }
 }
 
@@ -188,16 +195,16 @@ class PackLadrillos {
   }
 
   void draw() {
-    pushStyle();
-    stroke(255);
-    noFill();
-    rect(x, y, ancho, alto);
+    offscreen.pushStyle();
+    offscreen.stroke(255);
+    offscreen.noFill();
+    offscreen.rect(x, y, ancho, alto);
     for (int i=0; i<filas.size(); i++) {
       FilaLadrillos fl = filas.get(i);
       //fl.update(x, y, ancho, alto, 8);
       fl.draw();
     }
-    popStyle();
+    offscreen.popStyle();
   }
 }
 
@@ -229,17 +236,16 @@ class FilaLadrillos {
   }
 
   void draw() {
-    pushStyle();
-    strokeWeight(4);
-    stroke(255);
-    noFill();
-    rect(x, y, ancho, alto);
+    offscreen.pushStyle();
+    offscreen.strokeWeight(4);
+    offscreen.stroke(255);
+    offscreen.noFill();
+    offscreen.rect(x, y, ancho, alto);
     for (int i=0; i<ladrillos.size(); i++) {
       Ladrillo l = ladrillos.get(i);
-      int anchoLadrillo = ancho/cantidad;
       l.draw();
     }
-    popStyle();
+    offscreen.popStyle();
   }
 }
 
@@ -257,8 +263,23 @@ class Ladrillo {
   }
 
   void draw() {
-    strokeWeight(.5);
-    fill(color1);
-    rect (x, y, ancho, alto);
+    offscreen.strokeWeight(.5);
+    offscreen.fill(color1);
+    offscreen.rect (x, y, ancho, alto);
+  }
+}
+
+
+void drawKeystone(int cant) {
+  float ancho=width/cant;
+  for (int i=0; i<cant; i++) {
+    for (int j=0; j<cant; j++) {
+      if ((i+j)%2==0) {
+        offscreen.fill(255);
+      } else {
+        offscreen.fill(0);
+      }
+      offscreen.rect(i*ancho, j*ancho, ancho, ancho);
+    }
   }
 }

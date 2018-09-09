@@ -312,18 +312,18 @@ class AdminMensajes {
       if (punterosEntrantes[i] == true) {
         if (print) println("<---OSC--ENVIANDO puntero entrante: " + i);
         Blob esteBlob = devolverBlobNuevoPorPid(i);
-        enviarMesajePunteroEntrante(esteBlob.pid, esteBlob.oid, esteBlob.highestX, esteBlob.highestY, esteBlob.depth);
+        //enviarMesajePunteroEntrante(esteBlob.pid, esteBlob.oid, esteBlob.highestX, esteBlob.highestY, esteBlob.depth);
       } 
       if (punterosSalientes[i] == true) {
         if (print)println("<---OSC--ENVIANDO puntero saliente: " + i);
         Blob esteBlob = devolverBlobAnteriorPorPid(i);
-        enviarMesajePunteroSaliente(esteBlob.pid, esteBlob.oid, esteBlob.highestX, esteBlob.highestY, esteBlob.depth);
+        //enviarMesajePunteroSaliente(esteBlob.pid, esteBlob.oid, esteBlob.highestX, esteBlob.highestY, esteBlob.depth);
         //enviarMesajePunteroSaliente(i);
       }
       if (punterosPresentes[i] == true) {
         if (print)println("<---OSC--ENVIANDO puntero presente: " + i);
         Blob esteBlob = devolverBlobNuevoPorPid(i);
-        enviarMesajePunteroPresente(esteBlob.pid, esteBlob.oid, esteBlob.highestX, esteBlob.highestY, esteBlob.depth);
+        //enviarMesajePunteroPresente(esteBlob.pid, esteBlob.oid, esteBlob.highestX, esteBlob.highestY, esteBlob.depth);
         //enviarMesajePunteroPresente(i);
       }
     }

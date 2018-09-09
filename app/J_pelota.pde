@@ -1,21 +1,33 @@
+int RANDOM_ANGLE;
+int RANDOM_ANGLE2;
+
 //------------------------------------------------
 class Pelota {
   int x, y, tam;
+  int alpha=0;
+  int amount=5;
+  float transp=1;
+  
   FCircle bola;
   Pelota () {
     reset();
     update();
   }
-  
-  void rest(Paleta p){
-  bola.setPosition(p.x, p.y-p.alto/2-tam/2);
+
+  void rest(Paleta p) {
+    bola.setPosition(p.x, p.y-p.alto/2-tam/2);
   }
 
-  void jugar() {
+  void jugar(int nivel) {
     float velx = bola.getVelocityX();
     float vely = bola.getVelocityY();
-    velx = (velx > 0) ? MIN_VELOCITY : -MIN_VELOCITY;
-    vely = (vely > 0) ? MIN_VELOCITY : -MIN_VELOCITY;
+    if (nivel==0) {
+      velx = (velx > 0) ? MIN_VELOCITY_NIVEL1+RANDOM_ANGLE  : -MIN_VELOCITY_NIVEL1+RANDOM_ANGLE2;
+      vely = (vely > 0) ? MIN_VELOCITY_NIVEL1+RANDOM_ANGLE  : -MIN_VELOCITY_NIVEL1+RANDOM_ANGLE2;
+    } else {
+      velx = (velx > 0) ? MIN_VELOCITY_NIVEL2+RANDOM_ANGLE  : -MIN_VELOCITY_NIVEL2+RANDOM_ANGLE2;
+      vely = (vely > 0) ? MIN_VELOCITY_NIVEL2+RANDOM_ANGLE  : -MIN_VELOCITY_NIVEL2+RANDOM_ANGLE2;
+    }
     bola.setVelocity(velx, vely);
   }
 
@@ -23,15 +35,21 @@ class Pelota {
     this.x = int(bola.getX()); 
     this.y = int(bola.getY()); 
     this.tam = SIZE_BALL;
+    transp=(map(y,WORLD_BOTTOM_Y,height, 1,0));
   }
 
-  void draw() {
+  void draw(boolean seVe) {
     update();
-    pushStyle();
-    noStroke();
-    fill(255);
-    ellipse (x, y, tam, tam);
-    popStyle();
+    if (seVe) {
+      alpha = (alpha<255) ? alpha+=amount : 255;
+    } else {
+      alpha = (alpha>0) ? alpha-=amount : 0;
+    }
+    offscreen.pushStyle();
+    offscreen.noStroke();
+    offscreen.fill(255, alpha*transp);
+    offscreen.ellipse (x, y, tam, tam);
+    offscreen.popStyle();
   }
 
   void reset() {

@@ -1,8 +1,13 @@
-int DURACION_BARROTES = 2000;
+int DURACION_BARROTES = 1000;
+int STROKE_VENTANA = 10;
+int STROKE_BARROTE = 6;
+int CANTIDAD_BARROTES = 4;
+
 
 class Ventanas {
   FPoly v;
   PShape windowShape [] = new PShape [2];
+  PShape windowShapeBlack [] = new PShape [2];
   PShape negativeWindowShape [] = new PShape [2];
 
   Ventanas () {
@@ -10,16 +15,24 @@ class Ventanas {
 
   void draw() {
     for (int i=0; i<windowShape.length; i++) {
+      windowShape[i].setFill(color(255,0,0, 0));
       windowShape[i].setStroke(color(255));
-      windowShape[i].setStrokeWeight(10);
-      shape(windowShape[i]);
+      offscreen.shape(windowShape[i]);
+    }
+  }
+
+  void drawBlack() {
+    for (int i=0; i<windowShape.length; i++) {
+      windowShapeBlack[i].setFill(color(0, 255));
+      windowShapeBlack[i].setStroke(color(0));
+      offscreen.shape(windowShapeBlack[i]);
     }
   }
 
   void drawBehind() {
     for (int i=0; i<negativeWindowShape.length; i++) {
-      negativeWindowShape[i].setFill(0);
-      shape(negativeWindowShape[i]);
+      //negativeWindowShape[i].setFill(color(0,0,255));
+      offscreen.shape(negativeWindowShape[i]);
     }
   }
 
@@ -29,7 +42,7 @@ class Ventanas {
       v = new FPoly();
       windowShape[i] = createShape();
       windowShape[i].beginShape();
-      int numPoints=40;
+      int numPoints=20;
       float angle=PI/(float)numPoints;
       windowShape[i].vertex(windows[i].x, windows[i].y);
       v.vertex(windows[i].x, windows[i].y);
@@ -42,10 +55,16 @@ class Ventanas {
       v.vertex(windows[i].x+windows[i].ancho, windows[i].y);
       windowShape[i].vertex(windows[i].x+windows[i].ancho, windows[i].y+windows[i].alto);
       v.vertex(windows[i].x+windows[i].ancho, windows[i].y+windows[i].alto);
+      v.vertex(windows[i].x+windows[i].ancho, Y_PALETA);
       windowShape[i].vertex(windows[i].x, windows[i].y+windows[i].alto);
+      v.vertex(windows[i].x, Y_PALETA);
       v.vertex(windows[i].x, windows[i].y+windows[i].alto);
-      windowShape[i].noFill();
+      
+      windowShape[i].fill(255);
+      windowShape[i].stroke(color(255));
+      windowShape[i].strokeWeight(STROKE_VENTANA);
       windowShape[i].endShape(CLOSE);
+      windowShapeBlack[i]=windowShape[i];
       v.setStatic(true);
       world.add(v);
     }
@@ -65,7 +84,7 @@ class Ventanas {
       //negativeWindowShape[i].vertex(windows[i].x-calle, windows[i].y);
 
       negativeWindowShape[i].beginContour();
-      int numPoints=40;
+      int numPoints=20;
       float angle=PI/(float)numPoints;
 
 
@@ -81,6 +100,7 @@ class Ventanas {
 
       negativeWindowShape[i].endContour();
       negativeWindowShape[i].noStroke();
+      negativeWindowShape[i].fill(0);
       negativeWindowShape[i].endShape(CLOSE);
     }
   }
@@ -112,42 +132,42 @@ class Agua {
 
   void drawIrregular(float amount) {
 
-    pushStyle();
-    fill(colorJuegoAgua.elColor);
-    rectMode(CORNERS);
+    offscreen.pushStyle();
+    offscreen.fill(colorJuegoAgua.elColor);
+    offscreen.rectMode(CORNERS);
     //rect(windows[i].x, windows[i].y+windows[i].alto, windows[i].x+windows[i].ancho, windows[i].y+map(amount, 0, 1, windows[i].alto, 0));
 
-    beginShape(); 
+    offscreen.beginShape(); 
 
     float xoff = 0;
     for (float x = 0; x <= windows[windowNumber].ancho; x += 10) {
       float y = map(noise(xoff, yoff), 0, 1, 0, 50);
-      vertex(windows[windowNumber].x+x, windows[windowNumber].y+map(amount, 0, 1, windows[windowNumber].alto, -windows[windowNumber].altoArco/2)-y); 
+      offscreen.vertex(windows[windowNumber].x+x, windows[windowNumber].y+map(amount, 0, 1, windows[windowNumber].alto, -windows[windowNumber].altoArco/2)-y); 
       xoff += 0.05;
     }
     yoff += 0.01;
-    vertex(windows[windowNumber].x+windows[windowNumber].ancho, windows[windowNumber].y+windows[windowNumber].alto);
-    vertex(windows[windowNumber].x, windows[windowNumber].y+windows[windowNumber].alto);
-    endShape(CLOSE);
-    popStyle();
+    offscreen.vertex(windows[windowNumber].x+windows[windowNumber].ancho, windows[windowNumber].y+windows[windowNumber].alto);
+    offscreen.vertex(windows[windowNumber].x, windows[windowNumber].y+windows[windowNumber].alto);
+    offscreen.endShape(CLOSE);
+    offscreen.popStyle();
   }
 
   void draw(float amount) {
     calcWave(amount);
 
-    pushStyle();
-    fill(colorJuegoAgua.elColor);
+    offscreen.pushStyle();
+    offscreen.fill(colorJuegoAgua.elColor);
 
     //rect(windows[i].x, windows[i].y+windows[i].alto, windows[i].x+windows[i].ancho, windows[i].y+map(amount, 0, 1, windows[i].alto, 0));
 
-    beginShape(); 
+    offscreen.beginShape(); 
     for (int x = 0; x < yvalues.length; x++) {
-      vertex(windows[windowNumber].x+x*xspacing, windows[windowNumber].y+map(amount, 0, 1, windows[windowNumber].alto, -windows[windowNumber].altoArco/2)-yvalues[x]);
+      offscreen.vertex(windows[windowNumber].x+x*xspacing, windows[windowNumber].y+map(amount, 0, 1, windows[windowNumber].alto, -windows[windowNumber].altoArco/2)-yvalues[x]);
     }
-    vertex(windows[windowNumber].x+windows[windowNumber].ancho, windows[windowNumber].y+windows[windowNumber].alto);
-    vertex(windows[windowNumber].x, windows[windowNumber].y+windows[windowNumber].alto);
-    endShape(CLOSE);
-    popStyle();
+    offscreen.vertex(windows[windowNumber].x+windows[windowNumber].ancho, windows[windowNumber].y+windows[windowNumber].alto);
+    offscreen.vertex(windows[windowNumber].x, windows[windowNumber].y+windows[windowNumber].alto);
+    offscreen.endShape(CLOSE);
+    offscreen.popStyle();
   }
 
   void calcWave(float amount) {
@@ -165,34 +185,39 @@ class Agua {
 
 class Barrotes {
   int windowNumber;
-  int numberBarrotes;
-  int positions [];
   Temporizador temporizador;
+  boolean llego= false;
 
-  Barrotes(int windowNumber, int numberBarrotes) {
+  Barrotes(int windowNumber) {
     this.windowNumber = windowNumber;
-    this.numberBarrotes = numberBarrotes;
-    positions = new int [numberBarrotes];
-    for (int i=0; i<positions.length; i++) {
-      positions[i] = int(windows[windowNumber].ancho/numberBarrotes*i);
-    }
     temporizador = new Temporizador(DURACION_BARROTES);
   }
-  
+
   void reset() {
     temporizador.reset();
+    llego=false;
   }
 
   void draw() {
     float amount = temporizador.normalized();
-    pushStyle();
-    stroke(255);
-    strokeWeight(6);
-    Ventana v = windows[windowNumber];
-    for (int i=0; i<positions.length; i++) {
-      line(v.x+positions[i], v.y-v.altoArco/2, v.x+positions[i], v.y-v.altoArco/2+(v.alto+v.altoArco/2)*amount);
+    if(amount>=1 && !llego){
+    llego=true;
+    dispararSonidoBarrotes();
     }
-    line(v.x, v.y-v.altoArco/2+(v.alto+v.altoArco/2)*amount, v.x+v.ancho, v.y-v.altoArco/2+(v.alto+v.altoArco/2)*amount);
-    popStyle();
+    
+    offscreen.pushStyle();
+    if (CALIBRADOR && shElements.getState() == "ventana" && shWindows.getState() == "barrotes") {
+      offscreen.stroke(colorCalibracionAcento.elColor);
+    } else {
+      offscreen.stroke(255);
+    }
+
+    offscreen.strokeWeight(STROKE_BARROTE);
+    Ventana v = windows[windowNumber];
+    for (int i=1; i<CANTIDAD_BARROTES; i++) {
+      offscreen.line(v.x+windows[windowNumber].ancho/CANTIDAD_BARROTES*i, v.y-v.altoArco/2, v.x+windows[windowNumber].ancho/CANTIDAD_BARROTES*i, v.y-v.altoArco/2+(v.alto+v.altoArco/2)*amount);
+    }
+    offscreen.line(v.x, v.y-v.altoArco/2+(v.alto+v.altoArco/2)*amount, v.x+v.ancho, v.y-v.altoArco/2+(v.alto+v.altoArco/2)*amount);
+    offscreen.popStyle();
   }
 }
