@@ -87,24 +87,31 @@ void draw() {
     juego.draw();
   }
   mostrarCartel();
-
   offscreen.endDraw();
-
   surf.render(offscreen);
 }
 
 void keyPressed() {
   //println("keycode", keyCode);
+  if (!CALIBRADOR && juego.state=="animacion" && key == ENTER) {
+    juego.triggerAparicion();
+  }
   if (!CALIBRADOR && juego.state=="inicio" && key == ENTER) {
     resetAll(true);
+  }
+
+
+
+  if (!CALIBRADOR && key == 'r' || key == 'R' ) {
+    //resetAll(true);
+    juego.resetInicio();
+    detenerTodosLosSonidos();
   }
 
   if (key == 'c'|| key == 'C' ) {
     CALIBRADOR =!CALIBRADOR;
     juego.resetInicio();
   }
-  //RESET
-  if (key == 'r'|| key == 'R' ) resetAll(true);
   //USAR KINECT
   if (key == 'k'|| key == 'K' ) useKinect=!useKinect;
   if (key == 'l'|| key == 'L' ) ks.load();
@@ -152,6 +159,10 @@ void keyPressed() {
   //  }
   //}
 }
+
+void end() {
+}
+
 
 void mouseDragged() {
   //COLOR

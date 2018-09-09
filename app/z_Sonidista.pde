@@ -425,3 +425,10 @@ void iniciarSonidoIntro() {
 void detenerSonidoIntro() {
   sonidista.fadeOut(12, 200);
 }
+
+void detenerTodosLosSonidos() {
+  for(int i=0; i<sonidista.totalSonidos; i++){
+    sonidista.fadeOut(i,500);
+  }
+
+}

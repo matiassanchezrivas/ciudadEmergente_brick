@@ -5,9 +5,9 @@ int TIEMPO_GAME_OVER = 500;
 int TIEMPO_ANIMACION = 500;
 int TIEMPO_GANAR = 500;
 int TIEMPO_APARICION_ELEMENTOS=4000;
-int CANTIDAD_VIDAS=2;
+int CANTIDAD_VIDAS=4;
 int TIEMPO_TRANSICION = 500;
-float PORCENTAJE_DESTRUCCION_ARCOS=.7;
+float PORCENTAJE_DESTRUCCION_ARCOS=1;
 
 int FPS = 35;
 
@@ -20,7 +20,6 @@ int PUNTOS_LADRILLO;
 
 boolean useKinect; 
 int vidasLeft;
-
 
 class Juego {
   String state;
@@ -75,6 +74,13 @@ class Juego {
     motionGanaAstronauta= new MotionLive(FOTOGRAMAS_LIBERA_ASTRONAUTA, FPS, "img/libera_astronauta/bien-hecho-astronauta_");
   }
 
+  void triggerAparicion() {
+    detenerSonidoIntro();
+    temporizadorAparicionElementos.reset();
+    dispararSonidoLadrillos();
+    state="aparicionElementos";
+  }
+
   void draw() {
     offscreen.fill(0, 255);
     offscreen.rect(0, 0, width, height);
@@ -83,10 +89,9 @@ class Juego {
     if (state=="inicio") {
       motionInicioLoop.loop();
       motionInicioLoop.draw(width/2, height/2, width, height);
-    }
-    else if (state=="animacion") {
+    } else if (state=="animacion") {
       motionIntro.draw(width/2, height/2, width, height);     
-      ventanas.drawBlack();
+      //ventanas.drawBlack();
       ventanas.draw();
       if (motionIntro.temporizador.normalized()<.75) {
         barrotes[0].reset();
@@ -102,24 +107,38 @@ class Juego {
 
       if (motionIntro.isOver()) {
         detenerSonidoIntro();
-        if (temporizadorTransicion.isOver()) {
-          println("over");
-          temporizadorAparicionElementos.reset();
-          dispararSonidoLadrillos();
-          state="aparicionElementos";
+        if (temporizadorTransicion.isOver()) {        
+          triggerAparicion();
         }
       } else {
         temporizadorTransicion.reset();
       }
     } else if (state=="aparicionElementos") {
+      interfaz.draw(true);
       float n = temporizadorAparicionElementos.normalized();
 
-      for (int l=0; l<windows.length; l++) {
-        for (int i=0; i<(ladrillosArcos[l].bricks.size()-1)*n; i++) {
-          Brick b = ladrillosArcos[l].bricks.get(i);
+
+      for (int i=0; i<ladrillosArcos[0].bricks.size(); i++) {
+        float s =map(n, 0, .5, 0, 1);
+        
+        if (i*1.0/ladrillosArcos[0].bricks.size() < s) {
+          Brick b = ladrillosArcos[0].bricks.get(i);
           b.animate();
         }
       }
+      
+      for (int i=0; i<ladrillosArcos[1].bricks.size(); i++) {
+        float s =map(n, .5, 1, 0, 1);
+        
+        if (i*1.0/ladrillosArcos[1].bricks.size() < s) {
+          Brick b = ladrillosArcos[1].bricks.get(i);
+          b.animate();
+        }
+      }
+
+
+
+
       for (int i=0; i<(ladrillosGrilla.bricks.size()-1)*n; i++) {
         Brick b = ladrillosGrilla.bricks.get(i);
         b.animate();
@@ -133,7 +152,9 @@ class Juego {
       }
       drawCelda(false);
       drawElementos(false);
+      fijos.drawReboques();
     } else if (state=="countDown") {
+      interfaz.draw(true);
       drawCelda(!(vidasLeft==CANTIDAD_VIDAS));
       countdown.draw((vidasLeft==CANTIDAD_VIDAS) ? TIEMPO_COUNTDOWN : TIEMPO_COUNTDOWN_INTRAVIDA);
       if (countdown.temporizador.isOver()) {
@@ -147,6 +168,7 @@ class Juego {
       paleta.jugar();
 
       drawElementos(true);
+      fijos.drawReboques();
     } else if (state == "juego") {
       drawCelda(true);
       paleta.jugar();
@@ -173,7 +195,7 @@ class Juego {
         motionPerdiste.reset();
         iniciarSonidoGameOver();
       }
-      interfaz.draw();
+      interfaz.draw(true);
 
       //GANAR
       if (nivel==0) {
@@ -191,7 +213,9 @@ class Juego {
         motionVictoria.reset();
         iniciarSonidoVictoria();
       }
+      fijos.drawReboques();
     } else if (state == "gameOver") {
+      interfaz.draw(false);
       pelota.draw(false);
       paleta.jugar();
       drawCelda(true);
@@ -205,6 +229,7 @@ class Juego {
         resetInicio();
       }
     } else if (state == "liberaPerro") {
+      interfaz.draw(true);
       pelota.draw(false);
       paleta.jugar();
       drawCelda(true);
@@ -216,6 +241,7 @@ class Juego {
         dispararSonidoReloj();
       }
     } else if (state == "liberaAstronauta") {
+      interfaz.draw(true);
       pelota.draw(false);
       paleta.jugar();
       drawCelda(true);
@@ -227,6 +253,7 @@ class Juego {
         dispararSonidoReloj();
       }
     } else if (state == "victoria") {
+      interfaz.draw(false);
       pelota.draw(false);
       paleta.jugar();
       detenerSonidoJuego();
@@ -284,6 +311,7 @@ class Juego {
     PUNTAJE_JUEGO=0;
     vidasLeft=CANTIDAD_VIDAS;
     nivel=0;
+    fijos.resetFisica();
   }
 }
 //------------------------------------------------

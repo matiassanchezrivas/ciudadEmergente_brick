@@ -174,3 +174,8 @@ class LadrillosGrilla {
     }
   }
 }
+
+class ReboquesLadrillos {
+  
+
+}

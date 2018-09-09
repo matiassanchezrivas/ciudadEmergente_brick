@@ -1,4 +1,5 @@
 Fijos fijos;
+Reboque reboques;
 FisicaCalibracion fisicaCalibracion;
 
 class FisicaCalibracion {
@@ -86,6 +87,7 @@ void loadFijos() {
       fijos.addVertex(int(ver.getFloat("x")), int(ver.getFloat("y")), i);
     }
   }
+  fijos.play();
 }
 
 void loadElements2() {
@@ -96,7 +98,7 @@ void loadElements2() {
 
 void drawElements2() {
   drawFisica();
-  juego.interfaz.draw();
+  juego.interfaz.draw(true);
 
   for (Ventana ventana : windows) {
     ventana.draw();
@@ -130,18 +132,90 @@ void drawWorldEdges() {
   offscreen.popStyle();
 }
 
+class Reboque {
+  FPoly reb;
+  PShape rebShape;
+  PVector [] vertex;
+  int number;
+
+
+  Reboque(int number) {
+    this.number = number;
+    rebShape = createShape();
+  }
+
+  void updateVertex(PVector [] vertex) {
+    this.vertex=vertex;
+  }
+
+  void resetFisica() {
+    reb = new FPoly();
+    rebShape = createShape();
+    rebShape.beginShape();
+    for (PVector pv : vertex) {
+      rebShape.vertex(pv.x, pv.y);
+      reb.vertex(pv.x, pv.y);
+      println(pv.x, pv.y);
+    }
+
+    rebShape.noStroke();
+    rebShape.fill(0, 255, 255, 255);
+    rebShape.endShape(CLOSE);
+    reb.setStatic(true);
+    reb.setName("reboque,"+number);
+    println("reboque,"+number);
+    world.add(reb);
+  }
+
+
+  void draw() {
+    
+    offscreen.shape(rebShape);
+  }
+}
+
 class Fijos {
   int selected;
-  Poligono poligonos [] = new Poligono [8];
+  Poligono poligonos [] = new Poligono [9];
+  Reboque [] reboques = new Reboque [9];
 
   Fijos() {
     for (int i=0; i< poligonos.length; i++) {
       poligonos[i] = new Poligono();
-      selected = 0;
+    }
+    selected = 0;
+    for (int i=0; i< reboques.length; i++) {
+      reboques[i] = new Reboque(i);
+    }
+  }
+
+  void play() {
+    for (int i=0; i<poligonos.length; i++) {
+      PVector [] pvs = new PVector[poligonos[i].vertices.size()];
+      for (int j=0; j<poligonos[i].vertices.size(); j++) {
+        PVector p = poligonos[i].vertices.get(j);
+        pvs[j]= new PVector (p.x, p.y);
+        
+      }
+      reboques[i].updateVertex(pvs);
+    }
+  }
+
+  void resetFisica() {
+    for (int i=0; i< reboques.length; i++) {
+      reboques[i].resetFisica();
+    }
+  }
+
+  void drawReboques() {
+    for (int i=0; i< reboques.length; i++) {
+      
+      reboques[i].draw();
     }
   }
 
   void draw() {
+    play();
     for (int i=0; i< poligonos.length; i++) {
       poligonos[i].draw(i==selected);
     }

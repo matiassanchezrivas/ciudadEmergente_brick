@@ -154,7 +154,7 @@ PVector changeVariableV(int hor, int ver, int amount) {
 
 void tiempoKeys() {
   INTERFAZ_TIEMPO_X = changeVariable(INTERFAZ_TIEMPO_X, 0, 0, 0, amountChange)[0];
-  INTERFAZ_TIEMPO_Y = changeVariable(0, INTERFAZ_TIEMPO_Y, 0, 0, amountChange)[1];
+  INTERFAZ_Y = changeVariable(0, INTERFAZ_Y, 0, 0, amountChange)[1];
 }
 
 void worldTopKeys() {
@@ -169,7 +169,7 @@ void worldBottomKeys() {
 
 void puntosKeys() {
   INTERFAZ_PUNTOS_X = changeVariable(INTERFAZ_PUNTOS_X, 0, 0, 0, amountChange)[0];
-  INTERFAZ_PUNTOS_Y = changeVariable(0, INTERFAZ_PUNTOS_Y, 0, 0, amountChange)[1];
+  INTERFAZ_Y = changeVariable(0, INTERFAZ_Y, 0, 0, amountChange)[1];
 }
 
 void relojKeys() {
