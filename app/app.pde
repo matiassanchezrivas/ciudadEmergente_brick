@@ -116,6 +116,12 @@ void keyPressed() {
   if (key == 'k'|| key == 'K' ) useKinect=!useKinect;
   if (key == 'l'|| key == 'L' ) ks.load();
 
+  if (!CALIBRADOR && key == 'b') {
+    if (juego.state == "juego") {
+      juego.bolaMedieval.soltar();
+    }
+  }
+
   switch(key) {
   case 'p':
     // enter/leave calibration mode, where surfaces can be warped 
@@ -170,6 +176,8 @@ void mouseDragged() {
     ejecutarClickEnColores(int(surfaceMouse.x), int(surfaceMouse.y));
   }
 }
+
+
 
 void mousePressed() {
 

@@ -112,6 +112,15 @@ void drawElements2() {
   fisicaCalibracion.update();
   fisicaCalibracion.draw();
   fisicaCalibracion.jugar();
+  
+  drawPaleta();
+}
+
+void drawPaleta() {
+  juego.paleta.jugar();
+  juego.paleta.updateLive();
+  juego.paleta.draw(true);
+  
 }
 
 void drawReloj() {
@@ -169,7 +178,7 @@ class Reboque {
 
 
   void draw() {
-    
+
     offscreen.shape(rebShape);
   }
 }
@@ -195,7 +204,6 @@ class Fijos {
       for (int j=0; j<poligonos[i].vertices.size(); j++) {
         PVector p = poligonos[i].vertices.get(j);
         pvs[j]= new PVector (p.x, p.y);
-        
       }
       reboques[i].updateVertex(pvs);
     }
@@ -209,7 +217,7 @@ class Fijos {
 
   void drawReboques() {
     for (int i=0; i< reboques.length; i++) {
-      
+
       reboques[i].draw();
     }
   }

@@ -141,6 +141,7 @@ class Vidas {
 
 class ProgressBar {
   float scale=0;
+  float relleno=0;
   ProgressBar() {
   }
 
@@ -150,6 +151,8 @@ class ProgressBar {
     } else {
       disappear();
     }
+    float nuevo = juego.nivel==0 ? juego.temporizadorJuego1.normalized()*ancho : juego.temporizadorJuego2.normalized();
+    relleno= nuevo*(1-0.9)+relleno*.9;
     //PROGESSBAR
     offscreen.pushStyle();
     offscreen.pushMatrix();
@@ -159,7 +162,7 @@ class ProgressBar {
     offscreen.noStroke();
     offscreen.fill(colorJuegoAgua.elColor);
     offscreen.rectMode(CORNER);
-    offscreen.rect(-ancho/2, -alto/2, juego.temporizadorJuego.normalized()*ancho, alto, 10923812);
+    offscreen.rect(-ancho/2, -alto/2, relleno*ancho, alto, 10923812);
     offscreen.noFill();
     offscreen.stroke(0);
     offscreen.strokeWeight(10);
@@ -182,6 +185,7 @@ class ProgressBar {
 
   void reset() {
     scale=0;
+    relleno=0;
   }
 }
 
@@ -265,7 +269,7 @@ class Info {
       //PROGESSBAR
       offscreen.noStroke();
       offscreen.fill(colorJuegoAgua.elColor);
-      offscreen.rect(0, calle+textSize, juego.temporizadorJuego.normalized()*anchoString, textSize, 10923812);
+      //offscreen.rect(0, calle+textSize, juego.temporizadorJuego.normalized()*anchoString, textSize, 10923812);
       offscreen.noFill();
       offscreen.stroke(0);
       offscreen.strokeWeight(8);

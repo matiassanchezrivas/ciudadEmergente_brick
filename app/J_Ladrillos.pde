@@ -70,6 +70,7 @@ class LadrillosArcos {
   }
 
   void saltar() {
+    
     for (int i=0; i<bricks.size(); i++) {
       Brick b=bricks.get(i);
       b.saltar();

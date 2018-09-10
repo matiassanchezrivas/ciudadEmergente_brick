@@ -113,7 +113,7 @@ void elements2Keys() {
   } else if (shElements2.getState() == "reloj") {
     relojKeys();
   } else if (shElements2.getState() == "pastilla") {
-    //relojKeys();
+    pastillaKeys();
   } else if (shElements2.getState() == "fijos") {
     fijosKeys();
   }
@@ -124,6 +124,13 @@ void elements2Keys() {
     } 
     changeBread(false);
   }
+}
+
+void pastillaKeys() {
+  println(PADDLE_WIDTH, PADDLE_HEIGHT);
+  PADDLE_WIDTH = changeVariable(PADDLE_WIDTH, 0, 0, 0, amountChange)[0];
+  PADDLE_HEIGHT = changeVariable(0, PADDLE_HEIGHT, 0, 0, amountChange)[1];
+  Y_PALETA = changeVariable(0, 0, Y_PALETA, 0, amountChange)[2];
 }
 
 void fijosKeys() {

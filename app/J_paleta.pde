@@ -7,6 +7,8 @@ class Paleta {
   int alpha=0;
   int amount=5;
   FBox paleta;
+  FBox paleta2;
+
   Paleta () {
     reset();
     update();
@@ -17,15 +19,15 @@ class Paleta {
     if (useKinect) {
       xKinect = (kinect.getPlayerPosition()!=null) ? xKinect = int(kinect.getPlayerPosition().x) : xKinect;
       paleta.setPosition(limitar(xKinect), Y_PALETA);
+      paleta2.setPosition(limitar(xKinect), Y_PALETA);
     } else {
+      paleta2.setPosition(limitar(mouseX), Y_PALETA);
       paleta.setPosition(limitar(mouseX), Y_PALETA);
-      
     }
   }
-  
-  float limitar(float x){
-  return constrain(x, windows[0].x+windows[0].ancho, windows[1].x);
-    
+
+  float limitar(float x) {
+    return constrain(x, windows[0].x+windows[0].ancho, windows[1].x);
   }
 
   void update() {
@@ -35,8 +37,18 @@ class Paleta {
     this.ancho = int(paleta.getWidth());
     this.alto = int(paleta.getHeight());
   }
+  
+  void updateLive() {
+      //PALETA
+    this.x = int(paleta.getX()); 
+    this.y = int(paleta.getY()); 
+    this.ancho = PADDLE_WIDTH;
+    this.alto = PADDLE_HEIGHT;
+  }
 
   void draw(boolean seVe) {
+        ancho = PADDLE_WIDTH;
+    alto = PADDLE_HEIGHT;
     if (seVe) {
       alpha = (alpha<255) ? alpha+=amount : 255;
     } else {
@@ -47,9 +59,12 @@ class Paleta {
     offscreen.noFill();
     offscreen.stroke(255, alpha);
     offscreen.strokeWeight(20);
-    //offscreen.rect (x-ancho/2, y-alto/2, ancho, alto, 978879879);
-    skate.setFill(color(255,alpha));
-    offscreen.shape(skate, x-ancho/2, y-alto/2, ancho*1.5, ancho*skate.height/skate.width*1.5);
+    //offscreen.rect (x-PADDLE_WIDTH/2, y-alto/2, ancho, alto, 978879879);
+    offscreen.strokeWeight(1);
+    //offscreen.rect (x-PADDLE_WIDTH/2, y-PADDLE_HEIGHT/2, PADDLE_WIDTH, PADDLE_HEIGHT);
+    skate.setFill(color(255, alpha));
+    offscreen.shapeMode(CENTER);
+    offscreen.shape(skate, x, y-PADDLE_HEIGHT*1.0/92*20, PADDLE_WIDTH, PADDLE_HEIGHT);
     offscreen.popStyle();
   }
 
@@ -58,5 +73,10 @@ class Paleta {
     paleta.setName("paleta");
     paleta.setStatic(true);
     world.add(paleta);
+    
+    paleta2 = new FBox(PADDLE_WIDTH, PADDLE_HEIGHT);
+    paleta2.setName("paleta");
+    paleta2.setStatic(true);
+    worldBola.add(paleta2);
   }
 }

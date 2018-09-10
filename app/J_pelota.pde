@@ -7,7 +7,7 @@ class Pelota {
   int alpha=0;
   int amount=5;
   float transp=1;
-  
+
   FCircle bola;
   Pelota () {
     reset();
@@ -28,6 +28,21 @@ class Pelota {
       velx = (velx > 0) ? MIN_VELOCITY_NIVEL2+RANDOM_ANGLE  : -MIN_VELOCITY_NIVEL2+RANDOM_ANGLE2;
       vely = (vely > 0) ? MIN_VELOCITY_NIVEL2+RANDOM_ANGLE  : -MIN_VELOCITY_NIVEL2+RANDOM_ANGLE2;
     }
+    
+    float angulo = atan2( vely, velx );
+
+    bola.setVelocity(velx, vely);
+  }
+
+  void jugar2(int nivel) {
+    float velx = bola.getVelocityX();
+    float vely = bola.getVelocityY();
+
+    float angulo = atan2( vely, velx );
+
+    velx = MIN_VELOCITY_NIVEL1 * cos( angulo );
+    vely = MIN_VELOCITY_NIVEL1 * sin( angulo );
+
     bola.setVelocity(velx, vely);
   }
 
@@ -35,7 +50,7 @@ class Pelota {
     this.x = int(bola.getX()); 
     this.y = int(bola.getY()); 
     this.tam = SIZE_BALL;
-    transp=(map(y,WORLD_BOTTOM_Y,height, 1,0));
+    transp=(map(y, WORLD_BOTTOM_Y, height, 1, 0));
   }
 
   void draw(boolean seVe) {
@@ -55,7 +70,7 @@ class Pelota {
   void reset() {
     bola = new FCircle(tam);
     bola.setPosition(width/2, height/2);
-    bola.setVelocity(1000, 1000);
+    bola.setVelocity(1000, -1000);
     bola.setDensity(0.01);
     bola.setDamping(-1);
     bola.setName("bola");

@@ -1,15 +1,14 @@
 int TIEMPO_COUNTDOWN;
 int TIEMPO_COUNTDOWN_INTRAVIDA;
-int TIEMPO_JUEGO;
-int TIEMPO_GAME_OVER = 500;
-int TIEMPO_ANIMACION = 500;
-int TIEMPO_GANAR = 500;
+int TIEMPO_JUEGO_NIVEL1;
+int TIEMPO_JUEGO_NIVEL2;
 int TIEMPO_APARICION_ELEMENTOS=4000;
-int CANTIDAD_VIDAS=4;
-int TIEMPO_TRANSICION = 500;
-float PORCENTAJE_DESTRUCCION_ARCOS=1;
+int CANTIDAD_VIDAS;
+int TIEMPO_TRANSICION;
+float PORCENTAJE_DESTRUCCION_ARCOS;
+int TIEMPO_BOLA_MEDIEVAL = 5000;
 
-int FPS = 35;
+int FPS = 24;
 
 int X_RELOJ;
 int Y_RELOJ;
@@ -30,11 +29,11 @@ class Juego {
   //LadrillosVentana ladrillosVentana;
   Ventanas ventanas;
   Countdown countdown;
-  Temporizador temporizadorJuego;
-  Temporizador temporizadorGameOver;
-  Temporizador temporizadorGanar;
+  Temporizador temporizadorJuego1;
+  Temporizador temporizadorJuego2;
   Temporizador temporizadorAparicionElementos;
   Temporizador temporizadorTransicion;
+  Temporizador temporizadorBola;
   Agua [] agua = new Agua [2]; 
   Barrotes [] barrotes = new Barrotes [2];
   Interfaz interfaz; 
@@ -45,6 +44,8 @@ class Juego {
   MotionLive motionGanaPerro;
   MotionLive motionGanaAstronauta;
   int nivel;
+  BolaMedieval bolaMedieval; 
+  boolean reinicioNivel = false;
 
   Juego () {
     state = "inicio";
@@ -55,11 +56,12 @@ class Juego {
     //ladrillosVentana = new LadrillosVentana();
     ventanas = new Ventanas();
     countdown = new Countdown();
-    temporizadorJuego = new Temporizador(TIEMPO_JUEGO);
-    temporizadorGameOver = new Temporizador(TIEMPO_GAME_OVER);
-    temporizadorGanar = new Temporizador(TIEMPO_GANAR);
     temporizadorAparicionElementos = new Temporizador(TIEMPO_APARICION_ELEMENTOS);
     temporizadorTransicion = new Temporizador (TIEMPO_TRANSICION);
+    temporizadorJuego1 = new Temporizador (TIEMPO_JUEGO_NIVEL1);
+    temporizadorJuego2 = new Temporizador (TIEMPO_JUEGO_NIVEL2);
+    temporizadorBola = new Temporizador (TIEMPO_BOLA_MEDIEVAL+int(random(500)));
+
     for (int i=0; i<windows.length; i++) {
       agua[i] = new Agua(i);
       barrotes[i] = new Barrotes (i);
@@ -72,6 +74,7 @@ class Juego {
     motionVictoria= new MotionLive(FOTOGRAMAS_VICTORIA, FPS, "img/ganaste/ganaste_");
     motionGanaPerro= new MotionLive(FOTOGRAMAS_LIBERA_PERRO, FPS, "img/libera_perro/bien-hecho-perro_");
     motionGanaAstronauta= new MotionLive(FOTOGRAMAS_LIBERA_ASTRONAUTA, FPS, "img/libera_astronauta/bien-hecho-astronauta_");
+    bolaMedieval = new BolaMedieval(new PVector(X_BOLA_MEDIEVAL, Y_BOLA_MEDIEVAL), 10, .1);
   }
 
   void triggerAparicion() {
@@ -103,8 +106,6 @@ class Juego {
       } else {
         drawCeldaIntro(1);
       }
-
-
       if (motionIntro.isOver()) {
         detenerSonidoIntro();
         if (temporizadorTransicion.isOver()) {        
@@ -117,32 +118,31 @@ class Juego {
       interfaz.draw(true);
       float n = temporizadorAparicionElementos.normalized();
 
-
       for (int i=0; i<ladrillosArcos[0].bricks.size(); i++) {
         float s =map(n, 0, .5, 0, 1);
-        
+
         if (i*1.0/ladrillosArcos[0].bricks.size() < s) {
           Brick b = ladrillosArcos[0].bricks.get(i);
           b.animate();
         }
       }
-      
+
       for (int i=0; i<ladrillosArcos[1].bricks.size(); i++) {
         float s =map(n, .5, 1, 0, 1);
-        
+
         if (i*1.0/ladrillosArcos[1].bricks.size() < s) {
           Brick b = ladrillosArcos[1].bricks.get(i);
           b.animate();
         }
       }
 
-
-
-
       for (int i=0; i<(ladrillosGrilla.bricks.size()-1)*n; i++) {
         Brick b = ladrillosGrilla.bricks.get(i);
         b.animate();
       }
+      drawCelda(false);
+      drawElementos(false);
+      fijos.drawReboques();
 
       if (temporizadorAparicionElementos.isOver()) {
         iniciarSonidoJuego();
@@ -150,26 +150,29 @@ class Juego {
         state="countDown";
         dispararSonidoReloj();
       }
-      drawCelda(false);
-      drawElementos(false);
-      fijos.drawReboques();
+      temporizadorJuego1.reset();
+      temporizadorJuego2.reset();
     } else if (state=="countDown") {
       interfaz.draw(true);
-      drawCelda(!(vidasLeft==CANTIDAD_VIDAS));
-      countdown.draw((vidasLeft==CANTIDAD_VIDAS) ? TIEMPO_COUNTDOWN : TIEMPO_COUNTDOWN_INTRAVIDA);
+      drawCelda(reinicioNivel && nivel==0);
+      countdown.draw(reinicioNivel ? TIEMPO_COUNTDOWN : TIEMPO_COUNTDOWN_INTRAVIDA);
+
+      pelota.rest(paleta);
+      paleta.jugar();
+      drawElementos(true);
+      fijos.drawReboques();
+
       if (countdown.temporizador.isOver()) {
         state="juego";
         sonidista.ejecutarSonido(1); //DISPARAR PELOTA
-        if (vidasLeft==CANTIDAD_VIDAS) {
-          temporizadorJuego.reset();
+        if (!reinicioNivel) {
+          temporizadorJuego1.reset();
+          reinicioNivel=true;
         }
       }
-      pelota.rest(paleta);
-      paleta.jugar();
-
-      drawElementos(true);
-      fijos.drawReboques();
+      if (nivel==1) bolaMedieval.draw();
     } else if (state == "juego") {
+
       drawCelda(true);
       paleta.jugar();
       pelota.jugar(nivel);
@@ -189,14 +192,18 @@ class Juego {
           state="gameOver";
         }
       }
-      sonarAgua(temporizadorJuego.normalized());
-      if (temporizadorJuego.isOver()) {
+      sonarAgua(nivel==0 ? temporizadorJuego1.normalized() : temporizadorJuego2.normalized());
+      if (nivel==0 ? temporizadorJuego1.isOver() : temporizadorJuego2.isOver()) {
         state="gameOver";
         motionPerdiste.reset();
         iniciarSonidoGameOver();
       }
-      interfaz.draw(true);
+      if (nivel == 1 && temporizadorBola.isOver()) {
+        bolaMedieval.soltar();
+      }
 
+      interfaz.draw(true);
+      if (nivel==1) bolaMedieval.draw();
       //GANAR
       if (nivel==0) {
         if (ladrillosArcos[1].porcentajeMuertos() >= PORCENTAJE_DESTRUCCION_ARCOS) {
@@ -213,7 +220,6 @@ class Juego {
         motionVictoria.reset();
         iniciarSonidoVictoria();
       }
-      fijos.drawReboques();
     } else if (state == "gameOver") {
       interfaz.draw(false);
       pelota.draw(false);
@@ -228,6 +234,7 @@ class Juego {
         detenerSonidoGameOver();
         resetInicio();
       }
+      if (nivel==1)bolaMedieval.draw();
     } else if (state == "liberaPerro") {
       interfaz.draw(true);
       pelota.draw(false);
@@ -239,7 +246,12 @@ class Juego {
         countdown.reset(TIEMPO_COUNTDOWN_INTRAVIDA);
         state="countDown";
         dispararSonidoReloj();
+        reinicioNivel=false;
+        temporizadorBola.reset();
       }
+
+      temporizadorJuego1.reset();
+      temporizadorJuego2.reset();
     } else if (state == "liberaAstronauta") {
       interfaz.draw(true);
       pelota.draw(false);
@@ -251,7 +263,11 @@ class Juego {
         countdown.reset(TIEMPO_COUNTDOWN_INTRAVIDA);
         state="countDown";
         dispararSonidoReloj();
+        reinicioNivel=false;
+        temporizadorBola.reset();
       }
+      temporizadorJuego1.reset();
+      temporizadorJuego2.reset();
     } else if (state == "victoria") {
       interfaz.draw(false);
       pelota.draw(false);
@@ -265,7 +281,11 @@ class Juego {
         detenerSonidoVictoria();
         resetInicio();
       }
+      temporizadorJuego1.reset();
+      temporizadorJuego2.reset();
+      bolaMedieval.draw();
     }
+    fijos.drawReboques();
   }
 
   void drawElementos(boolean dibujar) {
@@ -282,7 +302,11 @@ class Juego {
 
   void drawCelda(boolean agua) {
     for (int i=0; i<windows.length; i++) {
-      if (agua) this.agua[i].draw(temporizadorJuego.normalized());
+      if (agua) {
+        this.agua[i].draw(nivel==0 ? temporizadorJuego1.normalized() : temporizadorJuego2.normalized());
+      } else {
+        this.agua[i].reset();
+      }
       barrotes[i].draw();
     }
   }
@@ -310,8 +334,13 @@ class Juego {
     motionIntro.reset();
     PUNTAJE_JUEGO=0;
     vidasLeft=CANTIDAD_VIDAS;
-    nivel=0;
     fijos.resetFisica();
+    bolaMedieval.reset();
+    nivel=0;
+    reinicioNivel=false;
+    temporizadorJuego1.reset();
+    temporizadorJuego2.reset();
+    temporizadorBola = new Temporizador (TIEMPO_BOLA_MEDIEVAL+int(random(500)));
   }
 }
 //------------------------------------------------
@@ -402,6 +431,7 @@ void explode(int x, int y) {
 }
 
 void saltar() {
+  world.setEdges(WORLD_TOP_X, -500, WORLD_BOTTOM_X, WORLD_BOTTOM_Y);
   juego.ladrillosGrilla.saltar();
   for (int i=0; i<windows.length; i++) {
     juego.ladrillosArcos[i].saltar();

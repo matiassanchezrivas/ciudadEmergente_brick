@@ -2,7 +2,6 @@ int STROKE_BRICK =3;
 int FACTOR_RANDOM =4;
 int DISTANCIA_EXPLOSION = 100;
 
-
 class Brick {
   FPoly brickV;
   FBox brick;
@@ -52,7 +51,7 @@ class Brick {
     this.centery = centery;
     this.rotAngle = rotAngle;
     for (int i=0; i<4; i++) {
-      factorArc[i] = int(random(0, 6));
+      factorArc[i] = 1;
     }
     motionDesapareceVentana = new Motion(IMG_ladrilloDesapareceVentana, FPS);
     reset();
@@ -148,7 +147,10 @@ class Brick {
     if (isAlive() && brick != null) {
       world.remove(brick);
       resetFisica(false);
-      fisicaImpulse();
+      brick.addForce(random(-100000, 100000), random(100000));
+    } else {
+      //resetFisica(false);
+      
     }
   }
 
@@ -194,7 +196,7 @@ class Brick {
         offscreen.translate(centerx, centery);
         offscreen.scale(scale);
         //brickShape.setFill(color(255, scale*255));
-        offscreen.shape(brickShape,-centerx, -centery);
+        offscreen.shape(brickShape, -centerx, -centery);
         offscreen.popMatrix();
       } else {
         animationDead(); 

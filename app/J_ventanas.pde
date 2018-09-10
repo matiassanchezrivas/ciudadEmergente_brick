@@ -15,7 +15,7 @@ class Ventanas {
 
   void draw() {
     for (int i=0; i<windowShape.length; i++) {
-      windowShape[i].setFill(color(255,0,0, 0));
+      windowShape[i].setFill(color(255, 0, 0, 0));
       windowShape[i].setStroke(color(255));
       offscreen.shape(windowShape[i]);
     }
@@ -59,7 +59,7 @@ class Ventanas {
       windowShape[i].vertex(windows[i].x, windows[i].y+windows[i].alto);
       v.vertex(windows[i].x, Y_PALETA);
       v.vertex(windows[i].x, windows[i].y+windows[i].alto);
-      
+
       windowShape[i].fill(255);
       windowShape[i].stroke(color(255));
       windowShape[i].strokeWeight(STROKE_VENTANA);
@@ -120,6 +120,8 @@ class Agua {
 
   int windowNumber;
 
+  float amount =0;
+
   //IRREGULAR
   float yoff = 0.0;
   Agua(int windowNumber) {
@@ -152,7 +154,12 @@ class Agua {
     offscreen.popStyle();
   }
 
-  void draw(float amount) {
+  void reset () {
+    amount=0;
+  }
+
+  void draw(float amount_) {
+    amount=amount_*(1-0.9)+amount*.9;
     calcWave(amount);
 
     offscreen.pushStyle();
@@ -169,6 +176,8 @@ class Agua {
     offscreen.endShape(CLOSE);
     offscreen.popStyle();
   }
+
+
 
   void calcWave(float amount) {
     // Increment theta (try different values for 'angular velocity' here
@@ -200,11 +209,11 @@ class Barrotes {
 
   void draw() {
     float amount = temporizador.normalized();
-    if(amount>=1 && !llego){
-    llego=true;
-    dispararSonidoBarrotes();
+    if (amount>=1 && !llego) {
+      llego=true;
+      dispararSonidoBarrotes();
     }
-    
+
     offscreen.pushStyle();
     if (CALIBRADOR && shElements.getState() == "ventana" && shWindows.getState() == "barrotes") {
       offscreen.stroke(colorCalibracionAcento.elColor);
