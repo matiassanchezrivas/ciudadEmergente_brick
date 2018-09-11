@@ -33,7 +33,7 @@ void initFisica() {
 
 //------------------------------------------------
 void drawFisica() {
-  if (CALIBRADOR || juego.state=="juego") {
+  if (CALIBRADOR || juego.state=="juego" || juego.state=="gameOver") {
     world.step();
     worldBola.step();
   }

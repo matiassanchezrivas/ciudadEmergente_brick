@@ -3,19 +3,35 @@ int STROKE_VENTANA = 10;
 int STROKE_BARROTE = 6;
 int CANTIDAD_BARROTES = 4;
 
+int TIEMPO_INTERVALO_CORAZON;
 
 class Ventanas {
   FPoly v;
   PShape windowShape [] = new PShape [2];
   PShape windowShapeBlack [] = new PShape [2];
   PShape negativeWindowShape [] = new PShape [2];
+  float amountColorSalvado [] = new float [2];
+  float amountChange=1.0/60;
+  PShape corazonShape;
+  Temporizador temporizador;
 
   Ventanas () {
+    for (int i=0; i<windows.length; i++) {
+      amountColorSalvado[i]=0;
+    }
+    corazonShape = loadShape("vida.svg");
+    temporizador = new Temporizador(0);
   }
 
-  void draw() {
+  void draw(boolean [] salvado) {
     for (int i=0; i<windowShape.length; i++) {
-      windowShape[i].setFill(color(255, 0, 0, 0));
+      color c = lerpColor( color(0, 0, 0, 0), color(255, 255), amountColorSalvado [i] );
+      if (salvado [i]) {
+        amountColorSalvado[i] = amountColorSalvado[i] >= 1 ? 1 : amountColorSalvado[i]+amountChange;
+      } else {
+        amountColorSalvado[i] = amountColorSalvado[i] >= 0 ? 0 : amountColorSalvado[i]-amountChange;
+      }
+      windowShape[i].setFill(c);
       windowShape[i].setStroke(color(255));
       offscreen.shape(windowShape[i]);
     }
@@ -37,6 +53,9 @@ class Ventanas {
   }
 
   void reset() {
+    for (int i=0; i<windows.length; i++) {
+      amountColorSalvado[i]=0;
+    }
     for (int i=0; i<windows.length; i++) {
       //VENTANA
       v = new FPoly();

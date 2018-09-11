@@ -42,7 +42,7 @@ void setup() {
   initStateHandlers();
 
   //VARIABLES GLOBALES
-  CALIBRADOR = true; 
+  CALIBRADOR = false; 
 
   //CONF PROCESSING
   smooth();
@@ -60,6 +60,7 @@ void setup() {
 
   //JUEGO
   juego = new Juego();
+  juego.reset();
 }
 
 void draw() {

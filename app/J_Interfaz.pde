@@ -151,8 +151,8 @@ class ProgressBar {
     } else {
       disappear();
     }
-    float nuevo = juego.nivel==0 ? juego.temporizadorJuego1.normalized()*ancho : juego.temporizadorJuego2.normalized();
-    relleno= nuevo*(1-0.9)+relleno*.9;
+    float nuevo = juego.nivel==0 ? juego.temporizadorJuego1.normalized() : juego.temporizadorJuego2.normalized();
+    relleno= nuevo*(1-0.9)+relleno*0.9;
     //PROGESSBAR
     offscreen.pushStyle();
     offscreen.pushMatrix();
