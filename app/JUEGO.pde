@@ -20,6 +20,7 @@ int PUNTOS_LADRILLO;
 boolean useKinect; 
 int vidasLeft;
 
+
 class Juego {
   String state;
   Paleta paleta;
@@ -47,6 +48,10 @@ class Juego {
   BolaMedieval bolaMedieval; 
   boolean reinicioNivel = false;
   boolean [] salvado = new boolean [2];
+  FBox topEdge;
+  FBox bottomEdge;
+  Transicion transicion;
+  boolean skipAnimation;
 
   Juego () {
     state = "reinicio";
@@ -80,6 +85,20 @@ class Juego {
     for (int i=0; i<windows.length; i++) {
       salvado[i]=false;
     }
+
+    topEdge = new FBox(width+100, 20);
+    topEdge.setGrabbable(false);
+    topEdge.setStatic(true);
+    topEdge.setPosition(width/2, WORLD_TOP_Y);
+
+    bottomEdge = new FBox(width+100, 10);
+    bottomEdge.setGrabbable(false);
+    bottomEdge.setStatic(true);
+    bottomEdge.setPosition(width/2, WORLD_BOTTOM_Y);
+
+    transicion= new Transicion();
+
+    skipAnimation=false;
   }
 
   void triggerAparicion() {
@@ -93,14 +112,24 @@ class Juego {
     offscreen.fill(0, 255);
     offscreen.rect(0, 0, width, height);
 
-
     if (state=="inicio") {
+
       motionInicioLoop.loop();
       motionInicioLoop.draw(width/2, height/2, width, height);
+
+      if (!skipAnimation) {
+        temporizadorTransicion.reset();
+      } else {
+        transicion.update(temporizadorTransicion.normalized());
+        transicion.draw();
+        if (temporizadorTransicion.isOver()) {
+          state="animacion";
+          resetAll(true);
+        }
+      }
     } else if (state=="animacion") {
       motionIntro.draw(width/2, height/2, width, height);     
       //ventanas.drawBlack();
-      ventanas.draw(salvado);
       if (motionIntro.temporizador.normalized()<.75) {
         barrotes[0].reset();
       } else {
@@ -111,13 +140,22 @@ class Juego {
       } else {
         drawCeldaIntro(1);
       }
-      if (motionIntro.isOver()) {
-        detenerSonidoIntro();
-        if (temporizadorTransicion.isOver()) {        
-          triggerAparicion();
-        }
-      } else {
+
+      if (motionIntro.isOver()) {  
+        skipAnimation=true;
+      } 
+
+      if (!skipAnimation) {
         temporizadorTransicion.reset();
+      } else {
+        if (!motionIntro.isOver()) {
+          transicion.update(temporizadorTransicion.normalized());
+          transicion.draw();
+        }
+        if (temporizadorTransicion.isOver()) {
+          triggerAparicion();
+          detenerSonidoIntro();
+        }
       }
     } else if (state=="aparicionElementos") {
       interfaz.draw(true);
@@ -159,8 +197,8 @@ class Juego {
       temporizadorJuego2.reset();
     } else if (state=="countDown") {
       interfaz.draw(true);
-      drawCelda(reinicioNivel && nivel==0);
-      countdown.draw(reinicioNivel ? TIEMPO_COUNTDOWN : TIEMPO_COUNTDOWN_INTRAVIDA);
+      drawCelda(!(!reinicioNivel && nivel==0));
+
 
       pelota.rest(paleta);
       paleta.jugar();
@@ -176,15 +214,20 @@ class Juego {
         }
       }
       if (nivel==1) bolaMedieval.draw();
+      countdown.draw(reinicioNivel ? TIEMPO_COUNTDOWN : TIEMPO_COUNTDOWN_INTRAVIDA);
     } else if (state == "juego") {
-      drawCelda(true);
+
       paleta.jugar();
       pelota.jugar(nivel);
       pelota.draw(true);
 
       drawElementos(true);
+      drawCelda(true);
+      if (nivel==1) bolaMedieval.draw();
+      interfaz.draw(true);
 
-      if (pelota.y>width) {
+      //CONDICIONES
+      if (pelota.y>height) {
         if (vidasLeft>0) {
           vidasLeft--;
           countdown.reset(TIEMPO_COUNTDOWN_INTRAVIDA);
@@ -195,6 +238,7 @@ class Juego {
           iniciarSonidoGameOver();
           state="gameOver";
           saltar();
+          skipAnimation=false;
         }
       }
       sonarAgua(nivel==0 ? temporizadorJuego1.normalized() : temporizadorJuego2.normalized());
@@ -203,13 +247,12 @@ class Juego {
         motionPerdiste.reset();
         iniciarSonidoGameOver();
         saltar();
+        skipAnimation=false;
       }
       if (nivel == 1 && temporizadorBola.isOver()) {
         bolaMedieval.soltar();
       }
 
-      interfaz.draw(true);
-      if (nivel==1) bolaMedieval.draw();
       //GANAR
       if (nivel==0) {
         if (ladrillosArcos[0].porcentajeMuertos() >= PORCENTAJE_DESTRUCCION_ARCOS) {
@@ -225,6 +268,7 @@ class Juego {
         }
       } else if (nivel==1 && ladrillosArcos[0].porcentajeMuertos() >= PORCENTAJE_DESTRUCCION_ARCOS && ladrillosArcos[1].porcentajeMuertos() >= PORCENTAJE_DESTRUCCION_ARCOS) {
         state = "victoria";
+        skipAnimation=false;
         motionVictoria.reset();
         iniciarSonidoVictoria();
       }
@@ -238,11 +282,23 @@ class Juego {
       detenerSonidoAgua();
 
       motionPerdiste.draw(width/2, height/2, 0, 0);
-      if (motionPerdiste.isOver()) {
-        detenerSonidoGameOver();
-        resetInicio();
-      }
+
       if (nivel==1)bolaMedieval.draw();
+
+      if (motionPerdiste.isOver()) {  
+        skipAnimation=true;
+      } 
+
+      if (!skipAnimation) {
+        temporizadorTransicion.reset();
+      } else {
+        transicion.update(temporizadorTransicion.normalized());
+        transicion.draw();
+        if (temporizadorTransicion.isOver()) {
+          detenerSonidoGameOver();
+          resetInicio();
+        }
+      }
     } else if (state == "liberaPerro") {
       interfaz.draw(true);
       pelota.draw(false);
@@ -292,9 +348,21 @@ class Juego {
       for (int i=0; i<windows.length; i++) {
         salvado[i]=true;
       }
-      if (motionVictoria.isOver()) {
-        detenerSonidoVictoria();
-        resetInicio();
+
+      if (motionVictoria.isOver()) {  
+        skipAnimation=true;
+      } 
+      if (!skipAnimation) {
+        temporizadorTransicion.reset();
+      } else {
+        
+          transicion.update(temporizadorTransicion.normalized());
+          transicion.draw();
+        
+        if (temporizadorTransicion.isOver()) {
+          detenerSonidoVictoria();
+          resetInicio();
+        }
       }
     }
     fijos.drawReboques();
@@ -325,7 +393,6 @@ class Juego {
   }
 
   void drawCeldaIntro(int i) {
-
     barrotes[i].draw();
   }
 
@@ -337,6 +404,7 @@ class Juego {
   }
 
   void reset() {
+    resetWorld();
     pelota.reset();
     paleta.reset();
     ladrillosGrilla.reset();
@@ -346,7 +414,7 @@ class Juego {
     //ladrillosVentana.reset();
     ventanas.reset();
     if (state != "reinicio") iniciarSonidoIntro();
-    state = "animacion";
+    state = (state != "reinicio") ? "animacion" : "inicio";
     motionIntro.reset();
     PUNTAJE_JUEGO=0;
     vidasLeft=CANTIDAD_VIDAS;
@@ -360,6 +428,8 @@ class Juego {
     for (int i=0; i<windows.length; i++) {
       salvado[i]=false;
     }
+    world.add(topEdge);
+    skipAnimation=false;
   }
 }
 //------------------------------------------------
@@ -374,9 +444,10 @@ class Countdown {
   int fotogramasSalida = 12;
   int tiempoEntrada;
   int tiempoSalida;
+  TextoInterfaz tnivel;
 
   Countdown() {
-
+    tnivel = new TextoInterfaz();
     tiempoEntrada=int(1000/35*fotogramasEntrada);
     tiempoSalida=int(1000/35*fotogramasSalida);
 
@@ -415,6 +486,8 @@ class Countdown {
       offscreen.image(salidaReloj[f], X_RELOJ, Y_RELOJ, TAM_RELOJ, TAM_RELOJ);
     }
     offscreen.popStyle();
+
+    tnivel.drawAmount("NIVEL "+str(juego.nivel+1), X_RELOJ, Y_RELOJ-TAM_RELOJ/2, temporizador.normalized(), 28);
   }
 }
 
@@ -440,6 +513,12 @@ class Temporizador {
   boolean isOver() {
     return normalized() > 1;
   }
+
+  void loop() {
+    if (isOver()) {
+      reset();
+    }
+  }
 }
 
 void explode(int x, int y) {
@@ -450,7 +529,8 @@ void explode(int x, int y) {
 }
 
 void saltar() {
-  world.setEdges(WORLD_TOP_X, -500, WORLD_BOTTOM_X, WORLD_BOTTOM_Y);
+  world.remove(juego.topEdge);
+  world.add(juego.bottomEdge);
   juego.ladrillosGrilla.saltar();
   for (int i=0; i<windows.length; i++) {
     juego.ladrillosArcos[i].saltar();

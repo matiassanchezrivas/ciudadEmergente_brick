@@ -156,7 +156,7 @@ class ProgressBar {
     //PROGESSBAR
     offscreen.pushStyle();
     offscreen.pushMatrix();
-    offscreen.translate(x,y);
+    offscreen.translate(x, y);
     offscreen.scale(scale);
     offscreen.rectMode(CENTER);
     offscreen.noStroke();
@@ -210,6 +210,26 @@ class TextoInterfaz {
     offscreen.textSize(size);
 
     offscreen.fill(255);
+    offscreen.text(texto, 0, 0);
+    offscreen.popStyle();
+    offscreen.popMatrix();
+  }
+
+  void drawAmount(String texto, int x, int y, float amount, int size) {
+
+    offscreen.pushMatrix();
+    offscreen.pushStyle();
+    offscreen.translate(x, y);
+    offscreen.textAlign(CENTER, CENTER);
+    offscreen.textFont(consolasBold30);
+    offscreen.textSize(size);
+    float alpha =255;
+    if (amount<.2) {
+      alpha = map(amount, 0, .2, 0, 255);
+    } else if ( amount >.8) {
+      alpha = map(amount, .8, 1, 255, 0);
+    }
+    offscreen.fill(255, alpha);
     offscreen.text(texto, 0, 0);
     offscreen.popStyle();
     offscreen.popMatrix();
@@ -294,4 +314,20 @@ class Info {
     offscreen.popMatrix();
     offscreen.popStyle();
   }
+}
+
+class Transicion {
+  float amount=0;
+  Transicion () {
+  }
+
+  void update(float amount_) {
+    amount=amount_;
+  }
+
+  void draw() {
+    offscreen.fill(0, amount*255);
+    offscreen.rect(0,0,width,height);
+  }
+  
 }

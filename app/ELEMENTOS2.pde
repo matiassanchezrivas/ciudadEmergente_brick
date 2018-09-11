@@ -173,6 +173,7 @@ class Reboque {
     reb.setStatic(true);
     reb.setName("reboque,"+number);
     println("reboque,"+number);
+    reb.setGrabbable(false);
     world.add(reb);
   }
 

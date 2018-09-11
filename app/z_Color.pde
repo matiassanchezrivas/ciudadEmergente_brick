@@ -1,6 +1,7 @@
 //colores UNO
 GestorColor colorCalibracionAcento;
 GestorColor colorJuegoAgua;
+GestorColor colorJuegoCorazon;
 
 void iniciarColores() {
   int FACTOR_TAMANIO=1;
@@ -13,16 +14,22 @@ void iniciarColores() {
    colorJuegoAgua = new GestorColor("color_juego_agua" );
   colorJuegoAgua.abrir();
   colorJuegoAgua.ubicar( 50, d*2 );
+  
+  colorJuegoCorazon = new GestorColor("color_juego_corazon" );
+  colorJuegoCorazon.abrir();
+  colorJuegoCorazon.ubicar( 50, d*3 );
 }
 
 void ejecutarClickEnColores(int x, int y) {
   colorCalibracionAcento.hacerClick( x, y );
   colorJuegoAgua.hacerClick( x, y );
+  colorJuegoCorazon.hacerClick( x, y );
 }
 
 void imprimirGestoresDeColores() {
   colorCalibracionAcento.imprimir();
   colorJuegoAgua.imprimir();
+  colorJuegoCorazon.imprimir();
 }
 
 class GestorColor {

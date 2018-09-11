@@ -3,7 +3,7 @@ int STROKE_VENTANA = 10;
 int STROKE_BARROTE = 6;
 int CANTIDAD_BARROTES = 4;
 
-int TIEMPO_INTERVALO_CORAZON;
+int TIEMPO_INTERVALO_CORAZON = 500;
 
 class Ventanas {
   FPoly v;
@@ -19,13 +19,19 @@ class Ventanas {
     for (int i=0; i<windows.length; i++) {
       amountColorSalvado[i]=0;
     }
-    corazonShape = loadShape("vida.svg");
-    temporizador = new Temporizador(0);
+    corazonShape = loadShape("corazon.svg");
+    temporizador = new Temporizador(TIEMPO_INTERVALO_CORAZON*2);
   }
 
   void draw(boolean [] salvado) {
+    temporizador.loop();
     for (int i=0; i<windowShape.length; i++) {
-      color c = lerpColor( color(0, 0, 0, 0), color(255, 255), amountColorSalvado [i] );
+      offscreen.pushStyle();
+      color colorRosa = color(red(colorJuegoCorazon.elColor), green(colorJuegoCorazon.elColor), blue(colorJuegoCorazon.elColor), amountColorSalvado[i]*255 );
+      color colorCorazon = color(255, amountColorSalvado[i]*255);
+
+      color c = lerpColor( color(1, 0), temporizador.normalized()>.5 ? colorCorazon : colorRosa, amountColorSalvado [i] );
+
       if (salvado [i]) {
         amountColorSalvado[i] = amountColorSalvado[i] >= 1 ? 1 : amountColorSalvado[i]+amountChange;
       } else {
@@ -34,6 +40,19 @@ class Ventanas {
       windowShape[i].setFill(c);
       windowShape[i].setStroke(color(255));
       offscreen.shape(windowShape[i]);
+      if (salvado [i]) {
+
+
+        if (temporizador.normalized()>.5) {
+          corazonShape.setFill(colorRosa);
+        } else {
+          corazonShape.setFill(colorCorazon);
+        }
+
+        offscreen.shapeMode(CENTER);
+        offscreen.shape(corazonShape, windows[i].x+windows[i].ancho/2, windows[i].y+windows[i].alto*.34);
+        offscreen.popStyle();
+      }
     }
   }
 
@@ -85,6 +104,7 @@ class Ventanas {
       windowShape[i].endShape(CLOSE);
       windowShapeBlack[i]=windowShape[i];
       v.setStatic(true);
+      v.setGrabbable(false);
       world.add(v);
     }
     //NEGATIVE
@@ -245,6 +265,7 @@ class Barrotes {
     for (int i=1; i<CANTIDAD_BARROTES; i++) {
       offscreen.line(v.x+windows[windowNumber].ancho/CANTIDAD_BARROTES*i, v.y-v.altoArco/2, v.x+windows[windowNumber].ancho/CANTIDAD_BARROTES*i, v.y-v.altoArco/2+(v.alto+v.altoArco/2)*amount);
     }
+    
     offscreen.line(v.x, v.y-v.altoArco/2+(v.alto+v.altoArco/2)*amount, v.x+v.ancho, v.y-v.altoArco/2+(v.alto+v.altoArco/2)*amount);
     offscreen.popStyle();
   }

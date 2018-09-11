@@ -1,46 +1,46 @@
 void saveConfig() {
-  //JSONObject jsonConfig;
-  //jsonConfig = new JSONObject();
-  //JSONObject v;
-  //v= new JSONObject();
-  //v.setInt("MIN_VELOCITY_NIVEL1", MIN_VELOCITY_NIVEL1);
-  //v.setInt("MIN_VELOCITY_NIVEL2", MIN_VELOCITY_NIVEL2);
+  JSONObject jsonConfig;
+  jsonConfig = new JSONObject();
+  JSONObject v;
+  v= new JSONObject();
+  v.setInt("BRICK_WIDTH", BRICK_WIDTH);
+  v.setInt("FACTOR_RANDOM", FACTOR_RANDOM);
+  v.setInt("Y_RELOJ", Y_RELOJ);
+  v.setInt("PADDLE_WIDTH", PADDLE_WIDTH);
+  v.setInt("WORLD_BOTTOM_Y", WORLD_BOTTOM_Y);
+  v.setInt("WORLD_BOTTOM_X", WORLD_BOTTOM_X);
+  v.setInt("PUNTOS_LADRILLO", PUNTOS_LADRILLO);
+  v.setInt("STROKE_BRICK", STROKE_BRICK);
+  v.setInt("X_RELOJ", X_RELOJ);
+  v.setInt("TIEMPO_COUNTDOWN", TIEMPO_COUNTDOWN);
+  v.setInt("NUM_ARC_BRICKS", NUM_ARC_BRICKS);
+  v.setInt("PADDLE_HEIGHT", PADDLE_HEIGHT);
+  v.setInt("WORLD_TOP_X", WORLD_TOP_X);
+  v.setInt("WORLD_TOP_Y", WORLD_TOP_Y);
+  v.setInt("SIZE_BALL", SIZE_BALL);
+  v.setInt("MIN_VELOCITY_NIVEL1", MIN_VELOCITY_NIVEL1);
+  v.setInt("TAM_RELOJ", TAM_RELOJ);
+  v.setInt("MIN_VELOCITY_NIVEL2", MIN_VELOCITY_NIVEL2);
+  v.setInt("TIEMPO_COUNTDOWN_INTRAVIDA", BRICK_WIDTH);
+  v.setInt("INTERFAZ_Y", INTERFAZ_Y);
+  v.setInt("TIEMPO_JUEGO_NIVEL1", TIEMPO_JUEGO_NIVEL1);
+  v.setInt("TIEMPO_JUEGO_NIVEL2", TIEMPO_JUEGO_NIVEL2);
+  v.setInt("FPS", FPS);
+  v.setInt("X_BOLA_MEDIEVAL", X_BOLA_MEDIEVAL); 
+  v.setInt("Y_BOLA_MEDIEVAL", Y_BOLA_MEDIEVAL);
+  v.setInt("TAM_BOLA_MEDIEVAL", TAM_BOLA_MEDIEVAL);
+  v.setInt("TIEMPO_TRANSICION", TIEMPO_TRANSICION);
+  v.setInt("CANTIDAD_VIDAS", CANTIDAD_VIDAS);
+  v.setInt("BRICK_HEIGHT", BRICK_HEIGHT);
+  v.setFloat("PORCENTAJE_DESTRUCCION_ARCOS", PORCENTAJE_DESTRUCCION_ARCOS);
+v.setInt("DISTANCIA_EXPLOSION", DISTANCIA_EXPLOSION);
+v.setInt("STOP_ANGLE_1", STOP_ANGLE_1);
+v.setInt("START_ANGLE_2", START_ANGLE_2);
+v.setInt("START_ANGLE_1", START_ANGLE_1);
+v.setInt("STOP_ANGLE_2", STOP_ANGLE_2);
+v.setInt("TIEMPO_BOLA_MEDIEVAL", TIEMPO_BOLA_MEDIEVAL);
+v.setInt("DISTANCIA_EXPLOSION", DISTANCIA_EXPLOSION);
 
-  //v.setInt("BRICK_HEIGHT", BRICK_HEIGHT);
-  //v.setInt("BRICK_WIDTH", BRICK_WIDTH);
-
-  //v.setInt("NUM_ARC_BRICKS", NUM_ARC_BRICKS);
-
-  //v.setInt("SIZE_BALL", SIZE_BALL);
-
-  //v.setInt("X_RELOJ", X_RELOJ);
-  //v.setInt("Y_RELOJ", Y_RELOJ);
-  //v.setInt("TAM_RELOJ", TAM_RELOJ);
-
-  //// v.setInt("INTERFAZ_PUNTOS_X", INTERFAZ_PUNTOS_X);
-
-  ////v.setInt("INTERFAZ_TIEMPO_X", INTERFAZ_TIEMPO_X);
-  //v.setInt("INTERFAZ__Y", INTERFAZ_Y);
-
-  //v.setInt("TIEMPO_COUNTDOWN", TIEMPO_COUNTDOWN);
-  //v.setInt("TIEMPO_COUNTDOWN_INTRAVIDA", TIEMPO_COUNTDOWN_INTRAVIDA);
-  //v.setInt("TIEMPO_JUEGO", TIEMPO_JUEGO);
-
-  //v.setInt("PADDLE_WIDTH", PADDLE_WIDTH);
-  //v.setInt("PADDLE_HEIGHT", PADDLE_HEIGHT);
-
-  //v.setInt("WORLD_TOP_X", WORLD_TOP_X);
-  //v.setInt("WORLD_TOP_Y", WORLD_TOP_Y);
-  //v.setInt("WORLD_BOTTOM_X", WORLD_BOTTOM_X);
-  //v.setInt("WORLD_BOTTOM_Y", WORLD_BOTTOM_Y);
-
-  //v.setInt("X_RELOJ", X_RELOJ);
-  //v.setInt("Y_RELOJ", Y_RELOJ);
-  //v.setInt("TAM_RELOJ", TAM_RELOJ);
-
-  //v.setInt("PUNTOS_LADRILLO", PUNTOS_LADRILLO);
-  //v.setInt("STROKE_BRICK", STROKE_BRICK);
-  //v.setInt("FACTOR_RANDOM", FACTOR_RANDOM);
 
   //jsonConfig.setJSONObject("config", v);
   //saveJSONObject(jsonConfig, "data/config.json");
@@ -105,8 +105,6 @@ void loadConfig() {
   START_ANGLE_1 = c.getInt("START_ANGLE_1");
   STOP_ANGLE_2 = c.getInt("STOP_ANGLE_2");
   Y_PALETA = c.getInt("Y_PALETA");
-  
-  RANDOM_ANGLE_CHANGE = c.getInt("RANDOM_ANGLE_CHANGE");
 }
 
 //TIPOS

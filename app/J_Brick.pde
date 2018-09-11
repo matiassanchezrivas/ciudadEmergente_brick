@@ -60,7 +60,7 @@ class Brick {
   void reset() {
     animation=false; 
     resetAnimation();
-    resetFisica(true);
+    resetFisica(true, false);
   }
 
   void followFisica() {
@@ -75,8 +75,8 @@ class Brick {
       for (int i=0; i<8; i++) {
         factor[i] = int(random(-FACTOR_RANDOM, FACTOR_RANDOM));
       }
-      x1=x2=x3=x4=x+ancho/2;
-      y1=y2=y3=y4=y+alto/2;
+      x1=x2=x3=x4=0;
+      y1=y2=y3=y4=0;
       numeroImagenLadrillo=int(random(5));
     } else if (type=="ventana") {
       //DERECHA
@@ -98,12 +98,14 @@ class Brick {
     }
   }
 
-  void resetFisica(boolean estatico) {
+  void resetFisica(boolean estatico, boolean saltar) {
     if (type=="grilla") {
       brick = new FBox(ancho, alto);
       brick.setName("brick");
       brick.setStatic(estatico);
+      
       brick.setPosition(x+ancho/2, y+alto/2);
+      if(saltar) brick.setPosition (random(width/4, width/4*3), -200);
       brick.setFill(random(255), 0, 0);
       world.add(brick);
     } else if (type=="vertices") {
@@ -144,13 +146,13 @@ class Brick {
   }
 
   void saltar() {
-    if (isAlive() && brick != null) {
+    if (isAlive() && brick != null && type!="oro") {
       world.remove(brick);
-      resetFisica(false);
+      resetFisica(false, false);
       brick.addForce(random(-100000, 100000), random(100000));
-    } else {
-      //resetFisica(false);
-      
+    } else if(brick != null && type!="oro") {
+      resetFisica(false, true);     
+      brick.addForce(random(-100000, 100000), random(100000));
     }
   }
 
@@ -164,15 +166,22 @@ class Brick {
             offscreen.fill(0);
             offscreen.stroke(255);
             offscreen.strokeWeight(STROKE_BRICK);
-            x1=(x+factor[0])*(1-0.9)+x1*0.9;
-            y1=(y+factor[1])*(1-0.9)+y1*0.9;
-            x2=(x+ancho+factor[2])*(1-0.9)+x2*0.9;
-            y2=(y+factor[3])*(1-0.9)+y2*0.9;
-            x3=(x+ancho+factor[4])*(1-0.9)+x3*0.9;
-            y3=(y+alto+factor[5])*(1-0.9)+y3*0.9;
-            x4=(x+factor[6])*(1-0.9)+x4*0.9;
-            y4=(y+alto+factor[7])*(1-0.9)+y4*0.9;
+            x1=(-ancho/2+factor[0])*(1-0.9)+x1*0.9;
+            y1=(-alto/2+factor[1])*(1-0.9)+y1*0.9;
+            x2=(ancho/2+factor[2])*(1-0.9)+x2*0.9;
+            y2=(-alto/2+factor[3])*(1-0.9)+y2*0.9;
+            x3=(ancho/2+factor[4])*(1-0.9)+x3*0.9;
+            y3=(alto/2+factor[5])*(1-0.9)+y3*0.9;
+            x4=(-ancho/2+factor[6])*(1-0.9)+x4*0.9;
+            y4=(alto/2+factor[7])*(1-0.9)+y4*0.9;
+            offscreen.pushMatrix();
+            offscreen.translate(x,y);
+            offscreen.translate(ancho/2, alto/2);
+            offscreen.rotate(brick.getRotation());
             offscreen.quad(x1, y1, x2, y2, x3, y3, x4, y4);
+            //offscreen.rectMode(CENTER);
+            //offscreen.rect(ancho/2,alto/2,10,10);
+            offscreen.popMatrix();
           } else {
             scale=1*(1-0.9)+scale*0.9;
             offscreen.pushMatrix();

@@ -11,6 +11,8 @@ Juego juego;
 
 PVector surfaceMouse;
 
+
+
 void setup() {
   size( 1024, 768, P3D);
 
@@ -22,8 +24,8 @@ void setup() {
 
   //KEYSTONE
   ks = new Keystone(this);
-  surf = ks.createCornerPinSurface(1200, 900, 20);
-  offscreen = createGraphics(1200, 900);
+  surf = ks.createCornerPinSurface(1024, 768, 20);
+  offscreen = createGraphics(1024, 768);
 
   //BREADCRUMB
   initBreadcrumb();
@@ -95,10 +97,11 @@ void draw() {
 void keyPressed() {
   //println("keycode", keyCode);
   if (!CALIBRADOR && juego.state=="animacion" && key == ENTER) {
-    juego.triggerAparicion();
+    juego.skipAnimation = true;
   }
   if (!CALIBRADOR && juego.state=="inicio" && key == ENTER) {
-    resetAll(true);
+    //resetAll(true);
+        juego.skipAnimation = true;
   }
 
 

@@ -1,6 +1,13 @@
-int RANDOM_ANGLE;
-int RANDOM_ANGLE2;
+float INCREMENTO_X;
+float INCREMENTO_Y;
 
+//------------------------------------------------
+void rebote() {
+  float ang = radians(random(35, 55));
+  int velocidad = juego.nivel==0 ? MIN_VELOCITY_NIVEL1 : MIN_VELOCITY_NIVEL2;
+  INCREMENTO_X = velocidad * cos( ang );
+  INCREMENTO_Y = velocidad * sin( ang );
+}
 //------------------------------------------------
 class Pelota {
   int x, y, tam;
@@ -18,19 +25,28 @@ class Pelota {
     bola.setPosition(p.x, p.y-p.alto/2-tam/2);
   }
 
+  void jugar3(int nivel) {
+    float velx = bola.getVelocityX();
+    float vely = bola.getVelocityY();
+    if (nivel==0) {
+      velx = (velx > 0) ? MIN_VELOCITY_NIVEL1  : -MIN_VELOCITY_NIVEL1;
+      vely = (vely > 0) ? MIN_VELOCITY_NIVEL1  : -MIN_VELOCITY_NIVEL1;
+    } else {
+      velx = (velx > 0) ? MIN_VELOCITY_NIVEL2  : -MIN_VELOCITY_NIVEL2;
+      vely = (vely > 0) ? MIN_VELOCITY_NIVEL2  : -MIN_VELOCITY_NIVEL2;
+    }
+  }
+
   void jugar(int nivel) {
     float velx = bola.getVelocityX();
     float vely = bola.getVelocityY();
     if (nivel==0) {
-      velx = (velx > 0) ? MIN_VELOCITY_NIVEL1+RANDOM_ANGLE  : -MIN_VELOCITY_NIVEL1+RANDOM_ANGLE2;
-      vely = (vely > 0) ? MIN_VELOCITY_NIVEL1+RANDOM_ANGLE  : -MIN_VELOCITY_NIVEL1+RANDOM_ANGLE2;
+      velx = (velx > 0) ? INCREMENTO_X  : -INCREMENTO_X;
+      vely = (vely > 0) ? INCREMENTO_Y  : -INCREMENTO_Y;
     } else {
-      velx = (velx > 0) ? MIN_VELOCITY_NIVEL2+RANDOM_ANGLE  : -MIN_VELOCITY_NIVEL2+RANDOM_ANGLE2;
-      vely = (vely > 0) ? MIN_VELOCITY_NIVEL2+RANDOM_ANGLE  : -MIN_VELOCITY_NIVEL2+RANDOM_ANGLE2;
+      velx = (velx > 0) ? INCREMENTO_X  : -INCREMENTO_X;
+      vely = (vely > 0) ? INCREMENTO_Y  : -INCREMENTO_Y;
     }
-    
-    float angulo = atan2( vely, velx );
-
     bola.setVelocity(velx, vely);
   }
 

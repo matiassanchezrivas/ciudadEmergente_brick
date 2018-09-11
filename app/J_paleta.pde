@@ -72,11 +72,13 @@ class Paleta {
     paleta = new FBox(PADDLE_WIDTH, PADDLE_HEIGHT);
     paleta.setName("paleta");
     paleta.setStatic(true);
+    paleta.setGrabbable(false);
     world.add(paleta);
     
     paleta2 = new FBox(PADDLE_WIDTH, PADDLE_HEIGHT);
     paleta2.setName("paleta");
     paleta2.setStatic(true);
+    paleta2.setGrabbable(false);
     worldBola.add(paleta2);
   }
 }
