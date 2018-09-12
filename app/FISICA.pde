@@ -33,7 +33,7 @@ void initFisica() {
 void drawFisica() {
   if (CALIBRADOR || juego.state=="juego" || juego.state=="gameOver" || juego.state=="muertePorBolaMedieval") {
     world.step();
-    world.draw();
+    //world.draw();
     worldBola.step();
   }
 } 

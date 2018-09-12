@@ -5,6 +5,8 @@ PackLadrillos packLadrillos;
 
 // ----- Cargar desde DB
 
+
+
 void loadElements() {
   //Inicializo ventanas
   windows = new Ventana [2];

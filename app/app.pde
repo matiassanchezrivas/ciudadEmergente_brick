@@ -9,7 +9,7 @@ PGraphics offscreen;
 boolean CALIBRADOR;
 Juego juego;
 
-PVector surfaceMouse;
+PVector surfaceMouse;;
 
 void setup() {
   size( 1024, 768, P3D);

@@ -120,7 +120,7 @@ class Juego {
     if (state=="inicio") {
 
       motionInicioLoop.loop();
-      motionInicioLoop.draw(width/2, height/2, width, height);
+      motionInicioLoop.draw(X_ANIMACIONES, Y_ANIMACIONES, width, height);
 
       if (!skipAnimation) {
         temporizadorTransicion.reset();
@@ -133,7 +133,7 @@ class Juego {
         }
       }
     } else if (state=="animacion") {
-      motionIntro.draw(width/2, height/2, width, height);     
+      motionIntro.draw(X_ANIMACIONES, Y_ANIMACIONES, width, height);     
       //ventanas.drawBlack();
       if (motionIntro.temporizador.normalized()<.75) {
         barrotes[0].reset();
@@ -299,7 +299,7 @@ class Juego {
       detenerSonidoJuego();
       detenerSonidoAgua();
 
-      motionPerdiste.draw(width/2, height/2, 0, 0);
+      motionPerdiste.draw(X_ANIMACIONES, Y_ANIMACIONES, width, height);
       interfaz.draw(false);
       for (int i=0; i<windows.length; i++) {
         ladrillosArcos[i].draw();
@@ -327,7 +327,7 @@ class Juego {
       paleta.jugar();
       drawCelda(true);
       drawElementos(false);
-      motionGanaPerro.draw(width/2, height/2, 0, 0);
+      motionGanaPerro.draw(X_ANIMACIONES, Y_ANIMACIONES, width, height);
       interfaz.draw(true);
       for (int i=0; i<windows.length; i++) {
         ladrillosArcos[i].draw();
@@ -351,7 +351,7 @@ class Juego {
       paleta.jugar();
       drawCelda(true);
       drawElementos(false);
-      motionGanaAstronauta.draw(width/2, height/2, 0, 0);
+      motionGanaAstronauta.draw(X_ANIMACIONES, Y_ANIMACIONES, width, height);
       interfaz.draw(true);
       for (int i=0; i<windows.length; i++) {
         ladrillosArcos[i].draw();
@@ -373,7 +373,7 @@ class Juego {
       detenerSonidoAgua();
       drawCelda(true);
       drawElementos(false);
-      motionVictoria.draw(width/2, height/2, 0, 0);
+      motionVictoria.draw(X_ANIMACIONES, Y_ANIMACIONES, width, height);
       temporizadorJuego1.reset();
       temporizadorJuego2.reset();
       bolaMedieval.draw();
@@ -542,7 +542,7 @@ class Countdown {
     }
     offscreen.popStyle();
 
-    tnivel.drawAmount("NIVEL "+str(juego.nivel+1), X_RELOJ, Y_RELOJ-TAM_RELOJ/2, temporizador.normalized(), 28);
+    tnivel.drawAmount("NIVEL "+str(juego.nivel+1), int(X_RELOJ-TAM_RELOJ/2+TAM_RELOJ*.516), int(Y_RELOJ-TAM_RELOJ/2+TAM_RELOJ*.577-TAM_RELOJ*.6), temporizador.normalized(), 40);
   }
 }
 

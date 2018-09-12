@@ -94,10 +94,10 @@ class BolaMedieval {
 
 
     offscreen.pushStyle();
-    offscreen.strokeWeight(3);
+    offscreen.strokeWeight(4);
     offscreen.stroke(255);
     offscreen.noFill();
-    int cantidad =20;
+    int cantidad =7;
 
     for (int i=0; i<cantidad; i++) {
       offscreen.pushMatrix();
@@ -108,7 +108,7 @@ class BolaMedieval {
         offscreen.rotate(QUARTER_PI/2+angle2);
       }
       if (!suelta) {
-        offscreen.ellipse(0, 0, 10, 15);
+        offscreen.ellipse(0, 0, 20, 25);
       }
       offscreen.popMatrix();
     }

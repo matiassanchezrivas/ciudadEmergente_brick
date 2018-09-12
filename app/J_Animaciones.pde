@@ -10,6 +10,9 @@ int FOTOGRAMAS_LIBERA_PERRO = 404;
 int FOTOGRAMAS_LIBERA_ASTRONAUTA = 414;
 int FOTOGRAMAS_STANDBY = 240;
 
+int X_ANIMACIONES = 500;
+int Y_ANIMACIONES= 500;
+
 void saveAnim() {
   JSONObject jsonConfig;
   jsonConfig = new JSONObject();

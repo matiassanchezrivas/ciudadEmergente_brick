@@ -15,7 +15,7 @@ stateHandler shKinect;
 String [] shKinectStates = {"calibracion", "normal"};
 //CALIBRACION ---> ELEMENTOS 2
 stateHandler shElements2;
-String [] shElementStates2 = {"tiempo", "puntos", "reloj", "worldTop", "worldBottom", "pastilla", "fijos", "bola medieval"};
+String [] shElementStates2 = {"tiempo", "puntos", "reloj", "worldTop", "worldBottom", "pastilla", "fijos", "bola medieval", "animaciones"};
 
 int selectedWindow =0;
 int selectedBrickRow =0;
@@ -122,6 +122,8 @@ void elements2Keys() {
     fijosKeys();
   }else if (shElements2.getState() == "bola medieval") {
     bolaMedievalKeys();
+  }else if (shElements2.getState() == "animaciones") {
+    animacionesKeys();
   }
   if (br.menuDepth == 1) {
     if (keyCode == 17) { //CTRL
@@ -130,6 +132,11 @@ void elements2Keys() {
     } 
     changeBread(false);
   }
+}
+
+void animacionesKeys() {
+  X_ANIMACIONES = changeVariable(X_ANIMACIONES, 0, 0, 0, amountChange)[0];
+  Y_ANIMACIONES = changeVariable(0, Y_ANIMACIONES, 0, 0, amountChange)[1];
 }
 
 void pastillaKeys() {

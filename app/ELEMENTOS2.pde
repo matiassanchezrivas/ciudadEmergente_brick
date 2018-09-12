@@ -97,8 +97,9 @@ void loadElements2() {
 }
 
 void drawElements2() {
+  juego.motionPerdiste.draw(X_ANIMACIONES, Y_ANIMACIONES, width, height);
+  juego.motionPerdiste.loop();
   drawFisica();
-
 
   for (Ventana ventana : windows) {
     ventana.draw();

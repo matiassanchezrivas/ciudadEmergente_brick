@@ -31,7 +31,8 @@ class Ventanas {
       color colorCorazon = color(255, amountColorSalvado[i]*255);
       color c;
       if (juego.state=="liberaAstronauta" || juego.state=="liberaPerro" || juego.state=="victoria") {
-         c = lerpColor( color(1, 0), temporizador.normalized()>.5 ? colorCorazon : colorRosa, amountColorSalvado [i] );
+        boolean ventana = (i==0) ? temporizador.normalized()>.5 : temporizador.normalized()<.5;
+         c = lerpColor( color(1, 0), ventana ? colorCorazon : colorRosa, amountColorSalvado [i] );
       } else {
          c = colorCorazon;
       }
@@ -45,7 +46,8 @@ class Ventanas {
       offscreen.shape(windowShape[i]);
       if (salvado [i]) {
         if (juego.state=="liberaAstronauta" || juego.state=="liberaPerro" || juego.state=="victoria") { 
-          if (temporizador.normalized()>.5) {
+          boolean ventana = (i==0) ? temporizador.normalized()>.5 : temporizador.normalized()<.5;
+          if (ventana) {
             corazonShape.setFill(colorRosa);
           } else {
             corazonShape.setFill(colorCorazon);
