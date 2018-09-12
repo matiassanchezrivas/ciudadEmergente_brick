@@ -29,9 +29,12 @@ class Ventanas {
       offscreen.pushStyle();
       color colorRosa = color(red(colorJuegoCorazon.elColor), green(colorJuegoCorazon.elColor), blue(colorJuegoCorazon.elColor), amountColorSalvado[i]*255 );
       color colorCorazon = color(255, amountColorSalvado[i]*255);
-
-      color c = lerpColor( color(1, 0), temporizador.normalized()>.5 ? colorCorazon : colorRosa, amountColorSalvado [i] );
-
+      color c;
+      if (juego.state=="liberaAstronauta" || juego.state=="liberaPerro" || juego.state=="victoria") {
+         c = lerpColor( color(1, 0), temporizador.normalized()>.5 ? colorCorazon : colorRosa, amountColorSalvado [i] );
+      } else {
+         c = colorCorazon;
+      }
       if (salvado [i]) {
         amountColorSalvado[i] = amountColorSalvado[i] >= 1 ? 1 : amountColorSalvado[i]+amountChange;
       } else {
@@ -41,14 +44,15 @@ class Ventanas {
       windowShape[i].setStroke(color(255));
       offscreen.shape(windowShape[i]);
       if (salvado [i]) {
-
-
-        if (temporizador.normalized()>.5) {
-          corazonShape.setFill(colorRosa);
+        if (juego.state=="liberaAstronauta" || juego.state=="liberaPerro" || juego.state=="victoria") { 
+          if (temporizador.normalized()>.5) {
+            corazonShape.setFill(colorRosa);
+          } else {
+            corazonShape.setFill(colorCorazon);
+          }
         } else {
-          corazonShape.setFill(colorCorazon);
+          corazonShape.setFill(colorRosa);
         }
-
         offscreen.shapeMode(CENTER);
         offscreen.shape(corazonShape, windows[i].x+windows[i].ancho/2, windows[i].y+windows[i].alto*.34);
         offscreen.popStyle();
@@ -265,7 +269,7 @@ class Barrotes {
     for (int i=1; i<CANTIDAD_BARROTES; i++) {
       offscreen.line(v.x+windows[windowNumber].ancho/CANTIDAD_BARROTES*i, v.y-v.altoArco/2, v.x+windows[windowNumber].ancho/CANTIDAD_BARROTES*i, v.y-v.altoArco/2+(v.alto+v.altoArco/2)*amount);
     }
-    
+
     offscreen.line(v.x, v.y-v.altoArco/2+(v.alto+v.altoArco/2)*amount, v.x+v.ancho, v.y-v.altoArco/2+(v.alto+v.altoArco/2)*amount);
     offscreen.popStyle();
   }

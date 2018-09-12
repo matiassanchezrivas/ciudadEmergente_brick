@@ -12,10 +12,10 @@ stateHandler shBricks;
 String [] shBrickStates = {"posicion total", "dimension total", "posicion fila", "dimension fila", "posicion ladrillo", "fila ladrillo"};
 //CALIBRACION ---> KINECT
 stateHandler shKinect;
-String [] shKinectStates = {"calibracion", "normal"};
+String [] shKinectStates = {"normal", "calibracion"};
 //CALIBRACION ---> ELEMENTOS 2
 stateHandler shElements2;
-String [] shElementStates2 = {"tiempo", "puntos", "reloj", "worldTop", "worldBottom", "pastilla", "fijos", "bola medieval"};
+String [] shElementStates2 = {"tiempo", "puntos", "reloj", "worldTop", "worldBottom", "pastilla", "fijos"};
 
 int selectedWindow =0;
 int selectedBrickRow =0;
@@ -43,9 +43,13 @@ class Breadcrumb {
   void add(String s) {
     breadcrumb[menuDepth]=s;
   }
-
-  void reset() {
-    menuDepth=0;
+  
+  void next(){
+   menuDepth = menuDepth < breadcrumb.length ? menuDepth+1 : menuDepth; 
+  }
+  
+  void previous(){
+  menuDepth = menuDepth > 0 ? menuDepth-1 : 0; 
   }
 }
 
@@ -120,8 +124,6 @@ void elements2Keys() {
     pastillaKeys();
   } else if (shElements2.getState() == "fijos") {
     fijosKeys();
-  }else if (shElements2.getState() == "bola medieval") {
-    bolaMedievalKeys();
   }
   if (br.menuDepth == 1) {
     if (keyCode == 17) { //CTRL
@@ -173,11 +175,6 @@ void tiempoKeys() {
 void worldTopKeys() {
   WORLD_TOP_X = changeVariable(WORLD_TOP_X, 0, 0, 0, amountChange)[0];
   WORLD_TOP_Y = changeVariable(0, WORLD_TOP_Y, 0, 0, amountChange)[1];
-}
-
-void bolaMedievalKeys() {
-  X_BOLA_MEDIEVAL = changeVariable(X_BOLA_MEDIEVAL, 0, 0, 0, amountChange)[0];
-  Y_BOLA_MEDIEVAL = changeVariable(0, Y_BOLA_MEDIEVAL, 0, 0, amountChange)[1];
 }
 
 void worldBottomKeys() {
@@ -296,17 +293,5 @@ class stateHandler {
 
   String getState() {
     return e[cursor];
-  }
-}
-
-void changeBread(boolean last) {
-  if (keyCode == 10 && !last) { //ENTER 
-    br.menuDepth ++;
-    //println("menuDepth++", br.menuDepth);
-  }
-  if (keyCode == 8 && !backBread) { // backSpace
-    br.menuDepth = (br.menuDepth > 0) ? br.menuDepth-1 : 0;
-    //println("menuDepth--", br.menuDepth);
-    backBread=true;
   }
 }

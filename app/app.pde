@@ -11,8 +11,6 @@ Juego juego;
 
 PVector surfaceMouse;
 
-
-
 void setup() {
   size( 1024, 768, P3D);
 
@@ -63,6 +61,8 @@ void setup() {
   //JUEGO
   juego = new Juego();
   juego.reset();
+  
+  useKinect = true; 
 }
 
 void draw() {
@@ -119,9 +119,13 @@ void keyPressed() {
 
   if (!CALIBRADOR && key == 'r' || key == 'R' ) {
     //resetAll(true);
+   
     juego.resetInicio();
     detenerTodosLosSonidos();
-  }
+  } 
+ if (CALIBRADOR && key == 'r' || key == 'R' ) {
+    detenerTodosLosSonidos();
+  } 
 
   if (key == 'c'|| key == 'C' ) {
     CALIBRADOR =!CALIBRADOR;

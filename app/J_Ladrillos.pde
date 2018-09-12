@@ -19,10 +19,9 @@ class LadrillosArcos {
       b.draw();
     }
   }
-
-  void pasarNivel() {
-    
-    for (int i=0; i<bricks.size(); i++) {
+  
+  void pasarNivel(){
+  for (int i=0; i<bricks.size(); i++) {
       Brick b = bricks.get(i);
       b.pasarNivel();
     }
@@ -78,7 +77,7 @@ class LadrillosArcos {
   }
 
   void saltar() {
-
+    
     for (int i=0; i<bricks.size(); i++) {
       Brick b=bricks.get(i);
       b.saltar();
@@ -153,22 +152,29 @@ class LadrillosGrilla {
     }
   }
 
-  void reset() {
+    void reset() {
     bricks = new ArrayList();
+    Brick oro = new Brick (windows[0].x, windows[0].y, 5, 5, "fds", "x");
+    int ri = int(random(packLadrillos.filas.size()-1));
 
     for (int i=0; i<packLadrillos.filas.size(); i++) {
       FilaLadrillos fila = packLadrillos.filas.get(i);
+      int rj =int(random(fila.ladrillos.size()-1));
       for (int j=0; j<fila.ladrillos.size(); j++) {
         Ladrillo l = fila.ladrillos.get(j);
-        int oro =int(random(fila.ladrillos.size()-1));
+        
         String type = "grilla";
-        if (i==3 && j==2) {
+        if (i==ri && j==rj) {
           type= "oro";
-          println("ES OROOOO");
+          println("hay un oro");
+          oro = new Brick (l.x, l.y, l.ancho, l.alto, type, "x");
+        } else {
+          bricks.add(new Brick (l.x, l.y, l.ancho, l.alto, type, "x"));
         }
-        bricks.add(new Brick (l.x, l.y, l.ancho, l.alto, type, "x"));
       }
     }
+    bricks.add(oro);
+    //bricks.add(h);
   }
   void explosion(int x, int y) {
     for (int i=0; i<bricks.size(); i++) {
@@ -182,7 +188,4 @@ class LadrillosGrilla {
       b.saltar();
     }
   }
-}
-
-class ReboquesLadrillos {
 }

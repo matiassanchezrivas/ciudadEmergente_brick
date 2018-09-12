@@ -1,9 +1,10 @@
 float INCREMENTO_X;
 float INCREMENTO_Y;
+int VARIACION_ANGULO_RANDOM = 15;
 
 //------------------------------------------------
 void rebote() {
-  float ang = radians(random(35, 55));
+  float ang = radians(random(45-VARIACION_ANGULO_RANDOM, 45+VARIACION_ANGULO_RANDOM));
   int velocidad = juego.nivel==0 ? MIN_VELOCITY_NIVEL1 : MIN_VELOCITY_NIVEL2;
   INCREMENTO_X = velocidad * cos( ang );
   INCREMENTO_Y = velocidad * sin( ang );

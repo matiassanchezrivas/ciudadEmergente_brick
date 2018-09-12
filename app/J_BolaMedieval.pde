@@ -46,6 +46,8 @@ class BolaMedieval {
   }
 
   void draw() {
+    location.x=X_BOLA_MEDIEVAL;
+    location.y=Y_BOLA_MEDIEVAL;
     if (!suelta) {
       updateWithPendulum();
     } else {

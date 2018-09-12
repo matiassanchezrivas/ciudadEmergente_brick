@@ -4,7 +4,7 @@ int FOTOGRAMAS_LADRILLO_ORO_DESAPARECE = 46;
 
 int FOTOGRAMAS_INTRO = 483;
 int FOTOGRAMAS_LADRILLO_VENTANA_DESAPARECE = 17;
-int FOTOGRAMAS_PERDISTE = 241;
+int FOTOGRAMAS_PERDISTE = 420;
 int FOTOGRAMAS_VICTORIA = 542;
 int FOTOGRAMAS_LIBERA_PERRO = 404;
 int FOTOGRAMAS_LIBERA_ASTRONAUTA = 414;
@@ -94,50 +94,6 @@ class Motion {
     if (temporizador.isOver()) {
       temporizador.reset();
     }
-  }
-
-  void reset() {
-    temporizador.reset();
-  }
-}
-
-class MotionLive {
-  Temporizador temporizador;
-  int FPS;
-  int cantFotogramas;
-  String ruta;
-  PImage i;
-  int number=-1;
-
-  MotionLive (int cantFotogramas, int FPS, String ruta) {
-    this.ruta=ruta;
-    this.FPS=FPS;
-    this.cantFotogramas=cantFotogramas-1;
-    temporizador = new Temporizador(cantFotogramas*1000/FPS);
-  }
-
-  void draw(float x, float y, int ancho, int alto) {  
-    if (!temporizador.isOver()) {
-      if (number!=int(temporizador.normalized()*(cantFotogramas))) {
-        number=int(temporizador.normalized()*(cantFotogramas));
-        i = loadImage(ruta+nf(number, 5)+".png");
-      }
-      offscreen.pushStyle();
-      offscreen.imageMode(CENTER);
-      offscreen.image(i, x, y);
-      offscreen.popStyle();
-    }
-  }
-
-
-  void loop() {
-    if (temporizador.isOver()) {
-      temporizador.reset();
-    }
-  }
-
-  boolean isOver() {
-    return temporizador.isOver();
   }
 
   void reset() {

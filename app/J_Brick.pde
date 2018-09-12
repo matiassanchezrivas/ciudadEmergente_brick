@@ -236,7 +236,7 @@ class Brick {
         if (animation) {
           scale=1*(1-0.9)+scale*0.9;
         }
-        motionLadrilloOro.draw(IMG_ladrilloOro, x+ancho/2, y+alto/2, ancho*2, ancho*2, scale);
+        motionLadrilloOro.draw(IMG_ladrilloOro, x+ancho/2, y+alto/2, int(ancho*1.4), int(ancho*1.4), scale);
         motionLadrilloOro.loop();
       } else {
         animationDead();

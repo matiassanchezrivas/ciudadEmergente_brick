@@ -17,8 +17,8 @@ class FisicaCalibracion {
     pelotaNivel2= new FCircle(SIZE_BALL);
     pelotaNivel1.setPosition(width/2-200, height/2);
     pelotaNivel2.setPosition(width/2+200, height/2);
-    world.add(pelotaNivel1);
-    world.add(pelotaNivel2);
+    //world.add(pelotaNivel1);
+    //world.add(pelotaNivel2);
   }
 
   void jugar() {
@@ -98,7 +98,7 @@ void loadElements2() {
 
 void drawElements2() {
   drawFisica();
-  juego.interfaz.draw(true);
+
 
   for (Ventana ventana : windows) {
     ventana.draw();
@@ -112,15 +112,19 @@ void drawElements2() {
   fisicaCalibracion.update();
   fisicaCalibracion.draw();
   fisicaCalibracion.jugar();
-  
+
   drawPaleta();
+  juego.interfaz.draw(true);
+  offscreen.pushStyle();
+  offscreen.fill(255,0,0);
+  offscreen.ellipse(X_BOLA_MEDIEVAL, Y_BOLA_MEDIEVAL, 10, 10);
+  offscreen.popStyle();
 }
 
 void drawPaleta() {
   juego.paleta.jugar();
   juego.paleta.updateLive();
   juego.paleta.draw(true);
-  
 }
 
 void drawReloj() {
@@ -172,7 +176,6 @@ class Reboque {
     rebShape.endShape(CLOSE);
     reb.setStatic(true);
     reb.setName("reboque,"+number);
-    println("reboque,"+number);
     reb.setGrabbable(false);
     world.add(reb);
   }
