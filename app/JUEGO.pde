@@ -5,7 +5,7 @@ int TIEMPO_JUEGO_NIVEL2;
 int TIEMPO_APARICION_ELEMENTOS=4000;
 int CANTIDAD_VIDAS;
 int TIEMPO_TRANSICION;
-float PORCENTAJE_DESTRUCCION_ARCOS;
+float PORCENTAJE_DESTRUCCION_ARCOS =.4;
 int TIEMPO_BOLA_MEDIEVAL = 5000;
 
 int FPS = 24;
@@ -52,6 +52,8 @@ class Juego {
   FBox bottomEdge;
   Transicion transicion;
   boolean skipAnimation;
+  boolean muertePorBolaMedieval;
+  boolean yaMurio=false;
 
   Juego () {
     state = "reinicio";
@@ -99,6 +101,8 @@ class Juego {
     transicion= new Transicion();
 
     skipAnimation=false;
+    muertePorBolaMedieval=false;
+    //useKinect = true;
   }
 
   void triggerAparicion() {
@@ -214,6 +218,7 @@ class Juego {
         }
       }
       if (nivel==1) bolaMedieval.draw();
+
       countdown.draw(reinicioNivel ? TIEMPO_COUNTDOWN : TIEMPO_COUNTDOWN_INTRAVIDA);
     } else if (state == "juego") {
 
@@ -221,13 +226,15 @@ class Juego {
       pelota.jugar(nivel);
       pelota.draw(true);
 
-      drawElementos(true);
+
       drawCelda(true);
-      if (nivel==1) bolaMedieval.draw();
+      drawElementos(true);
+      if (nivel==1 && yaMurio==false) bolaMedieval.draw() ;
       interfaz.draw(true);
 
       //CONDICIONES
       if (pelota.y>height) {
+        println("pelota.y es mayor a height");
         if (vidasLeft>0) {
           vidasLeft--;
           countdown.reset(TIEMPO_COUNTDOWN_INTRAVIDA);
@@ -249,7 +256,7 @@ class Juego {
         saltar();
         skipAnimation=false;
       }
-      if (nivel == 1 && temporizadorBola.isOver()) {
+      if (nivel == 1 && !muertePorBolaMedieval && !yaMurio && temporizadorBola.isOver()) {
         bolaMedieval.soltar();
       }
 
@@ -272,8 +279,16 @@ class Juego {
         motionVictoria.reset();
         iniciarSonidoVictoria();
       }
+  
+      if (muertePorBolaMedieval && !yaMurio) {
+        
+        temporizadorTransicion.reset();
+        vidasLeft--;
+        state = "muertePorBolaMedieval";
+        paleta.matarPorBola();
+      }
     } else if (state == "gameOver") {
-      interfaz.draw(false);
+
       pelota.draw(false);
       paleta.jugar();
       drawCelda(true);
@@ -282,7 +297,7 @@ class Juego {
       detenerSonidoAgua();
 
       motionPerdiste.draw(width/2, height/2, 0, 0);
-
+      interfaz.draw(false);
       if (nivel==1)bolaMedieval.draw();
 
       if (motionPerdiste.isOver()) {  
@@ -341,7 +356,6 @@ class Juego {
       drawCelda(true);
       drawElementos(false);
       motionVictoria.draw(width/2, height/2, 0, 0);
-
       temporizadorJuego1.reset();
       temporizadorJuego2.reset();
       bolaMedieval.draw();
@@ -355,14 +369,31 @@ class Juego {
       if (!skipAnimation) {
         temporizadorTransicion.reset();
       } else {
-        
-          transicion.update(temporizadorTransicion.normalized());
-          transicion.draw();
-        
+
+        transicion.update(temporizadorTransicion.normalized());
+        transicion.draw();
+
         if (temporizadorTransicion.isOver()) {
           detenerSonidoVictoria();
           resetInicio();
         }
+      }
+    } else if (state == "muertePorBolaMedieval") {
+
+      pelota.draw(false);
+      paleta.jugar();
+      drawCelda(true);
+      drawElementos(false);
+      interfaz.draw(true);
+      bolaMedieval.draw();
+
+      yaMurio=true;
+      if (temporizadorTransicion.isOver()) {
+        countdown.reset(TIEMPO_COUNTDOWN_INTRAVIDA);
+        state="countDown";
+        dispararSonidoReloj();
+        paleta.sacarPaleta2();
+        //paleta.reset();
       }
     }
     fijos.drawReboques();
@@ -430,6 +461,7 @@ class Juego {
     }
     world.add(topEdge);
     skipAnimation=false;
+    muertePorBolaMedieval=false;
   }
 }
 //------------------------------------------------
@@ -526,6 +558,15 @@ void explode(int x, int y) {
   for (int i=0; i<windows.length; i++) {
     juego.ladrillosArcos[i].explosion(x, y);
   }
+}
+
+void pasarNivel(int ventana) {
+  juego.ladrillosArcos[ventana].pasarNivel();
+}
+
+void ganar() {
+  juego.ladrillosArcos[0].pasarNivel();
+  juego.ladrillosArcos[1].pasarNivel();
 }
 
 void saltar() {

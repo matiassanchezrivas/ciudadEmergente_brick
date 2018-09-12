@@ -40,6 +40,7 @@ class BolaMedieval {
   void iniciarFisica() {
     bolaMedievalFisica = new FCircle (TAM_BOLA_MEDIEVAL);
     bolaMedievalFisica.setPosition(location.x, location.y);
+    bolaMedievalFisica.setName("bolaMedieval");
     worldBola.add(bolaMedievalFisica);
     bolaMedievalFisica.addForce(angle*999999/2, -1000);
   }

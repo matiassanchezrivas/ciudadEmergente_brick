@@ -8,6 +8,7 @@ class Paleta {
   int amount=5;
   FBox paleta;
   FBox paleta2;
+  boolean escucharPaleta2 = false;
 
   Paleta () {
     reset();
@@ -15,14 +16,23 @@ class Paleta {
     xKinect=width/2;
   }
 
+  void sacarPaleta2() {
+    escucharPaleta2=false;
+    worldBola.remove(paleta2);
+  }
+
   void jugar() {
     if (useKinect) {
       xKinect = (kinect.getPlayerPosition()!=null) ? xKinect = int(kinect.getPlayerPosition().x) : xKinect;
       paleta.setPosition(limitar(xKinect), Y_PALETA);
-      paleta2.setPosition(limitar(xKinect), Y_PALETA);
+      if (!escucharPaleta2) {
+        paleta2.setPosition(limitar(xKinect), Y_PALETA);
+      }
     } else {
-      paleta2.setPosition(limitar(mouseX), Y_PALETA);
       paleta.setPosition(limitar(mouseX), Y_PALETA);
+      if (!escucharPaleta2) {
+        paleta2.setPosition(limitar(mouseX), Y_PALETA);
+      }
     }
   }
 
@@ -37,24 +47,38 @@ class Paleta {
     this.ancho = int(paleta.getWidth());
     this.alto = int(paleta.getHeight());
   }
-  
+
   void updateLive() {
-      //PALETA
+    //PALETA
     this.x = int(paleta.getX()); 
     this.y = int(paleta.getY()); 
     this.ancho = PADDLE_WIDTH;
     this.alto = PADDLE_HEIGHT;
   }
 
+  void updateBolaMedieval() {
+    //PALETA
+    this.x = int(paleta2.getX()); 
+    this.y = int(paleta2.getY()); 
+    this.ancho = PADDLE_WIDTH;
+    this.alto = PADDLE_HEIGHT;
+  }
+
+
+
   void draw(boolean seVe) {
-        ancho = PADDLE_WIDTH;
+    ancho = PADDLE_WIDTH;
     alto = PADDLE_HEIGHT;
     if (seVe) {
       alpha = (alpha<255) ? alpha+=amount : 255;
     } else {
       alpha = (alpha>0) ? alpha-=amount : 0;
     }
-    update();
+    if (!escucharPaleta2) {
+      update();
+    } else {
+      updateBolaMedieval();
+    }
     offscreen.pushStyle();
     offscreen.noFill();
     offscreen.stroke(255, alpha);
@@ -69,15 +93,27 @@ class Paleta {
   }
 
   void reset() {
+    escucharPaleta2 = false; 
     paleta = new FBox(PADDLE_WIDTH, PADDLE_HEIGHT);
     paleta.setName("paleta");
     paleta.setStatic(true);
     paleta.setGrabbable(false);
     world.add(paleta);
-    
+
     paleta2 = new FBox(PADDLE_WIDTH, PADDLE_HEIGHT);
     paleta2.setName("paleta");
     paleta2.setStatic(true);
+    paleta2.setGrabbable(false);
+    worldBola.add(paleta2);
+  }
+
+  void matarPorBola() {
+    println("entra al matar x bola");
+    escucharPaleta2=true;
+    worldBola.remove(paleta2);
+    paleta2 = new FBox(PADDLE_WIDTH, PADDLE_HEIGHT);
+    paleta2.setName("paleta");
+    paleta2.setPosition(x, y);
     paleta2.setGrabbable(false);
     worldBola.add(paleta2);
   }

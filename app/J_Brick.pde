@@ -98,14 +98,16 @@ class Brick {
     }
   }
 
+  void explotar() {
+  }
   void resetFisica(boolean estatico, boolean saltar) {
     if (type=="grilla") {
       brick = new FBox(ancho, alto);
       brick.setName("brick");
       brick.setStatic(estatico);
-      
+
       brick.setPosition(x+ancho/2, y+alto/2);
-      if(saltar) brick.setPosition (random(width/4, width/4*3), -200);
+      if (saltar) brick.setPosition (random(width/4, width/4*3), -200);
       brick.setFill(random(255), 0, 0);
       world.add(brick);
     } else if (type=="vertices") {
@@ -150,7 +152,7 @@ class Brick {
       world.remove(brick);
       resetFisica(false, false);
       brick.addForce(random(-100000, 100000), random(100000));
-    } else if(brick != null && type!="oro") {
+    } else if (brick != null && type!="oro") {
       resetFisica(false, true);     
       brick.addForce(random(-100000, 100000), random(100000));
     }
@@ -175,7 +177,7 @@ class Brick {
             x4=(-ancho/2+factor[6])*(1-0.9)+x4*0.9;
             y4=(alto/2+factor[7])*(1-0.9)+y4*0.9;
             offscreen.pushMatrix();
-            offscreen.translate(x,y);
+            offscreen.translate(x, y);
             offscreen.translate(ancho/2, alto/2);
             offscreen.rotate(brick.getRotation());
             offscreen.quad(x1, y1, x2, y2, x3, y3, x4, y4);
@@ -253,6 +255,13 @@ class Brick {
         brick.setName("brick_dead");
         world.remove(brick);
       }
+    }
+  }
+
+  void pasarNivel() {
+    if (brickV != null) {
+      brickV.setName("brick_dead");
+      world.remove(brickV);
     }
   }
 

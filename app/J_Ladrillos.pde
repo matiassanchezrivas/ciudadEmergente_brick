@@ -20,6 +20,14 @@ class LadrillosArcos {
     }
   }
 
+  void pasarNivel() {
+    
+    for (int i=0; i<bricks.size(); i++) {
+      Brick b = bricks.get(i);
+      b.pasarNivel();
+    }
+  }
+
   void reset() {
 
     bricks = new ArrayList();
@@ -70,7 +78,7 @@ class LadrillosArcos {
   }
 
   void saltar() {
-    
+
     for (int i=0; i<bricks.size(); i++) {
       Brick b=bricks.get(i);
       b.saltar();
@@ -177,6 +185,4 @@ class LadrillosGrilla {
 }
 
 class ReboquesLadrillos {
-  
-
 }

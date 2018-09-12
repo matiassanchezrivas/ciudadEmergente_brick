@@ -96,12 +96,23 @@ void draw() {
 
 void keyPressed() {
   //println("keycode", keyCode);
-  if (!CALIBRADOR && juego.state=="animacion" && key == ENTER) {
-    juego.skipAnimation = true;
-  }
-  if (!CALIBRADOR && juego.state=="inicio" && key == ENTER) {
-    //resetAll(true);
-        juego.skipAnimation = true;
+
+  if (!CALIBRADOR) {
+    if (juego.state=="inicio" && key == ENTER) {
+      //resetAll(true);
+      juego.skipAnimation = true;
+    }
+    if (juego.state=="animacion" && key == ENTER) {
+      juego.skipAnimation = true;
+    }
+    if (juego.state=="juego") {
+      if (key=='n') {
+        pasarNivel(0);
+      }
+      if (key=='m') {
+        pasarNivel(1);
+      }
+    }
   }
 
 

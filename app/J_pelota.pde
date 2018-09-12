@@ -20,9 +20,13 @@ class Pelota {
     reset();
     update();
   }
+  
+    float limitar(float x) {
+    return constrain(x, windows[0].x+windows[0].ancho, windows[1].x);
+  }
 
   void rest(Paleta p) {
-    bola.setPosition(p.x, p.y-p.alto/2-tam/2);
+    bola.setPosition(limitar(juego.paleta.paleta.getX()), limitar(juego.paleta.paleta.getY()-p.alto/2-tam/2));
   }
 
   void jugar3(int nivel) {
