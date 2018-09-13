@@ -56,6 +56,8 @@ class Juego {
   boolean muertePorBolaMedieval;
   boolean yaMurio=false;
   TextoInterfaz tpuntos;
+  Linea lineaPerdiste;
+  Linea lineaGanaste;
 
 
   Juego () {
@@ -108,6 +110,8 @@ class Juego {
     skipAnimation=false;
     muertePorBolaMedieval=false;
     //useKinect = true;
+    lineaGanaste = new Linea("lineaGanaste.svg");
+    lineaPerdiste = new Linea("lineaPerdiste.svg");
   }
 
   void triggerAparicion() {
@@ -283,7 +287,6 @@ class Juego {
           nivel=1;
           salvado[1]=true;
           iniciarSonidoPasasteNivel();
-          
         }
       } else if (nivel==1 && ladrillosArcos[0].porcentajeMuertos() >= PORCENTAJE_DESTRUCCION_ARCOS && ladrillosArcos[1].porcentajeMuertos() >= PORCENTAJE_DESTRUCCION_ARCOS) {
         state = "victoria";
@@ -309,18 +312,31 @@ class Juego {
       detenerSonidoAgua();
 
       motionPerdiste.draw(X_ANIMACIONES, Y_ANIMACIONES, width, height);
+      drawCelda(true);
       interfaz.draw(false);
-      tpuntos.drawAmount("puntos "+str(PUNTAJE_JUEGO), X_PUNTAJE_FINAL, Y_PUNTAJE_FINAL, .5, 50);
       for (int i=0; i<windows.length; i++) {
         ladrillosArcos[i].draw();
       }
-      
+      float amountLinea=0;
+      if ( motionPerdiste.temporizador.normalized()<.4) {
+        amountLinea = constrain((map (motionPerdiste.temporizador.normalized(), 0.3, 0.4, 0, 1)), 0, 1);
+      } else if ( motionPerdiste.temporizador.normalized()>.9) {
+        amountLinea = constrain((map (motionPerdiste.temporizador.normalized(), 0.9, 1, 1, 0)), 0, 1);
+      } else {
+        amountLinea = 1;
+      }
+
+      float amountTexto= constrain((map (motionPerdiste.temporizador.normalized(), 0.4, 0.9, 0, 1)), 0, 1);
+
+
+      tpuntos.drawAmount(str(PUNTAJE_JUEGO)+" puntos", X_ANIMACIONES, Y_ANIMACIONES-768/2+598, amountTexto, 50);
+      lineaPerdiste.draw(X_ANIMACIONES-1024/2+529, Y_ANIMACIONES-768/2+557, amountLinea);
 
       if (nivel==1)bolaMedieval.draw();
-      
-      
-      
-      
+
+
+
+
       if (motionPerdiste.isOver()) {  
         skipAnimation=true;
       } 
@@ -356,7 +372,6 @@ class Juego {
         reinicioNivel=false;
         temporizadorBola.reset();
         detenerSonidoPasasteNivel();
-        
       }
 
       temporizadorJuego1.reset();
@@ -390,10 +405,22 @@ class Juego {
       drawCelda(true);
       drawElementos(false);
       motionVictoria.draw(X_ANIMACIONES, Y_ANIMACIONES, width, height);
+      drawCelda(true);
       temporizadorJuego1.reset();
       temporizadorJuego2.reset();
       bolaMedieval.draw();
-            tpuntos.drawAmount("puntos "+str(PUNTAJE_JUEGO), X_PUNTAJE_FINAL, Y_PUNTAJE_FINAL, .5, 50);
+      float  amountLinea= 0;
+      if ( motionVictoria.temporizador.normalized()<.4) {
+        amountLinea = constrain((map (motionVictoria.temporizador.normalized(), 0.3, 0.4, 0, 1)), 0, 1);
+      } else if ( motionVictoria.temporizador.normalized()>.9) {
+        amountLinea = constrain((map (motionVictoria.temporizador.normalized(), 0.9, 1, 1, 0)), 0, 1);
+      } else {
+        amountLinea = 1;
+      }
+      float amountTexto= constrain((map (motionVictoria.temporizador.normalized(), 0.4, 0.9, 0, 1)), 0, 1);
+      tpuntos.drawAmount(str(PUNTAJE_JUEGO)+" puntos", X_ANIMACIONES, Y_ANIMACIONES-768/2+555, amountTexto, 50);
+      lineaGanaste.draw(X_ANIMACIONES-1024/2+553, Y_ANIMACIONES-768/2+512, amountLinea);
+
       for (int i=0; i<windows.length; i++) {
         ladrillosArcos[i].draw();
       }
@@ -440,7 +467,6 @@ class Juego {
     }
     fijos.drawReboques();
     ventanas.draw(salvado);
-    
   }
 
   void drawElementos(boolean dibujar) {

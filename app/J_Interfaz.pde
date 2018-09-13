@@ -206,7 +206,13 @@ class TextoInterfaz {
     offscreen.translate(x, y);
     offscreen.scale(scale);
     offscreen.textAlign(CENTER, CENTER);
+    if (size >40){
+    offscreen.textFont(consolasBold50);
+    } else {
     offscreen.textFont(consolasBold30);
+    }
+    
+    
     offscreen.textSize(size);
 
     offscreen.fill(255);
@@ -327,7 +333,21 @@ class Transicion {
 
   void draw() {
     offscreen.fill(0, amount*255);
-    offscreen.rect(0,0,width,height);
+    offscreen.rect(0, 0, width, height);
   }
-  
+}
+
+class Linea {
+  PShape linea;
+  Linea(String svgRuta) {
+    linea = loadShape(svgRuta);
+  }
+
+  void draw(int x, int y, float amount) {
+    linea.setFill(color(255, 255*amount));
+    offscreen.pushStyle();
+    offscreen.shapeMode(CENTER);
+    offscreen.shape(linea, x, y);
+    offscreen.popStyle();
+  }
 }

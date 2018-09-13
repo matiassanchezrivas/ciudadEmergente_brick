@@ -126,6 +126,8 @@ void loadConfig() {
 
 //TIPOS
 PFont consolasBold30;
+PFont consolasBold50;
 void loadTipografias () {
   consolasBold30 = loadFont("Consolas-Bold-30.vlw");
+  consolasBold50 = loadFont("Consolas-Bold-50.vlw");
 }
