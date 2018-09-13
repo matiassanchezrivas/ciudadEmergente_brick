@@ -63,6 +63,9 @@ void setup() {
   juego.reset();
   
   useKinect = true; 
+  ks.load();
+  
+  rebote();
 }
 
 void draw() {
@@ -136,9 +139,7 @@ void keyPressed() {
   if (key == 'l'|| key == 'L' ) ks.load();
 
   if (!CALIBRADOR && key == 'b') {
-    if (juego.state == "juego") {
-      juego.bolaMedieval.soltar();
-    }
+    vidasLeft=0;
   }
 
   switch(key) {
@@ -168,7 +169,7 @@ void keyPressed() {
   }
 
   if (key == 'e') {
-    saltar();
+    //saltar();
   }
 
   //if (!CALIBRADOR) {

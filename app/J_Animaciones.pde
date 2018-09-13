@@ -13,6 +13,9 @@ int FOTOGRAMAS_STANDBY = 240;
 int X_ANIMACIONES = 500;
 int Y_ANIMACIONES= 500;
 
+int X_PUNTAJE_FINAL = 500;
+int Y_PUNTAJE_FINAL = 500;
+
 void saveAnim() {
   JSONObject jsonConfig;
   jsonConfig = new JSONObject();

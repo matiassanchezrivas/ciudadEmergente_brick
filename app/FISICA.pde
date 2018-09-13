@@ -54,8 +54,10 @@ FBody getBody(String bodyName) {
 }
 
 void contactResult(FContactResult result) {
-  if (juego.state=="juego" && result.getBody1().getName()!="brick" && result.getBody2().getName()=="bola") {
+  boolean esPaleta =  (result.getBody1().getName()=="paleta" && result.getBody2().getName()=="bola") || (result.getBody1().getName()=="bola" && result.getBody2().getName()=="paleta");
+  if (!esPaleta && juego.state=="juego" && result.getBody1().getName()!="brick" && result.getBody2().getName()=="bola") {
     //sonidista.ejecutarSonido(0);
+    triggerSonidoRebote();
     rebote();
   } else if (result.getBody1().getName()=="brick" && result.getBody2().getName()=="bola") {
     FBody b = result.getBody1();
@@ -64,12 +66,12 @@ void contactResult(FContactResult result) {
     world.remove(b);
     rebote();
   }
-  
+
   if (juego.state=="juego" && (result.getBody1().getName()=="paleta" && result.getBody2().getName()=="bola") || (result.getBody1().getName()=="bola" && result.getBody2().getName()=="paleta")) {
     sonidista.ejecutarSonido(0);
   } else if (juego.state=="juego" && (result.getBody1().getName()=="bolaMedieval" && result.getBody2().getName()=="paleta") || (result.getBody1().getName()=="paleta" && result.getBody2().getName()=="bolaMedieval")) {
     juego.muertePorBolaMedieval=true;
-  };
+  } 
   // Trigger your sound here
   // ...
 }

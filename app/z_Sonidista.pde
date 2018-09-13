@@ -42,7 +42,7 @@ int puerto = 13000;
 Sonidista sonidista;
 void initSounds() {
 
-  sonidista = new Sonidista(15);
+  sonidista = new Sonidista(22);
   sonidista.ejecutarSonido(4, true, 0, 0.0, 1.0); // agua
   sonidista.ejecutarSonido(5, true, 0, 0.0, 1.0); // musicaJuego
   sonidista.ejecutarSonido(9, true, 0, 0, 1.0); //loopReloj
@@ -426,9 +426,25 @@ void detenerSonidoIntro() {
   sonidista.fadeOut(12, 200);
 }
 
-void detenerTodosLosSonidos() {
-  for(int i=0; i<sonidista.totalSonidos; i++){
-    sonidista.fadeOut(i,500);
-  }
+void iniciarSonidoPasasteNivel() {
+  sonidista.ejecutarSonido(16, false, 0.8, 0, 1.0);
+}
 
+void detenerSonidoPasasteNivel() {
+  sonidista.fadeOut(16, 200);
+}
+
+void detenerTodosLosSonidos() {
+  for (int i=0; i<sonidista.totalSonidos; i++) {
+    sonidista.fadeOut(i, 500);
+  }
+}
+
+void triggerSonidoRebote() {
+  int number =int (random(13,14.99));
+  sonidista.ejecutarSonido(number, false, .3, 0, 1.0);
+}
+
+void triggerSonidoPerder() {
+  sonidista.ejecutarSonido(17, false, 0.9, 0, 1.0);
 }
